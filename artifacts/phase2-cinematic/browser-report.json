@@ -1,0 +1,969 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "Free Look remains disabled during cinematic"
+    },
+    {
+      "pass": true,
+      "label": "Final camera exactly matches approved Home position"
+    },
+    {
+      "pass": true,
+      "label": "Final camera direction exactly matches approved Home target"
+    },
+    {
+      "pass": true,
+      "label": "Home lens and original lighting settle consistently"
+    },
+    {
+      "pass": true,
+      "label": "PC emissive and all fill lights restore their original intensities"
+    },
+    {
+      "pass": true,
+      "label": "Temporary blur and scanlines are removed"
+    },
+    {
+      "pass": true,
+      "label": "One semantic name heading persists through the transformation"
+    },
+    {
+      "pass": true,
+      "label": "Persistent name and Drag to explore appear only after cinematic completion"
+    },
+    {
+      "pass": true,
+      "label": "Persistent brand lands at its documented lower-left anchor"
+    },
+    {
+      "pass": true,
+      "label": "Large name and approved caption are real HTML"
+    },
+    {
+      "pass": true,
+      "label": "Drag cannot move camera during hero hold"
+    },
+    {
+      "pass": true,
+      "label": "Final camera exactly matches approved Home position"
+    },
+    {
+      "pass": true,
+      "label": "Final camera direction exactly matches approved Home target"
+    },
+    {
+      "pass": true,
+      "label": "Home lens and original lighting settle consistently"
+    },
+    {
+      "pass": true,
+      "label": "PC emissive and all fill lights restore their original intensities"
+    },
+    {
+      "pass": true,
+      "label": "Temporary blur and scanlines are removed"
+    },
+    {
+      "pass": true,
+      "label": "One semantic name heading persists through the transformation"
+    },
+    {
+      "pass": true,
+      "label": "Persistent name and Drag to explore appear only after cinematic completion"
+    },
+    {
+      "pass": true,
+      "label": "Persistent brand lands at its documented lower-left anchor"
+    },
+    {
+      "pass": true,
+      "label": "Name compresses into a smaller persistent label"
+    },
+    {
+      "pass": true,
+      "label": "Free Look resumes after the branded transition"
+    },
+    {
+      "pass": true,
+      "label": "Final camera exactly matches approved Home position"
+    },
+    {
+      "pass": true,
+      "label": "Final camera direction exactly matches approved Home target"
+    },
+    {
+      "pass": true,
+      "label": "Home lens and original lighting settle consistently"
+    },
+    {
+      "pass": true,
+      "label": "PC emissive and all fill lights restore their original intensities"
+    },
+    {
+      "pass": true,
+      "label": "Temporary blur and scanlines are removed"
+    },
+    {
+      "pass": true,
+      "label": "One semantic name heading persists through the transformation"
+    },
+    {
+      "pass": true,
+      "label": "Persistent name and Drag to explore appear only after cinematic completion"
+    },
+    {
+      "pass": true,
+      "label": "Persistent brand lands at its documented lower-left anchor"
+    },
+    {
+      "pass": true,
+      "label": "Escape skips to a consistent final state"
+    },
+    {
+      "pass": true,
+      "label": "Final camera exactly matches approved Home position"
+    },
+    {
+      "pass": true,
+      "label": "Final camera direction exactly matches approved Home target"
+    },
+    {
+      "pass": true,
+      "label": "Home lens and original lighting settle consistently"
+    },
+    {
+      "pass": true,
+      "label": "PC emissive and all fill lights restore their original intensities"
+    },
+    {
+      "pass": true,
+      "label": "Temporary blur and scanlines are removed"
+    },
+    {
+      "pass": true,
+      "label": "One semantic name heading persists through the transformation"
+    },
+    {
+      "pass": true,
+      "label": "Persistent name and Drag to explore appear only after cinematic completion"
+    },
+    {
+      "pass": true,
+      "label": "Persistent brand lands at its documented lower-left anchor"
+    },
+    {
+      "pass": true,
+      "label": "Skip button completes camera, lighting and brand together"
+    },
+    {
+      "pass": true,
+      "label": "Interrupted entrance restarts cleanly behind boot"
+    },
+    {
+      "pass": true,
+      "label": "Final camera exactly matches approved Home position"
+    },
+    {
+      "pass": true,
+      "label": "Final camera direction exactly matches approved Home target"
+    },
+    {
+      "pass": true,
+      "label": "Home lens and original lighting settle consistently"
+    },
+    {
+      "pass": true,
+      "label": "PC emissive and all fill lights restore their original intensities"
+    },
+    {
+      "pass": true,
+      "label": "Temporary blur and scanlines are removed"
+    },
+    {
+      "pass": true,
+      "label": "One semantic name heading persists through the transformation"
+    },
+    {
+      "pass": true,
+      "label": "Persistent name and Drag to explore appear only after cinematic completion"
+    },
+    {
+      "pass": true,
+      "label": "Persistent brand lands at its documented lower-left anchor"
+    },
+    {
+      "pass": true,
+      "label": "Mobile hero and persistent name have no horizontal overflow"
+    },
+    {
+      "pass": true,
+      "label": "Touch Free Look resumes after mobile brand settlement"
+    },
+    {
+      "pass": true,
+      "label": "Final camera exactly matches approved Home position"
+    },
+    {
+      "pass": true,
+      "label": "Final camera direction exactly matches approved Home target"
+    },
+    {
+      "pass": true,
+      "label": "Home lens and original lighting settle consistently"
+    },
+    {
+      "pass": true,
+      "label": "PC emissive and all fill lights restore their original intensities"
+    },
+    {
+      "pass": true,
+      "label": "Temporary blur and scanlines are removed"
+    },
+    {
+      "pass": true,
+      "label": "One semantic name heading persists through the transformation"
+    },
+    {
+      "pass": true,
+      "label": "Persistent name and Drag to explore appear only after cinematic completion"
+    },
+    {
+      "pass": true,
+      "label": "Persistent brand lands at its documented lower-left anchor"
+    },
+    {
+      "pass": true,
+      "label": "Enabling reduced motion mid-sequence settles safely"
+    },
+    {
+      "pass": true,
+      "label": "Final camera exactly matches approved Home position"
+    },
+    {
+      "pass": true,
+      "label": "Final camera direction exactly matches approved Home target"
+    },
+    {
+      "pass": true,
+      "label": "Home lens and original lighting settle consistently"
+    },
+    {
+      "pass": true,
+      "label": "PC emissive and all fill lights restore their original intensities"
+    },
+    {
+      "pass": true,
+      "label": "Temporary blur and scanlines are removed"
+    },
+    {
+      "pass": true,
+      "label": "One semantic name heading persists through the transformation"
+    },
+    {
+      "pass": true,
+      "label": "Persistent name and Drag to explore appear only after cinematic completion"
+    },
+    {
+      "pass": true,
+      "label": "Persistent brand lands at its documented lower-left anchor"
+    },
+    {
+      "pass": true,
+      "label": "Resize during entrance finishes at the responsive brand anchor"
+    },
+    {
+      "pass": true,
+      "label": "Final camera exactly matches approved Home position"
+    },
+    {
+      "pass": true,
+      "label": "Final camera direction exactly matches approved Home target"
+    },
+    {
+      "pass": true,
+      "label": "Home lens and original lighting settle consistently"
+    },
+    {
+      "pass": true,
+      "label": "PC emissive and all fill lights restore their original intensities"
+    },
+    {
+      "pass": true,
+      "label": "Temporary blur and scanlines are removed"
+    },
+    {
+      "pass": true,
+      "label": "One semantic name heading persists through the transformation"
+    },
+    {
+      "pass": true,
+      "label": "Persistent name and Drag to explore appear only after cinematic completion"
+    },
+    {
+      "pass": true,
+      "label": "Persistent brand lands at its documented lower-left anchor"
+    },
+    {
+      "pass": true,
+      "label": "Reduced-motion reveal omits camera travel and prolonged introduction"
+    },
+    {
+      "pass": true,
+      "label": "No runtime exceptions or console errors"
+    }
+  ],
+  "captures": [
+    {
+      "name": "01-closeup-lamp-off",
+      "before": {
+        "phase": "entering",
+        "step": "lighting",
+        "name": {
+          "x": 329.09375,
+          "y": 292.5,
+          "width": 781.8125,
+          "height": 171,
+          "top": 292.5,
+          "right": 1110.90625,
+          "bottom": 463.5,
+          "left": 329.09375
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(0px) brightness(1)",
+        "caption": "0",
+        "position": [
+          -0.65,
+          1.43,
+          -0.55
+        ],
+        "quaternion": [
+          -0.05425761494004614,
+          -0.18954047225459783,
+          -0.010490503628075264,
+          0.9803165151787209
+        ],
+        "fov": 77,
+        "lamp": 0,
+        "blue": 0.5203023
+      },
+      "after": {
+        "phase": "entering",
+        "step": "pullback",
+        "name": {
+          "x": 329.09375,
+          "y": 292.5,
+          "width": 781.8125,
+          "height": 171,
+          "top": 292.5,
+          "right": 1110.90625,
+          "bottom": 463.5,
+          "left": 329.09375
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(0px) brightness(1)",
+        "caption": "0",
+        "position": [
+          -0.653771,
+          1.430916,
+          -0.537878
+        ],
+        "quaternion": [
+          -0.05420968520484089,
+          -0.18926055949637674,
+          -0.010465149437734779,
+          0.9803735162153028
+        ],
+        "fov": 76.940739,
+        "lamp": 10.966692,
+        "blue": 0.7
+      }
+    },
+    {
+      "name": "02-lighting-activation",
+      "before": {
+        "phase": "entering",
+        "step": "pullback",
+        "name": {
+          "x": 329.09375,
+          "y": 292.5,
+          "width": 781.8125,
+          "height": 171,
+          "top": 292.5,
+          "right": 1110.90625,
+          "bottom": 463.5,
+          "left": 329.09375
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(0px) brightness(1)",
+        "caption": "0",
+        "position": [
+          -0.653771,
+          1.430916,
+          -0.537878
+        ],
+        "quaternion": [
+          -0.05420968520484089,
+          -0.18926055949637674,
+          -0.010465149437734779,
+          0.9803735162153028
+        ],
+        "fov": 76.940739,
+        "lamp": 10.966692,
+        "blue": 0.7
+      },
+      "after": {
+        "phase": "entering",
+        "step": "pullback",
+        "name": {
+          "x": 329.09375,
+          "y": 292.5,
+          "width": 781.8125,
+          "height": 171,
+          "top": 292.5,
+          "right": 1110.90625,
+          "bottom": 463.5,
+          "left": 329.09375
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(0px) brightness(1)",
+        "caption": "0",
+        "position": [
+          -1.338343,
+          1.597169,
+          1.662532
+        ],
+        "quaternion": [
+          -0.051035546272657266,
+          -0.17101960207580413,
+          -0.00887085556183079,
+          0.9839049632175285
+        ],
+        "fov": 66.183178,
+        "lamp": 12,
+        "blue": 0.7
+      }
+    },
+    {
+      "name": "03-home-arrival",
+      "before": {
+        "phase": "entering",
+        "step": "home",
+        "name": {
+          "x": 329.09375,
+          "y": 292.5,
+          "width": 781.8125,
+          "height": 171,
+          "top": 292.5,
+          "right": 1110.90625,
+          "bottom": 463.5,
+          "left": 329.09375
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(0px) brightness(1)",
+        "caption": "0",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060083,
+          -0.17090839001221989,
+          -0.008861480264416787,
+          0.9839253936323108
+        ],
+        "fov": 66,
+        "lamp": 12,
+        "blue": 0.7
+      },
+      "after": {
+        "phase": "entering",
+        "step": "hero",
+        "name": {
+          "x": 329.09375,
+          "y": 292.5,
+          "width": 781.8125,
+          "height": 171,
+          "top": 292.5,
+          "right": 1110.90625,
+          "bottom": 463.5,
+          "left": 329.09375
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(2.2px) brightness(0.65)",
+        "caption": "0.9345",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060083,
+          -0.17090839001221989,
+          -0.008861480264416787,
+          0.9839253936323108
+        ],
+        "fov": 66,
+        "lamp": 12,
+        "blue": 0.7
+      }
+    },
+    {
+      "name": "04-name-and-hello-world",
+      "before": {
+        "phase": "entering",
+        "step": "hero",
+        "name": {
+          "x": 329.09375,
+          "y": 292.5,
+          "width": 781.8125,
+          "height": 171,
+          "top": 292.5,
+          "right": 1110.90625,
+          "bottom": 463.5,
+          "left": 329.09375
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(2.2px) brightness(0.65)",
+        "caption": "0.99",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060083,
+          -0.17090839001221989,
+          -0.008861480264416787,
+          0.9839253936323108
+        ],
+        "fov": 66,
+        "lamp": 12,
+        "blue": 0.7
+      },
+      "after": {
+        "phase": "entering",
+        "step": "hero",
+        "name": {
+          "x": 329.09375,
+          "y": 292.5,
+          "width": 781.8125,
+          "height": 171,
+          "top": 292.5,
+          "right": 1110.90625,
+          "bottom": 463.5,
+          "left": 329.09375
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(2.2px) brightness(0.65)",
+        "caption": "1",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060083,
+          -0.17090839001221989,
+          -0.008861480264416787,
+          0.9839253936323108
+        ],
+        "fov": 66,
+        "lamp": 12,
+        "blue": 0.7
+      }
+    },
+    {
+      "name": "05-name-collapsing",
+      "before": {
+        "phase": "entering",
+        "step": "collapse",
+        "name": {
+          "x": 265.6803283691406,
+          "y": 411.04498291015625,
+          "width": 639.7572021484375,
+          "height": 123.4791259765625,
+          "top": 411.04498291015625,
+          "right": 905.4375305175781,
+          "bottom": 534.5241088867188,
+          "left": 265.6803283691406
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(0.4713px) brightness(0.925)",
+        "caption": "0",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060083,
+          -0.17090839001221989,
+          -0.008861480264416787,
+          0.9839253936323108
+        ],
+        "fov": 66,
+        "lamp": 12,
+        "blue": 0.7
+      },
+      "after": {
+        "phase": "exploring",
+        "step": "exploring",
+        "name": {
+          "x": 32,
+          "y": 848,
+          "width": 116.390625,
+          "height": 24,
+          "top": 848,
+          "right": 148.390625,
+          "bottom": 872,
+          "left": 32
+        },
+        "nameText": "Mohd Hafiz",
+        "filter": "none",
+        "caption": "0",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060084,
+          -0.17090839001221994,
+          -0.008861480264416789,
+          0.9839253936323107
+        ],
+        "fov": 66,
+        "lamp": 12,
+        "blue": 0.7
+      }
+    },
+    {
+      "name": "06-clear-room-persistent-brand",
+      "before": {
+        "phase": "exploring",
+        "step": "exploring",
+        "name": {
+          "x": 32,
+          "y": 848,
+          "width": 116.390625,
+          "height": 24,
+          "top": 848,
+          "right": 148.390625,
+          "bottom": 872,
+          "left": 32
+        },
+        "nameText": "Mohd Hafiz",
+        "filter": "none",
+        "caption": "0",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060084,
+          -0.17090839001221994,
+          -0.008861480264416789,
+          0.9839253936323107
+        ],
+        "fov": 66,
+        "lamp": 12,
+        "blue": 0.7
+      },
+      "after": {
+        "phase": "exploring",
+        "step": "exploring",
+        "name": {
+          "x": 32,
+          "y": 848,
+          "width": 116.390625,
+          "height": 24,
+          "top": 848,
+          "right": 148.390625,
+          "bottom": 872,
+          "left": 32
+        },
+        "nameText": "Mohd Hafiz",
+        "filter": "none",
+        "caption": "0",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060084,
+          -0.17090839001221994,
+          -0.008861480264416789,
+          0.9839253936323107
+        ],
+        "fov": 66,
+        "lamp": 12,
+        "blue": 0.7
+      }
+    },
+    {
+      "name": "07-mobile-closeup",
+      "before": {
+        "phase": "entering",
+        "step": "closeup",
+        "name": {
+          "x": 73.3828125,
+          "y": 327.875,
+          "width": 243.234375,
+          "height": 53.1875,
+          "top": 327.875,
+          "right": 316.6171875,
+          "bottom": 381.0625,
+          "left": 73.3828125
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(0px) brightness(1)",
+        "caption": "0",
+        "position": [
+          -0.75,
+          1.48,
+          0.65
+        ],
+        "quaternion": [
+          -0.03861416516535518,
+          -0.11764906440401701,
+          -0.004578201637556772,
+          0.9922936480514264
+        ],
+        "fov": 86,
+        "lamp": 0,
+        "blue": 0
+      },
+      "after": {
+        "phase": "entering",
+        "step": "closeup",
+        "name": {
+          "x": 73.3828125,
+          "y": 327.875,
+          "width": 243.234375,
+          "height": 53.1875,
+          "top": 327.875,
+          "right": 316.6171875,
+          "bottom": 381.0625,
+          "left": 73.3828125
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(0px) brightness(1)",
+        "caption": "0",
+        "position": [
+          -0.75,
+          1.48,
+          0.65
+        ],
+        "quaternion": [
+          -0.03861416516535518,
+          -0.11764906440401701,
+          -0.004578201637556772,
+          0.9922936480514264
+        ],
+        "fov": 86,
+        "lamp": 0,
+        "blue": 0
+      }
+    },
+    {
+      "name": "08-mobile-name-and-caption",
+      "before": {
+        "phase": "entering",
+        "step": "hero",
+        "name": {
+          "x": 73.3828125,
+          "y": 327.875,
+          "width": 243.234375,
+          "height": 53.1875,
+          "top": 327.875,
+          "right": 316.6171875,
+          "bottom": 381.0625,
+          "left": 73.3828125
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(2.2px) brightness(0.65)",
+        "caption": "1",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060083,
+          -0.17090839001221989,
+          -0.008861480264416787,
+          0.9839253936323108
+        ],
+        "fov": 86,
+        "lamp": 12,
+        "blue": 0.7
+      },
+      "after": {
+        "phase": "entering",
+        "step": "hero",
+        "name": {
+          "x": 73.3828125,
+          "y": 327.875,
+          "width": 243.234375,
+          "height": 53.1875,
+          "top": 327.875,
+          "right": 316.6171875,
+          "bottom": 381.0625,
+          "left": 73.3828125
+        },
+        "nameText": "MOHD HAFIZ\nMOHD HAFIZ",
+        "filter": "blur(2.2px) brightness(0.65)",
+        "caption": "1",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060083,
+          -0.17090839001221989,
+          -0.008861480264416787,
+          0.9839253936323108
+        ],
+        "fov": 86,
+        "lamp": 12,
+        "blue": 0.7
+      }
+    },
+    {
+      "name": "09-mobile-persistent-brand",
+      "before": {
+        "phase": "exploring",
+        "step": "exploring",
+        "name": {
+          "x": 20,
+          "y": 800,
+          "width": 96.15625,
+          "height": 20,
+          "top": 800,
+          "right": 116.15625,
+          "bottom": 820,
+          "left": 20
+        },
+        "nameText": "Mohd Hafiz",
+        "filter": "none",
+        "caption": "0",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060084,
+          -0.17090839001221994,
+          -0.008861480264416789,
+          0.9839253936323107
+        ],
+        "fov": 86,
+        "lamp": 12,
+        "blue": 0.7
+      },
+      "after": {
+        "phase": "exploring",
+        "step": "exploring",
+        "name": {
+          "x": 20,
+          "y": 800,
+          "width": 96.15625,
+          "height": 20,
+          "top": 800,
+          "right": 116.15625,
+          "bottom": 820,
+          "left": 20
+        },
+        "nameText": "Mohd Hafiz",
+        "filter": "none",
+        "caption": "0",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060084,
+          -0.17090839001221994,
+          -0.008861480264416789,
+          0.9839253936323107
+        ],
+        "fov": 86,
+        "lamp": 12,
+        "blue": 0.7
+      }
+    },
+    {
+      "name": "10-reduced-motion",
+      "before": {
+        "phase": "exploring",
+        "step": "exploring",
+        "name": {
+          "x": 20,
+          "y": 800,
+          "width": 96.15625,
+          "height": 20,
+          "top": 800,
+          "right": 116.15625,
+          "bottom": 820,
+          "left": 20
+        },
+        "nameText": "Mohd Hafiz",
+        "filter": "none",
+        "caption": "0",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060084,
+          -0.17090839001221994,
+          -0.008861480264416789,
+          0.9839253936323107
+        ],
+        "fov": 86,
+        "lamp": 12,
+        "blue": 0.7
+      },
+      "after": {
+        "phase": "exploring",
+        "step": "exploring",
+        "name": {
+          "x": 20,
+          "y": 800,
+          "width": 96.15625,
+          "height": 20,
+          "top": 800,
+          "right": 116.15625,
+          "bottom": 820,
+          "left": 20
+        },
+        "nameText": "Mohd Hafiz",
+        "filter": "none",
+        "caption": "0",
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "quaternion": [
+          -0.05101584221060084,
+          -0.17090839001221994,
+          -0.008861480264416789,
+          0.9839253936323107
+        ],
+        "fov": 86,
+        "lamp": 12,
+        "blue": 0.7
+      }
+    }
+  ],
+  "errors": []
+}

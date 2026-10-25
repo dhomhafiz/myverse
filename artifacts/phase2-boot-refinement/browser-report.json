@@ -1,0 +1,254 @@
+{
+  "method": "Actual headless Chrome, software WebGL; the real scene-bundle network request is held for slow-loading captures; no application readiness state is mocked",
+  "results": [
+    {
+      "pass": true,
+      "label": "Initialization has zero completed checks and a disabled entrance"
+    },
+    {
+      "pass": true,
+      "label": "Command types progressively in the real browser"
+    },
+    {
+      "pass": true,
+      "label": "SVG trace draws progressively from left to right"
+    },
+    {
+      "pass": true,
+      "label": "Terminal cursor visibly blinks"
+    },
+    {
+      "pass": true,
+      "label": "Loading capture holds a real scene-bundle request"
+    },
+    {
+      "pass": true,
+      "label": "Elapsed animation time does not advance real readiness or enable entry"
+    },
+    {
+      "pass": true,
+      "label": "Real renderer/compiler work passes through LOADING before READY"
+    },
+    {
+      "pass": true,
+      "label": "Readiness remains partial until compilation and first frame complete"
+    },
+    {
+      "pass": true,
+      "label": "Actual first-frame readiness completes the bar and unlocks entry"
+    },
+    {
+      "pass": true,
+      "label": "Exactly one entrance button"
+    },
+    {
+      "pass": true,
+      "label": "Cached readiness enables entry immediately without an animation gate"
+    },
+    {
+      "pass": true,
+      "label": "Entrance receives keyboard focus"
+    },
+    {
+      "pass": true,
+      "label": "Mobile terminal and CTA fit without horizontal overflow"
+    },
+    {
+      "pass": true,
+      "label": "Reduced motion skips typing and graph drawing"
+    },
+    {
+      "pass": true,
+      "label": "Reduced-motion cursor does not blink"
+    },
+    {
+      "pass": true,
+      "label": "No runtime or console errors in the boot refinement scenarios"
+    }
+  ],
+  "captures": [
+    {
+      "name": "01-initializing-typing",
+      "before": {
+        "status": "INITIALIZING",
+        "phase": "loading",
+        "command": "works",
+        "graph": "496.954px",
+        "cursor": "1",
+        "checks": "0",
+        "disabled": true
+      },
+      "after": {
+        "status": "INITIALIZING",
+        "phase": "loading",
+        "command": "workspace boot --scene",
+        "graph": "280.101px",
+        "cursor": "0",
+        "checks": "0",
+        "disabled": true
+      }
+    },
+    {
+      "name": "02-initializing-trace",
+      "before": {
+        "status": "INITIALIZING",
+        "phase": "loading",
+        "command": "workspace boot --scene my-room",
+        "graph": "178.452px",
+        "cursor": "1",
+        "checks": "0",
+        "disabled": true
+      },
+      "after": {
+        "status": "INITIALIZING",
+        "phase": "loading",
+        "command": "workspace boot --scene my-room",
+        "graph": "140.954px",
+        "cursor": "1",
+        "checks": "0",
+        "disabled": true
+      }
+    },
+    {
+      "name": "04-ready",
+      "before": {
+        "status": "READY",
+        "phase": "ready",
+        "command": "workspace boot --scene my-room",
+        "graph": "0px",
+        "cursor": "1",
+        "checks": "3",
+        "disabled": false
+      },
+      "after": {
+        "status": "READY",
+        "phase": "ready",
+        "command": "workspace boot --scene my-room",
+        "graph": "0px",
+        "cursor": "0",
+        "checks": "3",
+        "disabled": false
+      }
+    },
+    {
+      "name": "05-cached-ready-animation",
+      "before": {
+        "status": "READY",
+        "phase": "ready",
+        "command": "workspace boot --sce",
+        "graph": "306.756px",
+        "cursor": "0",
+        "checks": "3",
+        "disabled": false
+      },
+      "after": {
+        "status": "READY",
+        "phase": "ready",
+        "command": "workspace boot --scene my-room",
+        "graph": "169.416px",
+        "cursor": "1",
+        "checks": "3",
+        "disabled": false
+      }
+    },
+    {
+      "name": "06-entry-transition",
+      "before": {
+        "status": "READY",
+        "phase": "entering",
+        "command": "workspace boot --scene my-room",
+        "graph": "151.345px",
+        "cursor": "1",
+        "checks": "3",
+        "disabled": true
+      },
+      "after": {
+        "status": "READY",
+        "phase": "entering",
+        "command": "workspace boot --scene my-room",
+        "graph": "0px",
+        "cursor": "0",
+        "checks": "3",
+        "disabled": true
+      }
+    },
+    {
+      "name": "07-room-unchanged",
+      "before": {
+        "phase": "exploring",
+        "graph": null,
+        "cursor": null
+      },
+      "after": {
+        "phase": "exploring",
+        "graph": null,
+        "cursor": null
+      }
+    },
+    {
+      "name": "08-mobile-terminal",
+      "before": {
+        "status": "READY",
+        "phase": "ready",
+        "command": "workspace boot --scene my-room",
+        "graph": "0px",
+        "cursor": "0",
+        "checks": "3",
+        "disabled": false
+      },
+      "after": {
+        "status": "READY",
+        "phase": "ready",
+        "command": "workspace boot --scene my-room",
+        "graph": "0px",
+        "cursor": "0",
+        "checks": "3",
+        "disabled": false
+      }
+    },
+    {
+      "name": "09-reduced-motion",
+      "before": {
+        "status": "READY",
+        "phase": "ready",
+        "command": "workspace boot --scene my-room",
+        "graph": "0px",
+        "cursor": "1",
+        "checks": "3",
+        "disabled": false
+      },
+      "after": {
+        "status": "READY",
+        "phase": "ready",
+        "command": "workspace boot --scene my-room",
+        "graph": "0px",
+        "cursor": "1",
+        "checks": "3",
+        "disabled": false
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "attribute": "aria-valuenow",
+      "previous": "0",
+      "current": "2"
+    },
+    {
+      "attribute": "data-boot-status",
+      "previous": "INITIALIZING",
+      "current": "LOADING"
+    },
+    {
+      "attribute": "aria-valuenow",
+      "previous": "2",
+      "current": "3"
+    },
+    {
+      "attribute": "data-boot-status",
+      "previous": "LOADING",
+      "current": "READY"
+    }
+  ],
+  "errors": []
+}

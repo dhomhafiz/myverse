@@ -1,0 +1,1 @@
+PASS: entire conservative play volume clears mesh bounds for workstation, gaming_chair, gravel_bike, guitar_wall, pegboard, floor_lamp, wall_back, wall_front, wall_left, wall_right. Entire play area is supported by carpet.

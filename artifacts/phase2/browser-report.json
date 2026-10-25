@@ -1,0 +1,159 @@
+{
+  "browser": "Headless Chrome / software WebGL",
+  "results": [
+    {
+      "pass": true,
+      "label": "Exactly one entrance button enabled after real readiness"
+    },
+    {
+      "pass": true,
+      "label": "Procedural readiness is disclosed without fake asset progress"
+    },
+    {
+      "pass": true,
+      "label": "Tab selects entrance"
+    },
+    {
+      "pass": true,
+      "label": "Normal entry uses transition state"
+    },
+    {
+      "pass": true,
+      "label": "Entry transfers focus to room canvas"
+    },
+    {
+      "pass": true,
+      "label": "Sub-threshold movement remains a click"
+    },
+    {
+      "pass": true,
+      "label": "Sub-threshold gesture does not rotate the camera"
+    },
+    {
+      "pass": true,
+      "label": "Mouse drag rotates and dismisses exploration hint"
+    },
+    {
+      "pass": true,
+      "label": "Mouse drag changes the rendered view"
+    },
+    {
+      "pass": true,
+      "label": "Yaw and pitch clamp at useful room boundaries"
+    },
+    {
+      "pass": true,
+      "label": "Arrow key changes the rendered view"
+    },
+    {
+      "pass": true,
+      "label": "Touch swipe explores without scrolling or horizontal overflow"
+    },
+    {
+      "pass": true,
+      "label": "Reduced-motion preference detected"
+    },
+    {
+      "pass": true,
+      "label": "Reduced-motion entry skips cinematic travel (106ms)"
+    },
+    {
+      "pass": true,
+      "label": "No runtime or console errors during normal, mouse, touch and reduced-motion tests"
+    },
+    {
+      "pass": true,
+      "label": "Context loss reveals semantic introduction and retry action"
+    },
+    {
+      "pass": true,
+      "label": "Retry reload restores readiness"
+    },
+    {
+      "pass": true,
+      "label": "WebGL startup failure leaves accessible HTML and retry"
+    },
+    {
+      "pass": true,
+      "label": "No-JavaScript introduction replaces the loading screen"
+    }
+  ],
+  "errors": [
+    {
+      "scenario": "webgl-unavailable",
+      "type": "console",
+      "detail": [
+        {
+          "type": "string",
+          "value": "THREE.WebGLRenderer: THREE.WebGLRenderer: Error creating WebGL context."
+        }
+      ]
+    },
+    {
+      "scenario": "webgl-unavailable",
+      "type": "console",
+      "detail": [
+        {
+          "type": "object",
+          "subtype": "error",
+          "className": "Error",
+          "description": "Error: THREE.WebGLRenderer: Error creating WebGL context.\n    at new tQ (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:342:24197)\n    at d (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:44296)\n    at Object.configure (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:44419)\n    at http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:46396\n    at iE (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:113726)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:124338)\n    at uv (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:137942)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:126683)\n    at uv (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:137942)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:124362)",
+          "objectId": "2063193606121290130.6.1",
+          "preview": {
+            "type": "object",
+            "subtype": "error",
+            "description": "Error: THREE.WebGLRenderer: Error creating WebGL context.\n    at new tQ (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:342:24197)\n    at d (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:44296)\n    at Object.configure (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:44419)\n    at http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:46396\n    at iE (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:113726)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:124338)\n    at uv (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:137942)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:126683)\n    at uv (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:137942)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:124362)",
+            "overflow": false,
+            "properties": [
+              {
+                "name": "stack",
+                "type": "string",
+                "value": "Error: THREE.WebGLRenderer: Error creating WebGL c…03/_next/static/chunks/2khxl0v1q4i6n.js:1:124362)"
+              },
+              {
+                "name": "message",
+                "type": "string",
+                "value": "THREE.WebGLRenderer: Error creating WebGL context."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "webgl-unavailable",
+      "type": "console",
+      "detail": [
+        {
+          "type": "string",
+          "value": "Room rendering failed:"
+        },
+        {
+          "type": "object",
+          "subtype": "error",
+          "className": "Error",
+          "description": "Error: THREE.WebGLRenderer: Error creating WebGL context.\n    at new tQ (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:342:24197)\n    at d (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:44296)\n    at Object.configure (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:44419)\n    at http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:46396\n    at iE (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:113726)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:124338)\n    at uv (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:137942)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:126683)\n    at uv (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:137942)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:124362)",
+          "objectId": "2063193606121290130.6.2",
+          "preview": {
+            "type": "object",
+            "subtype": "error",
+            "description": "Error: THREE.WebGLRenderer: Error creating WebGL context.\n    at new tQ (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:342:24197)\n    at d (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:44296)\n    at Object.configure (http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:44419)\n    at http://127.0.0.1:3003/_next/static/chunks/2y95fbhvmnzeh.js:353:46396\n    at iE (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:113726)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:124338)\n    at uv (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:137942)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:126683)\n    at uv (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:137942)\n    at un (http://127.0.0.1:3003/_next/static/chunks/2khxl0v1q4i6n.js:1:124362)",
+            "overflow": false,
+            "properties": [
+              {
+                "name": "stack",
+                "type": "string",
+                "value": "Error: THREE.WebGLRenderer: Error creating WebGL c…03/_next/static/chunks/2khxl0v1q4i6n.js:1:124362)"
+              },
+              {
+                "name": "message",
+                "type": "string",
+                "value": "THREE.WebGLRenderer: Error creating WebGL context."
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

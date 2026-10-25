@@ -1,0 +1,3 @@
+PASS desktop: 21 pullback samples, both monitors entirely in frustum, camera at least 5 cm clear of mesh bounds.
+PASS mobile-390: 21 pullback samples, both monitors entirely in frustum, camera at least 5 cm clear of mesh bounds.
+PASS mobile-360: 21 pullback samples, both monitors entirely in frustum, camera at least 5 cm clear of mesh bounds.

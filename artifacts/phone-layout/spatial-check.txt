@@ -1,0 +1,19 @@
+PASS: Stable phone root and centre flip pivot exist
+PASS: Face-down screen rests exactly on desktop
+PASS: Phone footprint fits entirely on main desk
+PASS: Phone does not intersect mousepad
+PASS: Phone does not intersect keyboard
+PASS: Phone does not intersect mouse
+PASS: Phone does not intersect audio_interface
+PASS: Phone does not intersect plant_small
+PASS: Phone does not intersect pc_tower
+PASS: Phone does not intersect monitor_arm
+Mousepad horizontal clearance: 4.07 cm
+PASS: Rear camera module faces upward; screen faces downward
+PASS: Rear lens 1 exists
+PASS: Rear lens 2 exists
+PASS: Rear lens 3 exists
+PASS: Configurable Contact anchor follows phone pivot
+PASS: Contact camera target matches transformed interaction anchor
+Phone world bounds: {"min":[-0.919289320915566,0.7949999999869615,-1.534213177277555],"max":[-0.820710679084434,0.8230999999999999,-1.365786822722445]}
+Contact anchor world position: -0.87, 0.8265, -1.45
