@@ -18,6 +18,12 @@ export type HotspotDestination = {
   duration?: number;
 };
 
+export type RoomDestination = Pick<HotspotDestination,
+  'id' | 'route' | 'focusPose' | 'returnTo' | 'loading' | 'accessibleLabel' | 'focusFov' | 'duration'
+> & {
+  cameraHandoff?: 'opaque';
+};
+
 export const hotspotDestinations = {
   projects: {
     id: 'left-monitor',
@@ -80,18 +86,34 @@ export const hotspotDestinations = {
   },
 } satisfies Record<'projects' | 'skills' | 'about' | 'contact', HotspotDestination>;
 
-export function getHotspotDestination(id: string | null | undefined) {
-  return Object.values(hotspotDestinations).find(destination => destination.id === id) ?? hotspotDestinations.projects;
+export const creditsDestination = {
+  id: 'credits',
+  route: '/credits',
+  focusPose: 'camera_home',
+  cameraHandoff: 'opaque',
+  returnTo: 'saved-camera',
+  loading: 'progressive',
+  accessibleLabel: 'Read asset credits and licenses',
+  focusFov: { desktop: 66, mobile: 86 },
+} satisfies RoomDestination;
+
+const roomDestinations: readonly RoomDestination[] = [
+  ...Object.values(hotspotDestinations),
+  creditsDestination,
+];
+
+export function getHotspotDestination(id: string | null | undefined): RoomDestination {
+  return roomDestinations.find(destination => destination.id === id) ?? hotspotDestinations.projects;
 }
 
 export function getHotspotDestinationForRoute(pathname: string) {
-  return Object.values(hotspotDestinations).find(destination =>
+  return roomDestinations.find(destination =>
     pathname === destination.route || (destination.route === '/work' && pathname.startsWith('/work/')),
   ) ?? hotspotDestinations.projects;
 }
 
 export function isHotspotDestinationRoute(pathname: string) {
-  return Object.values(hotspotDestinations).some(destination =>
+  return roomDestinations.some(destination =>
     pathname === destination.route || (destination.route === '/work' && pathname.startsWith('/work/')),
   );
 }

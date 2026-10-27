@@ -66,20 +66,24 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       hotspotNavigation.saved = { position: camera.position.toArray(), rotation: [rotation.x, rotation.y, rotation.z], fov: camera.fov };
       hotspotNavigation.visited = true;
     }
+    const neutralHandoff = destinationConfig.cameraHandoff === 'opaque';
     const monitor = cameraAnchors[destinationConfig.focusPose];
     const saved = hotspotNavigation.saved;
     const restore = navigationMode === 'returning';
     const restoreSaved = restore && saved && destinationConfig.returnTo === 'saved-camera';
-    const destination = restoreSaved ? new Vector3(...saved.position) : restore ? new Vector3(...pose.position) : new Vector3(...monitor.position);
+    const destination = !restore && neutralHandoff ? camera.position.clone()
+      : restoreSaved ? new Vector3(...saved.position) : restore ? new Vector3(...pose.position) : new Vector3(...monitor.position);
     const destinationRotation = restoreSaved
       ? new Quaternion().setFromEuler(new Euler(...saved.rotation, 'YXZ'))
-      : new Quaternion().setFromEuler(new Euler(base.pitch, base.yaw, 0, 'YXZ'));
-    if (!restore) {
+      : !restore && neutralHandoff ? camera.quaternion.clone()
+        : new Quaternion().setFromEuler(new Euler(base.pitch, base.yaw, 0, 'YXZ'));
+    if (!restore && !neutralHandoff) {
       const dummy = camera.clone(); dummy.position.copy(destination); dummy.lookAt(new Vector3(...monitor.target)); destinationRotation.copy(dummy.quaternion);
     }
     const destinationFov = restore
       ? restoreSaved ? saved.fov : size.width < size.height ? 86 : pose.fov
-      : size.width < size.height ? destinationConfig.focusFov.mobile : destinationConfig.focusFov.desktop;
+      : neutralHandoff ? camera.fov
+        : size.width < size.height ? destinationConfig.focusFov.mobile : destinationConfig.focusFov.desktop;
     const values = { position: camera.position.clone(), from: camera.quaternion.clone(), to: destinationRotation, fov: camera.fov, progress: 0 };
     navigationMotion.current = values;
     const phoneDestination = destinationConfig.id === 'iphone';
@@ -104,7 +108,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       completion.current = { callback: onNavigationSettled, frame: null };
       invalidate();
     };
-    const duration = reducedMotion ? .01 : destinationConfig.duration ?? 1.15;
+    const duration = reducedMotion ? .01 : neutralHandoff ? .16 : destinationConfig.duration ?? 1.15;
     const tween = gsap.timeline({ onUpdate: invalidate, onComplete: settle });
     tween.to(values, { progress: 1, duration, ease: 'power3.inOut' }, 0);
     if (phoneRoot && flipPivot && !reducedMotion && phoneDestination) {

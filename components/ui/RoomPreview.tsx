@@ -9,6 +9,7 @@ import type { HotspotNavigationMode } from '@/lib/hotspot-navigation';
 import { hotspotNavigation } from '@/lib/hotspot-navigation';
 import { roomPreparation, type ReadinessGate } from '@/lib/room-preparation';
 import { getHotspotDestination, getHotspotDestinationForRoute } from '@/lib/hotspot-destinations';
+import Link from 'next/link';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import BootScreen from './BootScreen';
 import RoomUnavailable from './RoomUnavailable';
@@ -192,7 +193,16 @@ export default function RoomPreview({
           {hint && phase === 'exploring' && <p className="explore-hint" aria-live="polite">Drag to explore</p>}
         </>
       )}
-      {navigationMode === 'opening' && <div className={`hotspot-transition-cover${hotspotNavigation.destinationId === 'iphone' ? ' is-contact' : ''}`} aria-hidden="true" />}
+      {navigationMode === 'opening' && <div className={`hotspot-transition-cover${hotspotNavigation.destinationId === 'iphone' ? ' is-contact' : hotspotNavigation.destinationId === 'credits' ? ' is-credits' : ''}`} aria-hidden="true" />}
+      {phase === 'exploring' && roomActive && navigationMode === 'explore' && (
+        <Link className="room-credits-link" href="/credits" aria-label="Open credits and asset attributions"
+          onClick={event => {
+            event.preventDefault();
+            onOpenDestination('credits');
+          }}>
+          CREDITS
+        </Link>
+      )}
       <HeroBrand active={phase === 'entering' || phase === 'exploring'} settled={phase === 'exploring'} />
       <noscript><style>{'.boot-screen { display: none; }'}</style><section className="scene-message no-script"><h1>Mohd Hafiz’s workspace</h1><p>A personal developer room with guitars and a gravel bike. Enable JavaScript for the interactive room. Portfolio content arrives in a later phase.</p></section></noscript>
     </div>

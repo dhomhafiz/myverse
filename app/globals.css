@@ -200,10 +200,15 @@ body { margin: 0; }
 .work-not-found { display: grid; align-content: center; justify-content: center; gap: 25px; padding: 30px; }
 .work-not-found h1 { font-size: clamp(32px, 5vw, 70px); }
 .room-surface canvas.over-projects:not(.is-dragging) { cursor: pointer; }
+.room-credits-link { position: absolute; z-index: 24; right: max(32px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); min-height: 44px; display: inline-flex; align-items: center; padding: 0 4px; color: #c1ccce; font: 12px/1 var(--font-space-mono), monospace; letter-spacing: .12em; text-decoration: none; text-shadow: 0 1px 5px #000b; transition: color .18s ease; touch-action: manipulation; }
+.room-credits-link:hover { color: #82d2df; }
+.room-credits-link:focus-visible { color: #a4e7f0; outline: 2px solid #82d2df; outline-offset: 4px; }
+@keyframes credits-handoff { 0% { opacity: 0; } 100% { opacity: 1; } }
 .projects-transition-cover, .hotspot-transition-cover { position: absolute; inset: 0; z-index: 28; background: #111314; pointer-events: none; }
 .projects-transition-cover, .hotspot-transition-cover { animation: monitor-to-work 1.15s ease both; }
 @keyframes monitor-to-work { 0%,55% { opacity: 0; } 100% { opacity: 1; } }
 .hotspot-transition-cover.is-contact { animation-name: phone-to-contact; }
+.hotspot-transition-cover.is-credits { animation-name: credits-handoff; }
 @keyframes phone-to-contact { 0%,76% { opacity: 0; } 100% { opacity: 1; } }
 @media (max-width: 760px) {
   .gallery { padding: 0 6vw; min-height: 0; }
@@ -373,9 +378,59 @@ body { margin: 0; }
 .skills-dashboard:not([data-skills-visible]) .skills-reveal,
 .about-dashboard:not([data-about-visible]) .about-reveal { opacity: 0; transform: translateY(14px); }
 .about-card-summary { display: block; margin-top: 15px; color: #bdc8ca; font-size: 13px; line-height: 1.65; }
+.credits-dashboard {
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  overflow-x: clip;
+  background: #0c1012;
+  color: #ecf0ee;
+  font-family: var(--font-space-mono), monospace;
+}
+.credits-content { position: relative; z-index: 1; width: min(1120px, calc(100% - 96px)); margin: 0 auto; padding: 38px 0 25px; }
+.credits-header { display: grid; grid-template-columns: 1fr auto; align-items: start; }
+.credits-brand { display: flex; align-items: center; gap: 16px; }
+.credits-return .room-return-control { align-items: flex-end; }
+.credits-return .room-return-progress { background: #ecf0ee24; }
+.credits-return .room-return-progress > span { background: #75c9d8; }
+.credits-return .room-return-status { color: #a6b8bb; font-size: 10px; }
+.credits-title { grid-column: 1 / -1; }
+.credits-intro { grid-column: 1 / -1; max-width: 760px; margin: 16px 0 0; color: #b7c3c6; font-size: 14px; line-height: 1.75; }
+.credits-section { margin-top: clamp(54px, 8vh, 82px); }
+.credits-section-heading { margin-bottom: 16px; }
+.credits-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.credit-card { min-width: 0; border: 1px solid #d5e0e21a; background: linear-gradient(135deg, #141a1dce, #101517ee); transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.credit-card.is-expanded { border-color: #74c6d15c; box-shadow: 0 0 30px #32809212; }
+.credit-card-summary { display: flex; flex-direction: column; align-items: stretch; padding: 20px 22px; }
+.credit-card-topline { margin: 0; color: #a2afb2; font-size: 11px; line-height: 1.6; letter-spacing: .1em; }
+.credit-card-title { margin: 20px 0 18px; color: #e2e8e5; font-size: clamp(16px, 2vw, 20px); line-height: 1.4; letter-spacing: -.045em; overflow-wrap: anywhere; }
+.credit-details { display: grid; gap: 13px; margin: 0; }
+.credit-details > div { display: grid; grid-template-columns: minmax(78px, .34fr) minmax(0, 1fr); gap: 12px; align-items: start; }
+.credit-details dt { color: #9eafb2; font-size: 10px; line-height: 1.7; letter-spacing: .09em; }
+.credit-details dd { min-width: 0; margin: 0; color: #d3dcdb; font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.credit-details a { color: #b5dce1; text-decoration: underline; text-decoration-color: #78c8d366; text-underline-offset: 3px; }
+.credit-details a:hover { color: #a4e7f0; text-decoration-color: currentColor; }
+.credit-details a:focus-visible, .credit-toggle:focus-visible { outline: 2px solid #82d1df; outline-offset: 4px; }
+.credit-license-full { display: block; margin-top: 3px; color: #aab8bb; font-size: 11px; }
+.credit-attribution { margin: 16px 0 0; color: #b9c5c7; font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.credit-notice { margin: 11px 0 0; color: #c1ccce; font-size: 11px; line-height: 1.65; overflow-wrap: anywhere; }
+.credit-notice strong { display: block; margin-bottom: 3px; color: #82d2df; font-size: 10px; letter-spacing: .1em; }
+.credit-notice.is-important { padding: 10px 12px; border-left: 2px solid #82d2df; background: #75c9d810; color: #e3edef; }
+.credit-customized { margin: 15px 0 0; color: #88cbd5; font-size: 10px; line-height: 1.6; letter-spacing: .1em; }
+.credit-toggle { display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 16px; margin-top: 8px; padding: 10px 0 0; border: 0; border-top: 1px solid #d5e0e21a; background: transparent; color: #aac3c6; font: 11px/1.5 var(--font-space-mono), monospace; letter-spacing: .08em; text-align: left; cursor: pointer; touch-action: manipulation; }
+.credit-toggle span { color: #91d5df; font-size: 18px; }
+.credit-toggle:hover { color: #a4e7f0; }
+.credit-modifications { padding: 0 22px 20px; color: #c0cbcc; font-size: 12px; line-height: 1.7; }
+.credit-modifications[hidden] { display: none; }
+.credit-modifications h4 { margin: 0 0 8px; color: #73bfcd; font-size: 11px; font-weight: 400; letter-spacing: .1em; }
+.credit-modifications ul { display: grid; gap: 7px; margin: 0; padding-left: 18px; }
+.credit-modifications li { padding-left: 2px; overflow-wrap: anywhere; }
+.credits-footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 28px; padding-top: 15px; border-top: 1px solid #d5e0e214; color: #9ba8aa; font-size: 11px; line-height: 1.6; letter-spacing: .1em; }
+.credits-dashboard:not([data-credits-visible]) .credits-reveal { opacity: 0; transform: translateY(14px); }
 @media (hover: hover) and (pointer: fine) {
   .skill-card:hover { transform: perspective(900px) translateY(-3px) rotateX(.45deg); border-color: #70c4d04c; box-shadow: 0 12px 32px #0003, 0 0 20px #38869a0b; }
   .skill-card:hover .skill-card-indicator { border-color: #70c4d078; }
+  .credit-card:hover { transform: perspective(900px) translateY(-3px) rotateX(.35deg); border-color: #70c4d04c; box-shadow: 0 12px 32px #0003, 0 0 20px #38869a0b; }
 }
 @media (max-width: 760px) {
   .skills-content { width: calc(100% - 40px); padding-top: 24px; }
@@ -389,15 +444,28 @@ body { margin: 0; }
   .skill-card-toggle { min-height: 185px; padding: 18px; }
   .skill-category { font-size: 17px; }
   .skills-footer { flex-direction: column; gap: 5px; }
+  .credits-content { width: calc(100% - 40px); padding-top: 24px; }
+  .credits-brand { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .credits-section { margin-top: 48px; }
+  .credits-section-heading { align-items: flex-start; }
+  .credits-grid { grid-template-columns: 1fr; gap: 9px; }
+  .credit-card-summary { padding: 18px; }
+  .credit-modifications { padding: 0 18px 18px; }
+  .credits-footer { flex-direction: column; gap: 5px; }
 }
 @media (max-width: 400px) {
   .skills-content { width: calc(100% - 32px); }
   .skills-return .room-return-control > button { max-width: 150px; white-space: normal; }
+  .credits-content { width: calc(100% - 32px); }
+  .credits-return .room-return-control > button { max-width: 150px; white-space: normal; }
+  .credit-details > div { grid-template-columns: 74px minmax(0, 1fr); gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .skill-card { transition: none; }
   .skills-dashboard:not([data-skills-visible]) .skills-reveal { transform: none; }
   .about-dashboard:not([data-about-visible]) .about-reveal { transform: none; }
+  .credits-dashboard:not([data-credits-visible]) .credits-reveal { transform: none; }
+  .credit-card { transition: none; }
 }
 
 .contact-page {
