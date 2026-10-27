@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { aboutCards } from '@/lib/about';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
 import useReducedMotion from '@/hooks/useReducedMotion';
+import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
 import ReturnToRoom from '@/components/ui/ReturnToRoom';
 
 export default function AboutPage() {
@@ -13,7 +14,14 @@ export default function AboutPage() {
   const heading = useRef<HTMLHeadingElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [liquidActive, setLiquidActive] = useState(true);
   const reducedMotion = useReducedMotion();
+
+  const stopLiquid = useCallback(() => setLiquidActive(false), []);
+  const returnToRoom = useCallback(() => {
+    stopLiquid();
+    requestRoomReturn();
+  }, [requestRoomReturn, stopLiquid]);
 
   useLayoutEffect(() => {
     const page = root.current;
@@ -41,15 +49,21 @@ export default function AboutPage() {
       if (event.key !== 'Escape') return;
       event.preventDefault();
       if (expanded) setExpanded(null);
-      else requestRoomReturn();
+      else returnToRoom();
     };
     window.addEventListener('keydown', key);
     return () => window.removeEventListener('keydown', key);
-  }, [expanded, requestRoomReturn]);
+  }, [expanded, returnToRoom]);
 
   return (
     <main ref={root} className="about-dashboard" data-about-visible="">
-      <div className="skills-backdrop" aria-hidden="true" />
+      <LiquidSodaBackground
+        className="about-liquid"
+        area={root}
+        interactionReadyAttribute="data-about-visible"
+        viewport
+        enabled={liquidActive}
+      />
       <div className="skills-content">
         <header className="skills-header">
           <div className="skills-brand about-reveal">
@@ -57,7 +71,7 @@ export default function AboutPage() {
             <span className="skills-online"><i aria-hidden="true" /> ONLINE</span>
           </div>
           <nav aria-label="Return to workspace" className="skills-return about-reveal">
-            <ReturnToRoom />
+            <ReturnToRoom size="prominent" onActivate={stopLiquid} />
           </nav>
           <h1 ref={heading} tabIndex={-1} className="skills-title about-reveal">ABOUT ME<span>_</span></h1>
           <p className="skills-subtitle about-reveal">THE PERSON BEHIND THE CODE</p>

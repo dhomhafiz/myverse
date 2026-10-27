@@ -21,7 +21,6 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
   const point = useMemo(() => new Vector3(), []);
   const visual = useRef({ pointer: false, focus: false, monitor: false });
   const activate = useEffectEvent(() => onActivate());
-  const motionReduced = useEffectEvent(() => reducedMotion);
   const updateHighlight = useEffectEvent(() => {
     const hover = visual.current.pointer || visual.current.focus || visual.current.monitor;
     node.current?.classList.toggle('is-highlighted', hover);
@@ -39,10 +38,8 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
     button.style.visibility = 'hidden';
     const float = document.createElement('span'); float.className = 'hotspot-float';
     const disc = document.createElement('span'); disc.className = 'hotspot-disc';
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true');
-    const arrow = document.createElementNS(svg.namespaceURI, 'path');
-    arrow.setAttribute('d', 'M12 5.5v12M7 12.5l5 5 5-5'); svg.appendChild(arrow); disc.appendChild(svg);
+    const ring = document.createElement('span'); ring.className = 'hotspot-ring';
+    disc.appendChild(ring);
     const label = document.createElement('span'); label.className = 'hotspot-caption';
     label.textContent = caption; label.setAttribute('aria-hidden', 'true');
     float.append(disc, label); button.appendChild(float); host.appendChild(button); node.current = button;
@@ -76,7 +73,7 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
       }
     }
     const state = visual.current;
-    let animation: Animation | null = null, pending = false, disposed = false;
+    let pending = false;
     let gesture: { id: number; x: number; y: number; dragged: boolean } | null = null;
     let suppressClick = false;
     const enter = (event: PointerEvent) => { if (event.pointerType !== 'touch') { state.pointer = true; updateHighlight(); } };
@@ -94,9 +91,7 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
       if (event.detail === 0) suppressClick = false;
       if (pending || suppressClick) { suppressClick = false; return; }
       pending = true;
-      if (motionReduced()) { activate(); return; }
-      animation = disc.animate([{ transform: 'scale(1.08)' }, { transform: 'scale(.88)' }, { transform: 'scale(1)' }], { duration: 130, easing: 'ease-out' });
-      void animation.finished.then(() => { if (!disposed) activate(); }, () => {});
+      activate();
     };
     button.addEventListener('pointerenter', enter); button.addEventListener('pointerleave', leave);
     button.addEventListener('focus', focus); button.addEventListener('blur', blur);
@@ -104,7 +99,7 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
     button.addEventListener('pointerup', up); button.addEventListener('pointercancel', cancel); button.addEventListener('click', click);
     updateHighlight(); invalidate();
     return () => {
-      disposed = true; animation?.cancel(); button.remove(); node.current = null;
+      button.remove(); node.current = null;
       state.pointer = false; state.focus = false;
       outlines.current.forEach(edge => {
         edge.removeFromParent();

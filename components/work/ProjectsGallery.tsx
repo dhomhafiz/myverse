@@ -7,7 +7,7 @@ import { galleryProjects } from '@/lib/projects';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import ProjectMedia from './ProjectMedia';
-import GalleryLiquid from './GalleryLiquid';
+import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
 import ReturnToRoom from '@/components/ui/ReturnToRoom';
 
 export default function ProjectsGallery() {
@@ -82,7 +82,7 @@ export default function ProjectsGallery() {
     window.addEventListener('keydown', key); return () => { window.removeEventListener('keydown', key); };
   }, [router, returnToRoom, switchProject]);
   return <main ref={root} className="work-shell gallery" style={{ '--project-accent': project?.accent ?? '#aaa' } as CSSProperties}>
-    {project && <GalleryLiquid project={project} gallery={root} media={visual} />}
+    {project && <LiquidSodaBackground className="gallery-liquid" project={project} area={root} media={visual} interactionReadyAttribute="data-gallery-interactive" />}
     <header className="work-header"><Link href="/" className="work-brand" onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); returnToRoom(); } }}>MYVERSE<span> / SELECTED WORK</span></Link><nav aria-label="Return to workspace"><ReturnToRoom /></nav></header>
     <div className="gallery-topline"><span>INDEPENDENT DEVELOPER / KUALA LUMPUR</span><span>AN EXPLORATION OF DIGITAL EXPERIENCES</span></div>
     <div className="gallery-content" ref={content}>

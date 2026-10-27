@@ -1,0 +1,4 @@
+{
+  "passed": true,
+  "html": "<article class=\"contact-card is-unavailable\"><div class=\"contact-card-topline\"><svg class=\"contact-icon\" viewBox=\"0 0 64 64\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"7\" y=\"13\" width=\"50\" height=\"38\" rx=\"5\"></rect><path d=\"m9 16 23 19 23-19M9 48l15-14m31 14L40 34\" stroke-linejoin=\"round\"></path></svg><span class=\"contact-card-index\">/ 01</span></div><h2>EMAIL ME</h2><p class=\"contact-description\">Example unavailable method</p><p class=\"contact-unavailable\">This contact method is currently unavailable.</p></article>"
+}

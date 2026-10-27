@@ -251,6 +251,20 @@ Each phase stops for review. Browser captures, actual checks, changed files and 
 
 **STOP: ready for visual review; visual approval PENDING. Do not mark Phase 3 complete.**
 
+## Phase 3E.1 — About Me Visual Enhancement (2026-10-28)
+
+**Implementation complete; Visual Approval PENDING. Overall Phase 3 remains incomplete.**
+
+- Removed the About page's `.skills-backdrop` element and replaced its page-specific background with the canonical `--work-background` (`#111314`). No other destination background was changed.
+- Integrated the existing `LiquidSodaBackground` in viewport mode with the About root and visibility gate. About reuses the shared ripple shader, pointer handling, highlights, carbonation bubbles, demand-render lifecycle, reduced-motion behavior, and cleanup. The canvas remains a decorative background layer beneath crisp HTML; no page-level text distortion or extra renderer was introduced. The effect is disabled when returning to the room.
+- Reused `ReturnToRoom` with the existing `prominent` size and Skills return layout, including its cyan hover/focus treatment and mobile sizing. Return navigation/readiness behavior is unchanged.
+- In response to visual feedback, loosened only the About heading's letter spacing (`-.09em` to `-.03em`); the original vertical spacing is unchanged.
+- **Files changed:** `components/about/AboutPage.tsx`, `app/globals.css`, and this plan.
+- **Validation PASS:** `npm.cmd run typecheck`, `npm.cmd exec eslint -- components/about/AboutPage.tsx`, and `git diff --check`. Browser smoke on direct `/about` confirmed the `#111314` background, no `.skills-backdrop`, a ready shared liquid canvas after pointer movement, prominent 14px desktop ReturnToRoom, and all four cards present; one card expanded and collapsed. At 390×844, document width equaled viewport width and ReturnToRoom used the 13px mobile style.
+- **Visual approval PENDING:** shader readiness and pointer response were exercised, but final visual approval remains with the user. No repeated room-navigation cycle, physical-device, or cross-browser/GPU test was performed.
+
+**STOP for user visual review. Do not mark overall Phase 3 complete.**
+
 ## Phase 3F — iPhone Contact destination (2026-10-27)
 
 **Implemented / production-validated; Visual Approval PENDING. Overall Phase 3 remains incomplete.** This slice adds the iPhone → `/contact` destination only; Pegboard remains out of scope.
@@ -279,3 +293,103 @@ Each phase stops for review. Browser captures, actual checks, changed files and 
 - Desktop and mobile Credits screenshots, desktop/mobile room entry screenshots, and the expanded Gaming PC card were captured in the browser handoff. No runtime errors appeared; the existing non-blocking `THREE.Clock` deprecation warning remains. Cancellation/retry recovery was not forced because no room-preparation failure was induced; physical touch hardware and cross-browser/GPU coverage remain unverified.
 
 **STOP: ready for user visual review; visual approval PENDING. Do not mark Phase 3 complete.**
+
+
+## Phase 3F.1 - Contact UX, motion and shared ripple (2026-10-28)
+
+**Implemented and technically validated. Visual approval PENDING. Overall Phase 3 remains incomplete.** This is a Contact enhancement, not a destination redesign. Previous milestone records remain intact. No new dependencies, room/navigation/readiness changes, phone geometry/animation changes, or automatic ripple activation on other destinations.
+
+### Contact destinations and controls
+
+- The owner supplied `dhomhafiz@gmail.com` and Malaysian number `+60 197860823`. `lib/contact.ts` now provides `mailto:dhomhafiz@gmail.com` and `https://wa.me/60197860823`, with readable destination labels. No social accounts or other contact details were invented.
+- `ContactCard` renders each configured method as one full-card native anchor, with no nested links/buttons. Email uses the mail client URI; WhatsApp opens a new tab with noopener/noreferrer. Large inline SVG envelope/WhatsApp icons use 64px boxes on desktop and 52px on mobile. Destination addresses remain visible and editable in the typed configuration.
+- The same component's missing-destination branch renders a non-interactive article with a clear unavailable message. Only `.is-actionable` anchors receive pointer, hover-lift and press styling. A server-rendered missing-destination fixture confirms no href, anchor, button or tabindex is emitted.
+- `ReturnToRoom` accepts an optional `size="prominent"` presentation prop. Contact uses 14px desktop / 13px mobile labels, increased padding/contrast and the existing cyan sweep/focus treatment. All other destinations retain the default 11px style, verified in the browser. The shared action/progress/readiness logic was not changed.
+
+### Shared ripple architecture
+
+- The Work effect was coupled to a Three.js media shader and its existing renderer. Extracted its 12-slot impulse pool, normalized coordinates, 45ms / 4px pointer throttle, speed-based strength and 2.8-second lifetime into `lib/pointer-ripples.ts`. Both GalleryLiquid and SharedHtmlRipple consume this controller. It attaches one passive local mouse-pointer listener and supports intensity and an interaction gate; disposal removes the listener and clears the pool. Touch does not simulate continuous movement.
+- Work keeps its original vertex/fragment shaders, image/refraction pipeline, bubbles, media readiness, visibility handling, demand render loop and renderer. The adapter copies shared impulses into the same uniforms. Both shader strings match the saved baseline after newline normalization. Twenty deterministic replayed events match original coordinates, intensity, timing, ignored touch input and pool rollover. At-rest draw counts remain zero before and after.
+- `SharedHtmlRipple` is the non-WebGL HTML-backdrop adapter. It accepts a target ref, backdrop ref, enabled/intensity and optional readiness-attribute gate. A CPU equivalent of the original GLSL slope populates an 80x60 displacement map, at most 30 updates/second, used by an SVG displacement filter on the decorative Contact backdrop only. Headline, paragraphs, cards, links, Return control and focus rings stay outside the filtered layer. There are no per-frame React state updates, extra WebGL renderers, global pointer listeners, or click/scroll interception.
+- Contact enables impulses after its content entrance completes. The loop stops and removes the filter when the real wave lifetime expires. Visibility changes clear impulses. Reduced motion, coarse pointer changes and unmount remove listeners/filter/RAF callbacks. Browser instrumentation confirmed one active pointer listener per mounted Contact and zero remaining on each of five unmounted Contacts.
+- **Parity limit:** the shared propagation/damping/pointer response is retained, but Contact's low-resolution HTML displacement has no gallery image refraction, bubble highlights or full WebGL material shading. This preserves the existing Contact grid atmosphere and avoids a new renderer. It is not claimed to reproduce every Work shader pixel on Contact.
+
+### Layout, contrast and motion
+
+- Retained Space Mono, the opaque dark root, cyan accents, grid backdrop, header position and two-method composition. Only child content enters; the root/backdrop never fades to expose the room.
+- One existing GSAP entrance timeline now reveals header/hero content over 380ms with a short stagger, and cards from opacity .65 / y=12px over 420ms with a 75ms stagger starting at 120ms. Card entrance transforms live on wrappers, separate from link hover/press transforms. The effect depends on reduced-motion preference, not viewport size or focus changes; it is killed on unmount. Reduced motion exposes content immediately.
+- Enabled cards lift 7px with a 220ms transition, brighten borders, and add a restrained cyan glow. Press settles the lift and scales to .99 without delaying the native link. Focus has a clear cyan outline. Touch uses native activation and active feedback.
+- Intro, descriptions, metadata, destination labels and CTA colors were brightened locally. Sampled normal-text contrast ranges from 8.71:1 to 12.48:1 against the tested dark/rest/press backgrounds; the card boundary sample is 4.63:1. These are measured token/background samples, not an exhaustive accessibility certification.
+- Heading tracking changed from -.075em to +.025em desktop and +.01em mobile. Font sizing/line-height allow natural wrapping at 320px without clipping. Reduced hero margins, copy gaps and hero-to-card spacing bring the actions upward without fixed-height clipping or smaller tap targets. Safe-area padding is retained on mobile.
+- At 390x844, the first card moved from approximately y=525 to y=387 and is fully visible through its action (bottom about 628px); the second starts about y=642 and is substantially visible. Its final action can require a small scroll. At 320x740 the first card is also fully visible. All five requested widths have no horizontal document overflow.
+
+### Validation and evidence
+
+- PASS: TypeScript, ESLint with zero warnings, isolated production builds (baseline `.tmp/phase3f1-before`, final `.tmp/phase3f1-final`), and git diff whitespace check. Temporary Next-generated tsconfig paths were removed after building. Existing fonts required network access during build; no dependency was added.
+- PASS: 53 production-browser assertions in `artifacts/phase3f1-contact/browser-report.json`. Full-card links, correct destinations, larger icons, hover/press/rest, keyboard Enter/focus, touch activation, reduced-motion cleanup, backdrop-only ripple, settled-wave cleanup, mobile above-the-fold checks, direct Contact return through real readiness, and five phone/Contact/room cycles.
+- Each room-origin cycle retained the identical Canvas, restored the exact saved Free Look position/rotation, restored phone y=.8045 and flip angle 0, and showed no loading screen, repeated boot or leaked ripple listener. The direct entry also returned Home with one ready Canvas. The existing phone lift/flip, camera timing and screen reveal were untouched.
+- Projects, Skills, About and Credits rendered successfully; default Return typography remained 11px on each. Work retained one existing liquid renderer. No runtime exceptions or React lifecycle errors were recorded in the successful suite.
+- Work parity captures use identical shader inputs at 1366x768. The final comparison differs in 29 of 3,147,264 color channels, with maximum difference 1/255 and mean channel difference 0.0000092/255. An earlier controlled pair was identical. This supports preserved Work appearance; it is not a broad GPU benchmark.
+- Before/after captures at 1920x1080, 1366x768, 768x1024, 390x844 and 320x740, plus hover, press, keyboard focus, mobile, ripple and five-cycle screenshots. A Chrome JPEG screencast sequence captures hover/ripple. `artifacts/phase3f1-contact/README.md` indexes evidence and rerun commands; the comparison images place Before on the left and After on the right.
+
+### Performance findings and remaining limitations
+
+- Work's shader program and original bounded demand loop are preserved, with a small 12-vector transfer from the shared pool. Contact creates no WebGL context and has no visible Canvas; its detached 2D displacement map is 80x60, updates at most 30Hz only while waves remain, and is removed on reduced-motion/unmount. No comprehensive FPS, battery or memory benchmark was run.
+- Contact intentionally omits a continuous touch ripple. Tap/press links remain functional. SVG displacement quality and compositor performance on other browsers/GPUs remain unverified.
+- Native email and WhatsApp activation were intercepted in the test browser to verify resolved destinations/keyboard/touch semantics. External mail-client delivery, WhatsApp account availability and message sending were not tested.
+- Physical touch hardware, full screen-reader auditing, exhaustive black-frame/ghosting analysis, unavailable-card browser styling under injected configuration, and all possible browser-history interruptions were not independently retested. The unavailable branch was checked by server-rendering a fixture. Earlier milestones' documented limitations remain applicable.
+
+**STOP after validation for user visual review. Visual approval remains PENDING; do not mark overall Phase 3 complete.**
+
+## Phase 3F.2 - Contact liquid background corrective hotfix (2026-10-28)
+
+**Visual Approved — 28 October 2026. Overall Phase 3 remains incomplete.** This supersedes Phase 3F.1's Contact-only HTML ripple implementation.
+
+### Root causes and correction
+
+- The lingering grid came from Contact's own `.contact-backdrop` layer: its radial background plus 64px repeating horizontal and vertical linear gradients. It was not inherited from `ExperienceShell`, the shared route wrapper, or the persistent room canvas. Removed that layer and its grid rule rather than covering it with another color. Contact now uses the shared `--work-background: #111314` token; no Contact pseudo-element, repeating gradient, dot layer, or room imagery remains visible.
+- The previous `SharedHtmlRipple` was an 80x60 CPU displacement map and SVG filter attached to the decorative backdrop. It did not use Work's Three.js shader, media refraction, ripple highlights, bubbles, or renderer lifecycle, and a nearly uniform backdrop gave displacement little visual detail. Its target also spanned Contact's scrollable `993x699` page rather than Work's `1008x576` viewport, stretching the normalized interaction field.
+- Work's renderer now lives in `components/ui/LiquidSodaBackground.tsx` and is shared by Work and Contact. Both pages use the same shader, impulse pool, ripple displacement/highlight/bubble tuning, propagation/decay, renderer lifecycle and demand loop. Contact uses a separate flat-background setting for its at-rest appearance. A viewport option sizes Contact's fixed canvas and normalizes its pointer coordinates to the viewport while leaving Work's existing gallery sizing unchanged.
+- The removed 80x60 SVG adapter and unused CPU slope helper are gone. Contact layers the fixed shared canvas at z-index 0, the crisp content at z-index 1, and keeps `pointer-events: none` on the canvas. The email and WhatsApp anchors remain independently clickable.
+
+### Production verification and evidence
+
+- Production browser at 1008x576: Contact's root computes to `rgb(17, 19, 20)`; its fixed canvas measures `1008x576`, has pointer events disabled, and `.contact-backdrop` is absent. Idle Work and Contact captures are in `artifacts/phase3f2-contact-liquid/work-contact-rest-comparison.png`.
+- A real pointer sweep on Contact produced a visible propagating liquid highlight and carbonation response, then decayed; the foreground remained crisp. The short recording is `artifacts/phase3f2-contact-liquid/contact-liquid-ripple.mp4` with an animated preview at `artifacts/phase3f2-contact-liquid/contact-liquid-ripple.gif`. Direct-entry and Room → iPhone → Contact screenshots are `contact-rest-final.png` and `contact-room-origin-final.png`.
+- Work's shared shader inputs remain unchanged at rest. The before/current Work screenshot difference is concentrated in browser focus state; the sampled background and media areas differ by at most 3/255, consistent with capture/compositor variance rather than a visual shader change.
+- Direct `/contact` entry and the real room iPhone hotspot both reached a ready Contact page. In the room-origin flow, the persistent room canvas remained mounted but hidden/inert behind Contact; Return restored the same ready/exploring room with one room canvas and no repeated initialization or `FINALIZING SCENE` stall.
+- TypeScript, ESLint, isolated production build and `git diff --check` passed. Reduced-motion emulation removed the liquid canvas while keeping content visible. At 390x844, the canvas fit the viewport, icons measured 52px, and document width remained 390px.
+
+### Remaining limitations
+
+- Physical touch hardware, Safari/other GPU implementations, external email/WhatsApp activation, and a comprehensive performance/battery benchmark were not independently tested. Coarse-pointer and reduced-motion behavior retain the existing guards; mobile layout and reduced-motion were checked in the production browser.
+- Phase 3F.2 visual approval was recorded on 28 October 2026. Overall Phase 3 remains incomplete pending approval of its other phases.
+- **Post-capture visual adjustments:** Contact's no-wave shader environment uses the same solid `#111314` base as the Contact root, and its ripple displacement, highlights and carbonation now use Work's tuning. The production captures above predate these final shader adjustments; no browser comparison was run for them. The user subsequently marked Phase 3F.2 Visual Approved on 28 October 2026.
+- **Attempted Contact content-distortion follow-up (2026-10-28):** A pixel-level SVG displacement filter on Contact HTML was reverted after the user reported a heavy visual effect and slowdown during the ReturnToRoom transition. Contact content remains crisp; the shared ripple is confined to the background.
+- **Validation after revert:** TypeScript, changed-file ESLint and `git diff --check` pass. The existing desktop browser preview had not activated `data-contact-visible` during the distortion smoke test, so no browser test was run after reverting it.
+
+## Skills visual enhancement (2026-10-28)
+
+- Skills now reuses the Contact `LiquidSodaBackground` viewport renderer and shared ripple pool, preserving its existing pointer response, shader highlights, carbonation, natural decay, reduced-motion handling and lifecycle. The crisp Skills content remains above the decorative canvas; the effect is disabled when ReturnToRoom starts so its renderer and pointer listener are disposed during handoff.
+- Removed the Skills-only `.skills-backdrop` layer, including its radial overlay and repeating grid gradients. The route now uses Contact's solid `--work-background` (`#111314`); other route backgrounds are unchanged.
+- Skills uses the shared prominent `ReturnToRoom` variant, including Contact's button sizing, hover sweep and focus treatment. Its mobile font and wrapping constraints follow Contact's responsive rules. Navigation and room readiness behavior were not changed.
+- **Validation:** TypeScript, ESLint on changed TypeScript files, and `git diff --check` passed. A preview smoke test at 1008x576 and 390x844 confirmed no Skills grid, a single viewport-sized renderer, `#111314` background, undistorted heading, four expandable cards, no mobile horizontal overflow, and 44px minimum ReturnToRoom target.
+- **Visual review:** Pointer movement was exercised on the preview and the shared renderer reached its ready state, but the capture does not conclusively establish ripple/bubble visibility; visual review remains pending. Clicking ReturnToRoom disposed the Skills canvas immediately and completed the direct-entry room preparation/return; within a 5-second check the route was `/`, the room reported `sceneReady`, and the loader was gone. The scene was not already ready at activation, so the ready-room fast path was not independently exercised. Contact and Work source/styles were otherwise unchanged. Awaiting user visual approval; overall Phase 3 remains incomplete.
+
+## Phase 3H.1 — Credits Visual Enhancement (2026-10-28)
+
+- Credits now reuses Contact's `LiquidSodaBackground` viewport renderer and shared pointer-ripple pool with the same default shader configuration. The background canvas remains behind crisp HTML content, respects reduced motion, and is disposed when ReturnToRoom is activated; unmount cleanup handles route changes.
+- Removed the leftover `.skills-backdrop` element from Credits and changed its opaque root background to Contact's `--work-background` (`#111314`). No other route background or attribution content was changed.
+- Credits now uses the shared prominent `ReturnToRoom` variant, matching Contact's font size, padding, cyan hover/focus treatment, responsive font size, and mobile wrapping/touch target.
+- **Files changed:** `components/credits/CreditsDashboard.tsx`, `app/globals.css`, and `docs/implementation-plan.md`.
+- **Basic validation:** TypeScript, ESLint for the changed Credits component, and `git diff --check` passed. Direct `/credits` entry rendered in the browser preview at 1008x576; the root computed to `#111314`, the backdrop element count was zero, and one viewport-sized liquid canvas reached its ready state beneath the content (z-index 0 versus content z-index 1). The four cards each expanded and collapsed, all eight source/license URLs were retained, and at 390x844 the document had no horizontal overflow while ReturnToRoom retained its 44px touch target and Contact-sized mobile text. Activating ReturnToRoom reached `/` with one room surface and no boot screen; the preview was returned to `/credits` afterward.
+- **Outstanding limitations:** A pointer sweep was performed against the ready shared renderer, but the quick capture did not conclusively establish visible ripple/bubble strength. Visual approval remains pending; overall Phase 3 remains incomplete.
+
+## Shared hotspot pulse-ring redesign (2026-10-28)
+
+- Replaced the shared downward-arrow beacon with one transparent cyan center-dot and two CSS pulse rings. The same indicator covers Projects, Skills, the shared V-Guitars destination, and Contact; Pegboard has no implemented hotspot. Existing anchors, raycast, keyboard/touch activation, navigation, and hover captions are unchanged.
+- Ring animation uses CSS transforms and opacity only, with no per-frame loop or additional renderer. Reduced-motion mode disables the rings; indicator effects exist only while the room hotspots are active. Button activation navigates immediately without waiting for animation.
+- **Basic validation:** TypeScript, ESLint for `HotspotIndicator.tsx`, and `git diff --check` passed. A browser smoke test could not be completed: the existing 3001 preview was unavailable, and the 3000 preview remained at 0/3 scene-readiness checks, so the room did not mount.
+- **Visual approval:** pending.
+
+**STOP for user visual review. Do not mark overall Phase 3 complete.**

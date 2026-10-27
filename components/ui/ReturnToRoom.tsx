@@ -4,7 +4,10 @@ import { useSyncExternalStore } from 'react';
 import { roomPreparation, initialRoomPreparationSnapshot, roomAssetPercent } from '@/lib/room-preparation';
 import { useExperienceNavigation } from './ExperienceNavigation';
 
-export default function ReturnToRoom() {
+export default function ReturnToRoom({ size = 'default', onActivate }: {
+  size?: 'default' | 'prominent';
+  onActivate?: () => void;
+}) {
   const preparation = useSyncExternalStore(
     roomPreparation.subscribe, roomPreparation.getSnapshot, () => initialRoomPreparationSnapshot,
   );
@@ -22,10 +25,11 @@ export default function ReturnToRoom() {
   const activate = () => {
     const current = roomPreparation.getSnapshot();
     if (current.returnRequested && current.status !== 'failed') return;
+    onActivate?.();
     requestRoomReturn();
   };
   return (
-    <div className="room-return-control" aria-busy={pending && !failed}>
+    <div className={`room-return-control${size === 'prominent' ? ' room-return-control--prominent' : ''}`} aria-busy={pending && !failed}>
       <button type="button" onClick={activate} disabled={pending && !failed}>
         {label}
       </button>

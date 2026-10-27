@@ -1,0 +1,11 @@
+{
+  "results": [
+    "Original vertex and fragment shaders unchanged",
+    "Pointer coordinates, speed strength, throttle, touch rejection and ring-pool rollover match baseline over 20 replayed events",
+    "One pointer listener; disposal removes listener and clears impulses"
+  ],
+  "shaders": {
+    "vertexShader": "d12b72167041e99c4163bf72c2b06db2f13a809faadc2b747556d9579ac97644",
+    "fragmentShader": "446e0ab3c82dc3fd3ecdc41b9a15661caaf2ef70c2208c166f052b2861886f41"
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "samples": [
+    {
+      "label": "before",
+      "width": 1920,
+      "height": 1080,
+      "metrics": {
+        "cards": [
+          {
+            "top": 608.5057373046875,
+            "bottom": 833.5057373046875,
+            "height": 225
+          },
+          {
+            "top": 609.2271728515625,
+            "bottom": 834.2271728515625,
+            "height": 225
+          }
+        ],
+        "headline": "-5.1px",
+        "returnFont": "11px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "before",
+      "width": 1366,
+      "height": 768,
+      "metrics": {
+        "cards": [
+          {
+            "top": 532.0148315429688,
+            "bottom": 757.0148315429688,
+            "height": 225
+          },
+          {
+            "top": 532.69384765625,
+            "bottom": 757.69384765625,
+            "height": 225
+          }
+        ],
+        "headline": "-4.61025px",
+        "returnFont": "11px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "before",
+      "width": 768,
+      "height": 1024,
+      "metrics": {
+        "cards": [
+          {
+            "top": 543.7540893554688,
+            "bottom": 768.7540893554688,
+            "height": 225
+          },
+          {
+            "top": 544.49658203125,
+            "bottom": 769.49658203125,
+            "height": 225
+          }
+        ],
+        "headline": "-3.15px",
+        "returnFont": "11px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "before",
+      "width": 390,
+      "height": 844,
+      "metrics": {
+        "cards": [
+          {
+            "top": 525.4796142578125,
+            "bottom": 719.4796142578125,
+            "height": 194
+          },
+          {
+            "top": 731.4166259765625,
+            "bottom": 925.4166259765625,
+            "height": 194
+          }
+        ],
+        "headline": "-2.6325px",
+        "returnFont": "11px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "before",
+      "width": 320,
+      "height": 740,
+      "metrics": {
+        "cards": [
+          {
+            "top": 516.4205932617188,
+            "bottom": 744.983154296875,
+            "height": 228.56256103515625
+          },
+          {
+            "top": 757.24169921875,
+            "bottom": 985.80419921875,
+            "height": 228.5625
+          }
+        ],
+        "headline": "-2.475px",
+        "returnFont": "11px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "before",
+      "atRestDraws": 0
+    },
+    {
+      "label": "after",
+      "width": 1920,
+      "height": 1080,
+      "metrics": {
+        "cards": [
+          {
+            "top": 451.46875,
+            "bottom": 738.953125,
+            "height": 287.484375
+          },
+          {
+            "top": 451.46875,
+            "bottom": 738.953125,
+            "height": 287.484375
+          }
+        ],
+        "headline": "1.475px",
+        "returnFont": "14px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "after",
+      "width": 1366,
+      "height": 768,
+      "metrics": {
+        "cards": [
+          {
+            "top": 414.453125,
+            "bottom": 701.9375,
+            "height": 287.484375
+          },
+          {
+            "top": 414.453125,
+            "bottom": 701.9375,
+            "height": 287.484375
+          }
+        ],
+        "headline": "1.366px",
+        "returnFont": "14px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "after",
+      "width": 768,
+      "height": 1024,
+      "metrics": {
+        "cards": [
+          {
+            "top": 394.234375,
+            "bottom": 675.71875,
+            "height": 281.484375
+          },
+          {
+            "top": 394.234375,
+            "bottom": 675.71875,
+            "height": 281.484375
+          }
+        ],
+        "headline": "0.9px",
+        "returnFont": "14px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "after",
+      "width": 390,
+      "height": 844,
+      "metrics": {
+        "cards": [
+          {
+            "top": 387.15625,
+            "bottom": 628.4375,
+            "height": 241.28125
+          },
+          {
+            "top": 642.4375,
+            "bottom": 883.71875,
+            "height": 241.28125
+          }
+        ],
+        "headline": "0.2652px",
+        "returnFont": "13px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "after",
+      "width": 320,
+      "height": 740,
+      "metrics": {
+        "cards": [
+          {
+            "top": 375.09375,
+            "bottom": 616.375,
+            "height": 241.28125
+          },
+          {
+            "top": 630.375,
+            "bottom": 871.65625,
+            "height": 241.28125
+          }
+        ],
+        "headline": "0.24px",
+        "returnFont": "13px",
+        "returnHeight": 44,
+        "overflow": false
+      }
+    },
+    {
+      "label": "after",
+      "atRestDraws": 0
+    }
+  ],
+  "captures": [
+    "before-contact-1920",
+    "before-contact-1366",
+    "before-contact-768",
+    "before-contact-390",
+    "before-contact-320",
+    "before-work-fixed-ripple",
+    "after-contact-1920",
+    "after-contact-1366",
+    "after-contact-768",
+    "after-contact-390",
+    "after-contact-320",
+    "after-work-fixed-ripple"
+  ],
+  "errors": [],
+  "results": [
+    {
+      "pass": true,
+      "label": "before Work has no idle draw loop"
+    },
+    {
+      "pass": true,
+      "label": "after Work has no idle draw loop"
+    }
+  ]
+}

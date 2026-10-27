@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { credits } from '@/lib/credits';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
 import useReducedMotion from '@/hooks/useReducedMotion';
+import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
 import ReturnToRoom from '@/components/ui/ReturnToRoom';
 
 export default function CreditsDashboard() {
@@ -13,7 +14,14 @@ export default function CreditsDashboard() {
   const heading = useRef<HTMLHeadingElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [liquidActive, setLiquidActive] = useState(true);
   const reducedMotion = useReducedMotion();
+
+  const stopLiquid = useCallback(() => setLiquidActive(false), []);
+  const returnToRoom = useCallback(() => {
+    stopLiquid();
+    requestRoomReturn();
+  }, [requestRoomReturn, stopLiquid]);
 
   useLayoutEffect(() => {
     const dashboard = root.current;
@@ -40,15 +48,21 @@ export default function CreditsDashboard() {
       if (event.altKey || event.ctrlKey || event.metaKey || event.key !== 'Escape') return;
       event.preventDefault();
       if (expanded) setExpanded(null);
-      else requestRoomReturn();
+      else returnToRoom();
     };
     window.addEventListener('keydown', key);
     return () => window.removeEventListener('keydown', key);
-  }, [expanded, requestRoomReturn]);
+  }, [expanded, returnToRoom]);
 
   return (
     <main ref={root} className="credits-dashboard" data-credits-visible="">
-      <div className="skills-backdrop" aria-hidden="true" />
+      <LiquidSodaBackground
+        className="credits-liquid"
+        area={root}
+        interactionReadyAttribute="data-credits-visible"
+        viewport
+        enabled={liquidActive}
+      />
       <div className="credits-content">
         <header className="credits-header">
           <div className="credits-brand credits-reveal">
@@ -56,7 +70,7 @@ export default function CreditsDashboard() {
             <span className="skills-online"><i aria-hidden="true" /> ONLINE</span>
           </div>
           <nav aria-label="Return to workspace" className="credits-return credits-reveal">
-            <ReturnToRoom />
+            <ReturnToRoom size="prominent" onActivate={stopLiquid} />
           </nav>
           <h1 ref={heading} tabIndex={-1} className="skills-title credits-reveal">CREDITS<span>_</span></h1>
           <p className="skills-subtitle credits-reveal">ATTRIBUTIONS, LICENSES &amp; MODIFICATIONS</p>

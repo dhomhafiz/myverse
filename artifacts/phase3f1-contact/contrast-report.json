@@ -1,0 +1,37 @@
+{
+  "intro": {
+    "foreground": "#c6d3d8",
+    "background": "#0c1012",
+    "ratio": 12.48123791864662
+  },
+  "description": {
+    "foreground": "#cad6d9",
+    "background": "#172a30",
+    "ratio": 10.020502173170179
+  },
+  "action": {
+    "foreground": "#a4e2eb",
+    "background": "#172a30",
+    "ratio": 10.392613579762777
+  },
+  "metadata": {
+    "foreground": "#b7c5ca",
+    "background": "#0c1012",
+    "ratio": 10.790158541403455
+  },
+  "index": {
+    "foreground": "#9acfd7",
+    "background": "#172a30",
+    "ratio": 8.70766188747633
+  },
+  "destination": {
+    "foreground": "#e2ecee",
+    "background": "#172a30",
+    "ratio": 12.385004385118151
+  },
+  "cardBoundary": {
+    "foreground": "#72888e",
+    "background": "#141c1f",
+    "ratio": 4.629480619927186
+  }
+}

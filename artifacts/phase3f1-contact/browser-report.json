@@ -1,0 +1,394 @@
+{
+  "base": "http://127.0.0.1:3032",
+  "results": [
+    {
+      "pass": true,
+      "label": "two entire-card native links with no nested controls"
+    },
+    {
+      "pass": true,
+      "label": "large email and WhatsApp icons"
+    },
+    {
+      "pass": true,
+      "label": "verified email and normalized Malaysian WhatsApp destinations"
+    },
+    {
+      "pass": true,
+      "label": "direct Contact adds no WebGL renderer or visible Canvas"
+    },
+    {
+      "pass": true,
+      "label": "one shared ripple pointer listener"
+    },
+    {
+      "pass": true,
+      "label": "enabled card lifts 7px on hover"
+    },
+    {
+      "pass": true,
+      "label": "press compresses hovered card"
+    },
+    {
+      "pass": true,
+      "label": "mouse activation anywhere in email card opens configured mail destination"
+    },
+    {
+      "pass": true,
+      "label": "card returns to rest after pointer exit"
+    },
+    {
+      "pass": true,
+      "label": "ripple affects only the decorative backdrop; text and control layout remain stationary"
+    },
+    {
+      "pass": true,
+      "label": "ripple stops and removes filter after real wave lifetime"
+    },
+    {
+      "pass": true,
+      "label": "keyboard Enter activates WhatsApp link in a new tab"
+    },
+    {
+      "pass": true,
+      "label": "reduced motion removes ripple listeners and card transitions"
+    },
+    {
+      "pass": true,
+      "label": "touch activates full email card"
+    },
+    {
+      "pass": true,
+      "label": "first mobile action fully visible; second card substantially visible above fold"
+    },
+    {
+      "pass": true,
+      "label": "390px has no horizontal overflow"
+    },
+    {
+      "pass": true,
+      "label": "320px has no overflow and shows the entire primary action"
+    },
+    {
+      "pass": true,
+      "label": "direct Contact returns through real readiness with one room Canvas and no boot"
+    },
+    {
+      "pass": true,
+      "label": "persistent Canvas retained on Contact cycle 0"
+    },
+    {
+      "pass": true,
+      "label": "one Contact and ripple listener cycle 0"
+    },
+    {
+      "pass": true,
+      "label": "exact saved camera restored cycle 0"
+    },
+    {
+      "pass": true,
+      "label": "no loader, boot, duplicate Canvas or leaked ripple listener cycle 0"
+    },
+    {
+      "pass": true,
+      "label": "phone returns to original face-down pose cycle 0"
+    },
+    {
+      "pass": true,
+      "label": "persistent Canvas retained on Contact cycle 1"
+    },
+    {
+      "pass": true,
+      "label": "one Contact and ripple listener cycle 1"
+    },
+    {
+      "pass": true,
+      "label": "exact saved camera restored cycle 1"
+    },
+    {
+      "pass": true,
+      "label": "no loader, boot, duplicate Canvas or leaked ripple listener cycle 1"
+    },
+    {
+      "pass": true,
+      "label": "phone returns to original face-down pose cycle 1"
+    },
+    {
+      "pass": true,
+      "label": "persistent Canvas retained on Contact cycle 2"
+    },
+    {
+      "pass": true,
+      "label": "one Contact and ripple listener cycle 2"
+    },
+    {
+      "pass": true,
+      "label": "exact saved camera restored cycle 2"
+    },
+    {
+      "pass": true,
+      "label": "no loader, boot, duplicate Canvas or leaked ripple listener cycle 2"
+    },
+    {
+      "pass": true,
+      "label": "phone returns to original face-down pose cycle 2"
+    },
+    {
+      "pass": true,
+      "label": "persistent Canvas retained on Contact cycle 3"
+    },
+    {
+      "pass": true,
+      "label": "one Contact and ripple listener cycle 3"
+    },
+    {
+      "pass": true,
+      "label": "exact saved camera restored cycle 3"
+    },
+    {
+      "pass": true,
+      "label": "no loader, boot, duplicate Canvas or leaked ripple listener cycle 3"
+    },
+    {
+      "pass": true,
+      "label": "phone returns to original face-down pose cycle 3"
+    },
+    {
+      "pass": true,
+      "label": "persistent Canvas retained on Contact cycle 4"
+    },
+    {
+      "pass": true,
+      "label": "one Contact and ripple listener cycle 4"
+    },
+    {
+      "pass": true,
+      "label": "exact saved camera restored cycle 4"
+    },
+    {
+      "pass": true,
+      "label": "no loader, boot, duplicate Canvas or leaked ripple listener cycle 4"
+    },
+    {
+      "pass": true,
+      "label": "phone returns to original face-down pose cycle 4"
+    },
+    {
+      "pass": true,
+      "label": "destination remains functional /work"
+    },
+    {
+      "pass": true,
+      "label": "Work retains one existing ripple renderer"
+    },
+    {
+      "pass": true,
+      "label": "default Return size preserved /work"
+    },
+    {
+      "pass": true,
+      "label": "destination remains functional /skills"
+    },
+    {
+      "pass": true,
+      "label": "default Return size preserved /skills"
+    },
+    {
+      "pass": true,
+      "label": "destination remains functional /about"
+    },
+    {
+      "pass": true,
+      "label": "default Return size preserved /about"
+    },
+    {
+      "pass": true,
+      "label": "destination remains functional /credits"
+    },
+    {
+      "pass": true,
+      "label": "default Return size preserved /credits"
+    },
+    {
+      "pass": true,
+      "label": "no runtime exceptions or React lifecycle errors"
+    }
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "cycle": 0,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "actual": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "phone": {
+        "y": 0.8045,
+        "flip": 0
+      }
+    },
+    {
+      "cycle": 1,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "actual": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "phone": {
+        "y": 0.8045,
+        "flip": 0
+      }
+    },
+    {
+      "cycle": 2,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "actual": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "phone": {
+        "y": 0.8045,
+        "flip": 0
+      }
+    },
+    {
+      "cycle": 3,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "actual": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "phone": {
+        "y": 0.8045,
+        "flip": 0
+      }
+    },
+    {
+      "cycle": 4,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "actual": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "phone": {
+        "y": 0.8045,
+        "flip": 0
+      }
+    }
+  ],
+  "captures": [
+    "contact-hover",
+    "contact-press",
+    "contact-ripple",
+    "contact-keyboard-focus",
+    "contact-mobile-390",
+    "contact-mobile-320",
+    "five-contact-cycles-home"
+  ]
+}

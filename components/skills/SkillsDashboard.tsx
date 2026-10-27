@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { skillGroups } from '@/lib/skills';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
 import useReducedMotion from '@/hooks/useReducedMotion';
+import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
 import ReturnToRoom from '@/components/ui/ReturnToRoom';
 
 export default function SkillsDashboard() {
@@ -13,9 +14,14 @@ export default function SkillsDashboard() {
   const heading = useRef<HTMLHeadingElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [liquidActive, setLiquidActive] = useState(true);
   const reducedMotion = useReducedMotion();
 
-  const returnToRoom = requestRoomReturn;
+  const stopLiquid = useCallback(() => setLiquidActive(false), []);
+  const returnToRoom = useCallback(() => {
+    stopLiquid();
+    requestRoomReturn();
+  }, [requestRoomReturn, stopLiquid]);
 
   useLayoutEffect(() => {
     const dashboard = root.current;
@@ -52,7 +58,13 @@ export default function SkillsDashboard() {
 
   return (
     <main ref={root} className="skills-dashboard" data-skills-visible="">
-      <div className="skills-backdrop" aria-hidden="true" />
+      <LiquidSodaBackground
+        className="skills-liquid"
+        area={root}
+        interactionReadyAttribute="data-skills-visible"
+        viewport
+        enabled={liquidActive}
+      />
       <div className="skills-content">
         <header className="skills-header">
           <div className="skills-brand skills-reveal">
@@ -60,7 +72,7 @@ export default function SkillsDashboard() {
             <span className="skills-online"><i aria-hidden="true" /> ONLINE</span>
           </div>
           <nav aria-label="Return to workspace" className="skills-return skills-reveal">
-            <ReturnToRoom />
+            <ReturnToRoom size="prominent" onActivate={stopLiquid} />
           </nav>
           <h1 ref={heading} tabIndex={-1} className="skills-title skills-reveal">SKILLS<span>_</span></h1>
           <p className="skills-subtitle skills-reveal">THE TOOLS BEHIND THE EXPERIENCE</p>
