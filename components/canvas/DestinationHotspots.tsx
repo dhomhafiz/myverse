@@ -6,8 +6,9 @@ import { Raycaster, Vector2 } from 'three';
 import HotspotIndicator from './HotspotIndicator';
 import { freeLook } from '@/lib/room-state';
 import { hotspotDestinations } from '@/lib/hotspot-destinations';
+import type { HotspotDestination } from '@/lib/hotspot-destinations';
 
-const destinations = Object.values(hotspotDestinations);
+const destinations: HotspotDestination[] = Object.values(hotspotDestinations);
 
 export default function DestinationHotspots({ active, reducedMotion, onOpen }: {
   active: boolean; reducedMotion: boolean; onOpen: (destinationId: string) => void;
@@ -31,7 +32,9 @@ export default function DestinationHotspots({ active, reducedMotion, onOpen }: {
       const first = ray.intersectObjects(scene.children, true).find(item => item.object.type === 'Mesh');
       let object = first?.object;
       while (object) {
-        const destination = destinations.find(item => object?.name === item.transitionAnchor);
+        const destination = destinations.find(item =>
+          object?.name === item.transitionAnchor || item.activationAnchors?.includes(object?.name ?? ''),
+        );
         if (destination) return destination.id;
         object = object.parent ?? undefined;
       }
@@ -79,6 +82,7 @@ export default function DestinationHotspots({ active, reducedMotion, onOpen }: {
     <HotspotIndicator
       key={destination.id}
       target={destination.transitionAnchor}
+      outlineTargets={destination.outlineTargets}
       anchor={destination.beaconAnchor}
       position={destination.beaconPosition}
       caption={destination.caption}

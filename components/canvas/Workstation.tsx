@@ -4,6 +4,7 @@ import RgbKeyboard from './RgbKeyboard';
 import GamingMouse from './GamingMouse';
 import LeftMonitorDisplay from './LeftMonitorDisplay';
 import RightMonitorDisplay from './RightMonitorDisplay';
+import PhoneContactScreen from './PhoneContactScreen';
 import { phone, room } from '@/lib/room-config';
 import type { RefObject } from 'react';
 import type { EntranceMotion } from '@/lib/entrance';
@@ -42,10 +43,10 @@ export default function Workstation({ active, reducedMotion, motion }: {
     <GamingMouse position={[0.2, 0.797, 0.23]} />
     <GamingPc active={active} reducedMotion={reducedMotion} motion={motion} />
     <group name={phone.name} position={phone.position} rotation={phone.rotation} scale={phone.scale} userData={{ destination: 'contact' }}>
-      {/* Centre pivot is reserved for a future lift-then-flip; nothing animates yet. */}
       <group name={phone.flipPivotName}>
         <Box size={[0.08, 0.16, 0.013]} color="#787e82" />
         <Box position={[0, 0, 0.008]} size={[0.071, 0.15, 0.003]} color="#141a20" />
+        <PhoneContactScreen />
         <Box position={[0, 0, -0.0075]} size={[0.074, 0.153, 0.002]} color="#a9acae" />
         <Box name="iphone_rear_camera_module" position={[-0.017, 0.045, -0.0115]} size={[0.041, 0.045, 0.006]} color="#8b9195" />
         {([[-0.028, 0.059], [-0.008, 0.046], [-0.028, 0.033]] as const).map(([x, y], index) => <group key={index} name={`iphone_rear_lens_${index + 1}`}>
@@ -62,6 +63,7 @@ export default function Workstation({ active, reducedMotion, motion }: {
         <object3D name={phone.contactAnchor.name} position={phone.contactAnchor.position} />
       </group>
     </group>
+    <object3D name={phone.hotspotAnchor.name} position={phone.hotspotAnchor.position} />
     <Box name="audio_interface" position={[0.69, 0.825, -0.1]} size={[0.16, 0.06, 0.12]} color="#765047" />
     <group name="plant_small" position={[0.62, 0.84, -0.25]}>
       <mesh><cylinderGeometry args={[0.065, 0.05, 0.1, 8]} /><meshStandardMaterial color="#b3aca0" /></mesh>

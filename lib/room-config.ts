@@ -49,12 +49,14 @@ export const bikeReview = {
 export type ReviewView = 'home' | 'bike';
 
 // Desk-local placement. Local +Z is the screen; +π/2 around X puts it face down.
+const phoneDeskPosition: Vec3 = [-0.87, 0.8045, 0.2];
 export const phone = {
   name: 'iphone_15_pro_max',
-  position: [-0.87, 0.8045, 0.2] as Vec3,
+  position: phoneDeskPosition,
   rotation: [Math.PI / 2, 0, -0.12] as Vec3,
   scale: [1, 1, 1] as Vec3,
   contactAnchor: { name: 'contact_anchor', position: [0, 0, -0.022] as Vec3 },
+  hotspotAnchor: { name: 'phone_hotspot_anchor', position: [phoneDeskPosition[0], phoneDeskPosition[1] + 0.245, phoneDeskPosition[2]] as Vec3 },
   flipPivotName: 'iphone_flip_pivot',
 };
 
@@ -70,10 +72,10 @@ export const cameraAnchors = {
   camera_home: room.home,
   camera_projects: { position: relative(room.desk, [-0.7, 1.35, 1.05]), target: relative(room.desk, [-0.66, 1.29, -0.07]) },
   camera_skills: { position: relative(room.desk, [0.3, 1.35, 1.05]), target: relative(room.desk, [0.25, 1.29, -0.07]) },
-  camera_about: { position: relative(room.guitars, [0, 1.5, 1.3]), target: relative(room.guitars, [0, 1.3, 0]) },
+  camera_about: { position: relative(room.guitars, [-1.87, 2, 2.2]), target: relative(room.guitars, [-1.87, 1.8, 0]) },
   camera_contact: {
-    position: relative(room.desk, [phone.position[0], 1.2, phone.position[2] + 0.65]),
-    target: relative(room.desk, relative(phone, phone.contactAnchor.position)),
+    position: relative(room.desk, [phone.position[0] + 0.15, 1.43, phone.position[2] + 0.25]),
+    target: relative(room.desk, [phone.position[0], phone.position[1] + 0.11, phone.position[2]]),
   },
   camera_beyond_code: { position: relative(room.pegboard, [0, -0.15, 1.2]), target: room.pegboard.position },
 };

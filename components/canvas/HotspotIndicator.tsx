@@ -9,14 +9,15 @@ import { ROOM_SNAPSHOT_EXCLUDE } from '@/lib/room-snapshot';
 
 type IndicatorProps = {
   target: string; anchor: string; position: Vec3; caption: string; ariaLabel?: string;
+  outlineTargets?: readonly string[];
   active: boolean; reducedMotion: boolean; highlighted?: boolean; onActivate: () => void;
 };
 
 // Same native-DOM ownership as RoomLabel: no Html, portals or nested React roots.
-export default function HotspotIndicator({ target, anchor, position, caption, ariaLabel = caption, active, reducedMotion, highlighted = false, onActivate }: IndicatorProps) {
+export default function HotspotIndicator({ target, anchor, position, caption, ariaLabel = caption, outlineTargets, active, reducedMotion, highlighted = false, onActivate }: IndicatorProps) {
   const { gl, scene, invalidate } = useThree();
   const node = useRef<HTMLButtonElement | null>(null);
-  const outline = useRef<LineSegments<EdgesGeometry, LineBasicMaterial> | null>(null);
+  const outlines = useRef<LineSegments<EdgesGeometry, LineBasicMaterial>[]>([]);
   const point = useMemo(() => new Vector3(), []);
   const visual = useRef({ pointer: false, focus: false, monitor: false });
   const activate = useEffectEvent(() => onActivate());
@@ -24,7 +25,7 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
   const updateHighlight = useEffectEvent(() => {
     const hover = visual.current.pointer || visual.current.focus || visual.current.monitor;
     node.current?.classList.toggle('is-highlighted', hover);
-    if (outline.current) outline.current.visible = hover;
+    outlines.current.forEach(outline => { outline.visible = hover; });
     invalidate();
   });
 
@@ -45,15 +46,34 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
     const label = document.createElement('span'); label.className = 'hotspot-caption';
     label.textContent = caption; label.setAttribute('aria-hidden', 'true');
     float.append(disc, label); button.appendChild(float); host.appendChild(button); node.current = button;
-    const frame = object.children.find(child => child instanceof Mesh);
-    if (frame instanceof Mesh) {
-      const geometry = new EdgesGeometry(frame.geometry);
-      const material = new LineBasicMaterial({ color: '#bdeaff', transparent: true, opacity: .58, depthWrite: false });
-      const edge = new LineSegments(geometry, material);
-      edge.name = `${target}_hotspot_outline`; edge.position.copy(frame.position); edge.rotation.copy(frame.rotation);
-      edge.scale.copy(frame.scale).multiplyScalar(1.012); edge.visible = false;
-      edge.userData[ROOM_SNAPSHOT_EXCLUDE] = true;
-      object.add(edge); outline.current = edge;
+    if (outlineTargets) {
+      outlineTargets.forEach(name => scene.getObjectByName(name)?.traverse(child => {
+        if (!(child instanceof Mesh)) return;
+        const geometry = new EdgesGeometry(child.geometry);
+        const material = new LineBasicMaterial({ color: '#bdeaff', transparent: true, opacity: .42, depthWrite: false });
+        const edge = new LineSegments(geometry, material);
+        edge.name = `${child.name || target}_hotspot_outline`;
+        edge.scale.setScalar(1.006);
+        edge.visible = false;
+        edge.userData[ROOM_SNAPSHOT_EXCLUDE] = true;
+        child.add(edge);
+        outlines.current.push(edge);
+      }));
+    } else {
+      const frame = object.children.find(child => child instanceof Mesh);
+      if (frame instanceof Mesh) {
+        const geometry = new EdgesGeometry(frame.geometry);
+        const material = new LineBasicMaterial({ color: '#bdeaff', transparent: true, opacity: .58, depthWrite: false });
+        const edge = new LineSegments(geometry, material);
+        edge.name = `${target}_hotspot_outline`;
+        edge.position.copy(frame.position);
+        edge.rotation.copy(frame.rotation);
+        edge.scale.copy(frame.scale).multiplyScalar(1.012);
+        edge.visible = false;
+        edge.userData[ROOM_SNAPSHOT_EXCLUDE] = true;
+        object.add(edge);
+        outlines.current.push(edge);
+      }
     }
     const state = visual.current;
     let animation: Animation | null = null, pending = false, disposed = false;
@@ -86,11 +106,15 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
     return () => {
       disposed = true; animation?.cancel(); button.remove(); node.current = null;
       state.pointer = false; state.focus = false;
-      const edge = outline.current;
-      if (edge) { edge.removeFromParent(); edge.geometry.dispose(); edge.material.dispose(); outline.current = null; }
+      outlines.current.forEach(edge => {
+        edge.removeFromParent();
+        edge.geometry.dispose();
+        edge.material.dispose();
+      });
+      outlines.current = [];
       // Detached button owns its listeners; no global subscriptions or roots remain.
     };
-  }, [active, anchor, ariaLabel, caption, gl, invalidate, scene, target]);
+  }, [active, anchor, ariaLabel, caption, gl, invalidate, outlineTargets, scene, target]);
 
   useEffect(() => { visual.current.monitor = highlighted; updateHighlight(); }, [highlighted, active]);
   useEffect(() => { if (node.current) node.current.dataset.reducedMotion = String(reducedMotion); }, [reducedMotion, active]);

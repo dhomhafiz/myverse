@@ -192,7 +192,7 @@ export default function RoomPreview({
           {hint && phase === 'exploring' && <p className="explore-hint" aria-live="polite">Drag to explore</p>}
         </>
       )}
-      {navigationMode === 'opening' && <div className="hotspot-transition-cover" aria-hidden="true" />}
+      {navigationMode === 'opening' && <div className={`hotspot-transition-cover${hotspotNavigation.destinationId === 'iphone' ? ' is-contact' : ''}`} aria-hidden="true" />}
       <HeroBrand active={phase === 'entering' || phase === 'exploring'} settled={phase === 'exploring'} />
       <noscript><style>{'.boot-screen { display: none; }'}</style><section className="scene-message no-script"><h1>Mohd Hafiz’s workspace</h1><p>A personal developer room with guitars and a gravel bike. Enable JavaScript for the interactive room. Portfolio content arrives in a later phase.</p></section></noscript>
     </div>

@@ -6,7 +6,7 @@ import { gsap } from 'gsap';
 import { hotspotNavigation, type HotspotNavigationMode } from '@/lib/hotspot-navigation';
 import { cameraAnchors } from '@/lib/room-config';
 import type { MutableRefObject } from 'react';
-import { bikeReview, room, type ReviewView } from '@/lib/room-config';
+import { bikeReview, phone, room, type ReviewView } from '@/lib/room-config';
 import { freeLook, type CameraMode, type EntrancePhase } from '@/lib/room-state';
 import { entrance, poseValues, type EntranceMotion } from '@/lib/entrance';
 import { getHotspotDestination } from '@/lib/hotspot-destinations';
@@ -16,7 +16,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
   directStart: boolean; directDestinationId: string; onGesture: () => void;
   navigationMode: HotspotNavigationMode; onNavigationSettled: () => void;
 }) {
-  const { gl, size, invalidate, camera } = useThree();
+  const { gl, size, invalidate, camera, scene } = useThree();
   const pose = view === 'bike' ? bikeReview : room.home;
   const base = useMemo(() => {
     const dx = pose.target[0] - pose.position[0], dy = pose.target[1] - pose.position[1], dz = pose.target[2] - pose.position[2];
@@ -82,6 +82,18 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       : size.width < size.height ? destinationConfig.focusFov.mobile : destinationConfig.focusFov.desktop;
     const values = { position: camera.position.clone(), from: camera.quaternion.clone(), to: destinationRotation, fov: camera.fov, progress: 0 };
     navigationMotion.current = values;
+    const phoneDestination = destinationConfig.id === 'iphone';
+    const phoneRoot = phoneDestination ? scene.getObjectByName(phone.name) : undefined;
+    const flipPivot = phoneDestination ? scene.getObjectByName(phone.flipPivotName) : undefined;
+    const phoneNeedsReset = restore && phoneRoot && flipPivot &&
+      (Math.abs(phoneRoot.position.y - phone.position[1]) > 0.001 || Math.abs(flipPivot.rotation.x) > 0.001);
+    if (phoneDestination && (!phoneRoot || !flipPivot)) {
+      console.error('The configured iPhone contact hotspot is missing its phone root or flip pivot.');
+    }
+    if (phoneRoot && flipPivot && reducedMotion && phoneDestination) {
+      phoneRoot.position.y = restore ? phone.position[1] : phone.position[1] + 0.11;
+      flipPivot.rotation.x = restore ? 0 : Math.PI;
+    }
     const settle = () => {
       if (restore) {
         const rotation = new Euler().setFromQuaternion(destinationRotation, 'YXZ');
@@ -92,13 +104,20 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       completion.current = { callback: onNavigationSettled, frame: null };
       invalidate();
     };
-    const tween = gsap.to(values, {
-      progress: 1,
-      duration: reducedMotion ? .01 : destinationConfig.duration ?? 1.15,
-      ease: 'power3.inOut',
-      onUpdate: invalidate,
-      onComplete: settle,
-    });
+    const duration = reducedMotion ? .01 : destinationConfig.duration ?? 1.15;
+    const tween = gsap.timeline({ onUpdate: invalidate, onComplete: settle });
+    tween.to(values, { progress: 1, duration, ease: 'power3.inOut' }, 0);
+    if (phoneRoot && flipPivot && !reducedMotion && phoneDestination) {
+      if (restore) {
+        if (phoneNeedsReset) {
+          tween.to(flipPivot.rotation, { x: 0, duration: duration * 0.75, ease: 'power2.inOut' }, 0);
+          tween.to(phoneRoot.position, { y: phone.position[1], duration: duration * 0.25, ease: 'power2.in' }, duration * 0.75);
+        }
+      } else {
+        tween.to(phoneRoot.position, { y: phone.position[1] + 0.11, duration: duration * 0.14, ease: 'power2.out' }, 0);
+        tween.to(flipPivot.rotation, { x: Math.PI, duration: duration * 0.32, ease: 'power2.inOut' }, duration * 0.14);
+      }
+    }
     // Numeric channels only: this rig remains the sole camera writer.
     const frame = () => {
       camera.position.lerpVectors(values.position, destination, values.progress);
@@ -107,7 +126,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     };
     projectFrame.current = frame;
     return () => { tween.kill(); projectFrame.current = null; completion.current = null; };
-  }, [navigationMode, phase, camera, invalidate, reducedMotion, onNavigationSettled, base, pose, size.width, size.height]);
+  }, [navigationMode, phase, camera, invalidate, reducedMotion, onNavigationSettled, base, pose, size.width, size.height, scene]);
   useEffect(() => {
     const canvas = gl.domElement;
     canvas.setAttribute('tabindex', phase === 'exploring' ? '0' : '-1');
