@@ -1,0 +1,2295 @@
+{
+  "base": "http://127.0.0.1:3013",
+  "results": [
+    {
+      "pass": true,
+      "label": "Chair hint and football action remain mounted"
+    },
+    {
+      "pass": true,
+      "label": "Room labels cleanly removed on gallery entry 0"
+    },
+    {
+      "pass": true,
+      "label": "Gallery snapshot exists immediately on return 0"
+    },
+    {
+      "pass": true,
+      "label": "Free Look remains locked while retained gallery covers room 0"
+    },
+    {
+      "pass": true,
+      "label": "Gallery crossfade animation observed after camera preparation"
+    },
+    {
+      "pass": true,
+      "label": "Return does not replay boot 0"
+    },
+    {
+      "pass": true,
+      "label": "Exact saved camera pose restored 0"
+    },
+    {
+      "pass": true,
+      "label": "Only room WebGL canvas remains 0"
+    },
+    {
+      "pass": true,
+      "label": "Free Look works after reveal 0"
+    },
+    {
+      "pass": true,
+      "label": "Room labels cleanly removed on gallery entry 1"
+    },
+    {
+      "pass": true,
+      "label": "Gallery snapshot exists immediately on return 1"
+    },
+    {
+      "pass": true,
+      "label": "Free Look remains locked while retained gallery covers room 1"
+    },
+    {
+      "pass": true,
+      "label": "Return does not replay boot 1"
+    },
+    {
+      "pass": true,
+      "label": "Exact saved camera pose restored 1"
+    },
+    {
+      "pass": true,
+      "label": "Only room WebGL canvas remains 1"
+    },
+    {
+      "pass": true,
+      "label": "Free Look works after reveal 1"
+    },
+    {
+      "pass": true,
+      "label": "Room labels cleanly removed on gallery entry 2"
+    },
+    {
+      "pass": true,
+      "label": "Gallery snapshot exists immediately on return 2"
+    },
+    {
+      "pass": true,
+      "label": "Free Look remains locked while retained gallery covers room 2"
+    },
+    {
+      "pass": true,
+      "label": "Return does not replay boot 2"
+    },
+    {
+      "pass": true,
+      "label": "Exact saved camera pose restored 2"
+    },
+    {
+      "pass": true,
+      "label": "Only room WebGL canvas remains 2"
+    },
+    {
+      "pass": true,
+      "label": "Free Look works after reveal 2"
+    },
+    {
+      "pass": true,
+      "label": "Chair hover still finds swivel after return"
+    },
+    {
+      "pass": true,
+      "label": "Chair swivel drag still works"
+    },
+    {
+      "pass": true,
+      "label": "Football keyboard action still kicks after repeated navigation"
+    },
+    {
+      "pass": true,
+      "label": "Direct gallery returns to approved Home fallback"
+    },
+    {
+      "pass": true,
+      "label": "Direct gallery return also skips boot"
+    },
+    {
+      "pass": true,
+      "label": "Browser Back/Forward leaves no stale retained gallery"
+    },
+    {
+      "pass": true,
+      "label": "No synchronous-root-unmount warning or runtime errors"
+    }
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.645986,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": true,
+      "opacity": 0.546378,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 0,
+      "overlay": false,
+      "opacity": 0,
+      "mode": "explore",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "expected": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "returned": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": true,
+      "opacity": 0.998321,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 1,
+      "overlay": false,
+      "opacity": 0,
+      "mode": "explore",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "expected": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      },
+      "returned": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "loading",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 1,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": true,
+      "opacity": 0.985052,
+      "mode": "returning",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": true
+    },
+    {
+      "visit": 2,
+      "overlay": false,
+      "opacity": 0,
+      "mode": "explore",
+      "phase": "exploring",
+      "boot": false,
+      "canvas": 1,
+      "fadeActive": false
+    },
+    {
+      "expected": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      },
+      "returned": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.10360582214071021,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      }
+    }
+  ],
+  "captures": [
+    "01-original-room-pose",
+    "02-retained-gallery-during-room-load",
+    "03-restored-room"
+  ],
+  "saved": {
+    "position": [
+      -1.35,
+      1.6,
+      1.7
+    ],
+    "rotation": [
+      -0.1036058221407102,
+      -0.23896911972336138,
+      0
+    ],
+    "fov": 66
+  },
+  "home": {
+    "position": [
+      -1.35,
+      1.6,
+      1.7
+    ],
+    "rotation": [
+      -0.1036058221407102,
+      -0.23896911972336138,
+      0
+    ],
+    "fov": 66
+  }
+}

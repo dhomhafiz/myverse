@@ -1,0 +1,273 @@
+{
+  "base": "http://127.0.0.1:3015",
+  "results": [
+    {
+      "pass": true,
+      "label": "No beacon during boot"
+    },
+    {
+      "pass": true,
+      "label": "No beacon during cinematic"
+    },
+    {
+      "pass": true,
+      "label": "Desktop Home beacon tracks 3D anchor"
+    },
+    {
+      "pass": true,
+      "label": "Desktop Home beacon visible with 44px tap target"
+    },
+    {
+      "pass": true,
+      "label": "Only left monitor has a beacon"
+    },
+    {
+      "pass": true,
+      "label": "Idle has no visible caption"
+    },
+    {
+      "pass": true,
+      "label": "Hover highlights left monitor edge"
+    },
+    {
+      "pass": true,
+      "label": "Hover caption and pointer cursor"
+    },
+    {
+      "pass": true,
+      "label": "Existing monitor hover shares the beacon highlight"
+    },
+    {
+      "pass": true,
+      "label": "Free Look beacon tracks 3D anchor"
+    },
+    {
+      "pass": true,
+      "label": "Free Look beacon visible with 44px tap target"
+    },
+    {
+      "pass": true,
+      "label": "Entry 0 beacon tracks 3D anchor"
+    },
+    {
+      "pass": true,
+      "label": "Entry 0 beacon visible with 44px tap target"
+    },
+    {
+      "pass": true,
+      "label": "Beacon and caption removed during entry 0"
+    },
+    {
+      "pass": true,
+      "label": "Beacon opens Netflix-first gallery 0"
+    },
+    {
+      "pass": true,
+      "label": "One clean beacon after return 0"
+    },
+    {
+      "pass": true,
+      "label": "Entry 1 beacon tracks 3D anchor"
+    },
+    {
+      "pass": true,
+      "label": "Entry 1 beacon visible with 44px tap target"
+    },
+    {
+      "pass": true,
+      "label": "Beacon and caption removed during entry 1"
+    },
+    {
+      "pass": true,
+      "label": "Beacon opens Netflix-first gallery 1"
+    },
+    {
+      "pass": true,
+      "label": "One clean beacon after return 1"
+    },
+    {
+      "pass": true,
+      "label": "Entry 2 beacon tracks 3D anchor"
+    },
+    {
+      "pass": true,
+      "label": "Entry 2 beacon visible with 44px tap target"
+    },
+    {
+      "pass": true,
+      "label": "Beacon and caption removed during entry 2"
+    },
+    {
+      "pass": true,
+      "label": "Beacon opens Netflix-first gallery 2"
+    },
+    {
+      "pass": true,
+      "label": "One clean beacon after return 2"
+    },
+    {
+      "pass": true,
+      "label": "Returned Free Look beacon tracks 3D anchor"
+    },
+    {
+      "pass": true,
+      "label": "Returned Free Look beacon visible with 44px tap target"
+    },
+    {
+      "pass": true,
+      "label": "Keyboard Enter activates beacon"
+    },
+    {
+      "pass": true,
+      "label": "Mobile Home beacon tracks 3D anchor"
+    },
+    {
+      "pass": true,
+      "label": "Mobile Home beacon visible with 44px tap target"
+    },
+    {
+      "pass": true,
+      "label": "Touch tap opens Projects"
+    },
+    {
+      "pass": true,
+      "label": "Reduced motion disables float and breathing"
+    },
+    {
+      "pass": true,
+      "label": "Beacon creates no document overflow"
+    },
+    {
+      "pass": true,
+      "label": "No React root lifecycle errors or runtime exceptions during repeated navigation"
+    }
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "label": "Desktop Home",
+      "expected": {
+        "x": 600.4194927960382,
+        "y": 292.3075047221383
+      },
+      "beacon": {
+        "x": 600.4194946289062,
+        "y": 292.3074951171875,
+        "w": 44,
+        "h": 44,
+        "visible": "visible",
+        "caption": "0"
+      }
+    },
+    {
+      "label": "Free Look",
+      "expected": {
+        "x": 663.6834666834984,
+        "y": 292.5776232987567
+      },
+      "beacon": {
+        "x": 663.6834716796875,
+        "y": 292.57763671875,
+        "w": 44,
+        "h": 44,
+        "visible": "visible",
+        "caption": "1"
+      }
+    },
+    {
+      "label": "Entry 0",
+      "expected": {
+        "x": 663.6834666834984,
+        "y": 292.5776232987567
+      },
+      "beacon": {
+        "x": 663.6834716796875,
+        "y": 292.57763671875,
+        "w": 44,
+        "h": 44,
+        "visible": "visible",
+        "caption": "0"
+      }
+    },
+    {
+      "label": "Entry 1",
+      "expected": {
+        "x": 663.6834666834984,
+        "y": 292.5776232987567
+      },
+      "beacon": {
+        "x": 663.6834716796875,
+        "y": 292.57763671875,
+        "w": 44,
+        "h": 44,
+        "visible": "visible",
+        "caption": "0"
+      }
+    },
+    {
+      "label": "Entry 2",
+      "expected": {
+        "x": 663.6834666834984,
+        "y": 292.5776232987567
+      },
+      "beacon": {
+        "x": 663.6834716796875,
+        "y": 292.57763671875,
+        "w": 44,
+        "h": 44,
+        "visible": "visible",
+        "caption": "0"
+      }
+    },
+    {
+      "label": "Returned Free Look",
+      "expected": {
+        "x": 663.6834666834984,
+        "y": 292.5776232987567
+      },
+      "beacon": {
+        "x": 663.6834716796875,
+        "y": 292.57763671875,
+        "w": 44,
+        "h": 44,
+        "visible": "visible",
+        "caption": "0"
+      }
+    },
+    {
+      "label": "Mobile Home",
+      "expected": {
+        "x": 131.79953576960847,
+        "y": 351.82595452349284
+      },
+      "beacon": {
+        "x": 131.79953002929688,
+        "y": 351.8259582519531,
+        "w": 44,
+        "h": 44,
+        "visible": "visible",
+        "caption": "0"
+      }
+    }
+  ],
+  "captures": [
+    "01-home-idle",
+    "02-beacon-hover",
+    "03-free-look-anchor",
+    "04-mobile-idle",
+    "05-reduced-motion"
+  ],
+  "saved": {
+    "position": [
+      -1.35,
+      1.6,
+      1.7
+    ],
+    "rotation": [
+      -0.1036058221407102,
+      -0.23896911972336138,
+      0
+    ],
+    "fov": 66
+  }
+}

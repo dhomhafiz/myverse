@@ -1,9 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
-import { Html, useGLTF } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Box3, Color, Group, MathUtils, Material, Mesh, MeshStandardMaterial, Object3D, Raycaster, Vector2, Vector3 } from 'three';
+import RoomLabel from './RoomLabel';
 import { room } from '@/lib/room-config';
 import { freeLook } from '@/lib/room-state';
 import type { EntranceMotion } from '@/lib/entrance';
@@ -98,6 +99,17 @@ export default function InteractiveChair({ active, reducedMotion, onGesture, mot
     setHovered(value);
     invalidate();
   }, [gl, invalidate]);
+
+  useEffect(() => {
+    if (active) return;
+    const swivel = swivelRef.current;
+    if (swivel) spin.current.angle = swivel.rotation.y;
+    spin.current.velocity = 0;
+    spin.current.dragging = false;
+    gesture.current = null;
+    setHover(false);
+    invalidate();
+  }, [active, invalidate, setHover]);
 
   useEffect(() => () => {
     model.hoverMaterials.forEach(({ material }) => material.dispose());
@@ -285,8 +297,6 @@ export default function InteractiveChair({ active, reducedMotion, onGesture, mot
     <group position={[0, carpetSurfaceY / scale[1], 0]}>
       <primitive object={model.object} dispose={null} />
     </group>
-    <Html position={[0, 1.4, 0]} center zIndexRange={[18, 12]}>
-      <span aria-hidden="true" className={`chair-spin-hint${hovered ? ' is-hovered' : ''}`}>Give it a spin</span>
-    </Html>
+    <RoomLabel position={[0, 1.4, 0]} zIndex={18} className={`chair-spin-hint${hovered ? ' is-hovered' : ''}`} text="Give it a spin" />
   </group>;
 }

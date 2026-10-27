@@ -1,0 +1,394 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "Netflix starts first"
+    },
+    {
+      "pass": true,
+      "label": "1366x768 has no document overflow"
+    },
+    {
+      "pass": true,
+      "label": "Exactly one WebGL visual context"
+    },
+    {
+      "pass": true,
+      "label": "Liquid layer cannot intercept links"
+    },
+    {
+      "pass": true,
+      "label": "Resting gallery stops GPU draw calls"
+    },
+    {
+      "pass": true,
+      "label": "Mouse motion outside project image wakes fullscreen liquid"
+    },
+    {
+      "pass": true,
+      "label": "Text, navigation and image hit area remain stationary with no filters"
+    },
+    {
+      "pass": true,
+      "label": "Ripples damp fully and stop drawing"
+    },
+    {
+      "pass": true,
+      "label": "Project switching reuses the same renderer"
+    },
+    {
+      "pass": true,
+      "label": "Case study has no liquid canvas"
+    },
+    {
+      "pass": true,
+      "label": "Gallery releases its WebGL context on exit"
+    },
+    {
+      "pass": true,
+      "label": "Re-entry resets project and creates clean visual layer"
+    },
+    {
+      "pass": true,
+      "label": "1920x1080 has no document overflow"
+    },
+    {
+      "pass": true,
+      "label": "Reduced motion restores static DOM artwork"
+    },
+    {
+      "pass": true,
+      "label": "Touch layout uses static presentation"
+    },
+    {
+      "pass": true,
+      "label": "Mobile has no document overflow"
+    },
+    {
+      "pass": true,
+      "label": "Mobile project navigation stays within viewport"
+    },
+    {
+      "pass": true,
+      "label": "Back to Room removes all liquid rendering"
+    },
+    {
+      "pass": true,
+      "label": "No runtime exceptions or console errors during gallery tests"
+    },
+    {
+      "pass": true,
+      "label": "Unavailable WebGL leaves static media and controls"
+    },
+    {
+      "pass": true,
+      "label": "Only expected forced-WebGL-failure diagnostics"
+    }
+  ],
+  "errors": [],
+  "expectedFallbackErrors": [
+    [
+      {
+        "type": "string",
+        "value": "THREE.WebGLRenderer: THREE.WebGLRenderer: Error creating WebGL context."
+      }
+    ]
+  ],
+  "samples": [
+    {
+      "desktop1366": {
+        "title": {
+          "x": 54.625,
+          "y": 247.015625,
+          "w": 448.96875,
+          "h": 97,
+          "transform": "none",
+          "filter": "none"
+        },
+        "description": {
+          "x": 54.625,
+          "y": 407.015625,
+          "w": 320,
+          "h": 74.0625,
+          "transform": "none",
+          "filter": "none"
+        },
+        "nav": {
+          "x": 54.625,
+          "y": 683.53125,
+          "w": 1256.75,
+          "h": 84.46875,
+          "transform": "none",
+          "filter": "none"
+        },
+        "media": {
+          "x": 571.890625,
+          "y": 177.390625,
+          "w": 613.78125,
+          "h": 414.703125,
+          "transform": "none",
+          "filter": "none"
+        },
+        "overflowX": false,
+        "overflowY": false,
+        "canvases": 1
+      }
+    },
+    {
+      "restDrawsOver350ms": 0
+    },
+    {
+      "activeDrawsSinceRest": 37,
+      "metrics": {
+        "metrics": [
+          {
+            "name": "Timestamp",
+            "value": 3112842.730698
+          },
+          {
+            "name": "AudioHandlers",
+            "value": 0
+          },
+          {
+            "name": "AudioWorkletProcessors",
+            "value": 0
+          },
+          {
+            "name": "Documents",
+            "value": 4
+          },
+          {
+            "name": "Frames",
+            "value": 4
+          },
+          {
+            "name": "JSEventListeners",
+            "value": 330
+          },
+          {
+            "name": "LayoutObjects",
+            "value": 97
+          },
+          {
+            "name": "MediaKeySessions",
+            "value": 0
+          },
+          {
+            "name": "MediaKeys",
+            "value": 0
+          },
+          {
+            "name": "Nodes",
+            "value": 142
+          },
+          {
+            "name": "Resources",
+            "value": 20
+          },
+          {
+            "name": "ContextLifecycleStateObservers",
+            "value": 19
+          },
+          {
+            "name": "V8PerContextDatas",
+            "value": 2
+          },
+          {
+            "name": "WorkerGlobalScopes",
+            "value": 0
+          },
+          {
+            "name": "UACSSResources",
+            "value": 0
+          },
+          {
+            "name": "RTCPeerConnections",
+            "value": 0
+          },
+          {
+            "name": "ResourceFetchers",
+            "value": 4
+          },
+          {
+            "name": "AdSubframes",
+            "value": 0
+          },
+          {
+            "name": "DetachedScriptStates",
+            "value": 1
+          },
+          {
+            "name": "ArrayBufferContents",
+            "value": 31
+          },
+          {
+            "name": "LayoutCount",
+            "value": 3
+          },
+          {
+            "name": "RecalcStyleCount",
+            "value": 17
+          },
+          {
+            "name": "LayoutDuration",
+            "value": 0.055903
+          },
+          {
+            "name": "RecalcStyleDuration",
+            "value": 0.003129
+          },
+          {
+            "name": "DevToolsCommandDuration",
+            "value": 0.001528
+          },
+          {
+            "name": "ScriptDuration",
+            "value": 0.537009
+          },
+          {
+            "name": "V8CompileDuration",
+            "value": 0.000288
+          },
+          {
+            "name": "TaskDuration",
+            "value": 0.723269
+          },
+          {
+            "name": "TaskOtherDuration",
+            "value": 0.125412
+          },
+          {
+            "name": "ThreadTime",
+            "value": 0.199974
+          },
+          {
+            "name": "ProcessTime",
+            "value": 0.349585
+          },
+          {
+            "name": "JSHeapUsedSize",
+            "value": 5925516
+          },
+          {
+            "name": "JSHeapTotalSize",
+            "value": 7864320
+          },
+          {
+            "name": "FirstMeaningfulPaint",
+            "value": 0
+          },
+          {
+            "name": "DomContentLoaded",
+            "value": 3112838.773662
+          },
+          {
+            "name": "NavigationStart",
+            "value": 3112838.702533
+          }
+        ]
+      }
+    },
+    {
+      "desktop1920": {
+        "title": {
+          "x": 76.796875,
+          "y": 388.65625,
+          "w": 631.03125,
+          "h": 118.71875,
+          "transform": "none",
+          "filter": "none"
+        },
+        "description": {
+          "x": 76.796875,
+          "y": 570.375,
+          "w": 320,
+          "h": 74.0625,
+          "transform": "none",
+          "filter": "none"
+        },
+        "nav": {
+          "x": 76.796875,
+          "y": 967,
+          "w": 1766.40625,
+          "h": 113,
+          "transform": "none",
+          "filter": "none"
+        },
+        "media": {
+          "x": 803.828125,
+          "y": 245.65625,
+          "w": 863.109375,
+          "h": 583.171875,
+          "transform": "none",
+          "filter": "none"
+        },
+        "overflowX": false,
+        "overflowY": false,
+        "canvases": 1
+      }
+    },
+    {
+      "mobile390": {
+        "title": {
+          "x": 23.390625,
+          "y": 197.015625,
+          "w": 343.21875,
+          "h": 63.59375,
+          "transform": "none",
+          "filter": "none"
+        },
+        "description": {
+          "x": 23.390625,
+          "y": 306.609375,
+          "w": 343.21875,
+          "h": 45.59375,
+          "transform": "none",
+          "filter": "none"
+        },
+        "nav": {
+          "x": 23.390625,
+          "y": 751.171875,
+          "w": 343.21875,
+          "h": 92.828125,
+          "transform": "none",
+          "filter": "none"
+        },
+        "media": {
+          "x": 23.390625,
+          "y": 481.59375,
+          "w": 343.21875,
+          "h": 236.6875,
+          "transform": "none",
+          "filter": "none"
+        },
+        "overflowX": false,
+        "overflowY": false,
+        "canvases": 0
+      }
+    }
+  ],
+  "captures": [
+    "01-gallery-rest",
+    "02-background-wave",
+    "03-liquid-across-media",
+    "04-next-project",
+    "05-gallery-1920",
+    "06-reduced-motion",
+    "07-mobile-gallery",
+    "08-mobile-internal-scroll",
+    "09-no-webgl-fallback"
+  ],
+  "pixelEvidence": {
+    "backgroundMeanAbsoluteChannelDifference": [
+      1.3562807017543859,
+      1.2956491228070175,
+      1.029719298245614
+    ],
+    "mediaMeanAbsoluteChannelDifference": [
+      0.23059752747252749,
+      0.19456324925074925,
+      0.19458276098901098
+    ],
+    "note": "Actual browser screenshot differences, 8-bit channels. Read alongside stationary DOM bounds; captures sample transient waves, not a GPU benchmark."
+  }
+}

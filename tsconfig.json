@@ -36,6 +36,8 @@
     ".next/dev/types/**/*.ts",
     ".next-guitar-review/types/**/*.ts",
     ".next-guitar-review/dev/types/**/*.ts",
+    ".next-projects-review/types/**/*.ts",
+    ".next-projects-review/dev/types/**/*.ts",
   ],
   "exclude": [
     "node_modules"

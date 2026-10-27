@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Html, useGLTF } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 import { Box3, Group, Material, Mesh, MeshStandardMaterial, Raycaster, Vector2, Vector3 } from 'three';
+import RoomLabel from './RoomLabel';
 import { createBall, football, kickBall, moving, stepBall } from '@/lib/football';
 import { freeLook } from '@/lib/room-state';
 
@@ -50,6 +51,11 @@ export default function Football({ active, reducedMotion }: { active: boolean; r
     });
     invalidate();
   }, [active, hovered, focused, invalidate]);
+  useEffect(() => {
+    if (active) return;
+    accumulator.current = 0;
+    gl.domElement.classList.remove('over-football');
+  }, [active, gl]);
 
   const kick = () => {
     if (!active) return;
@@ -102,6 +108,8 @@ export default function Football({ active, reducedMotion }: { active: boolean; r
       canvas.removeEventListener('pointerup', up); canvas.removeEventListener('pointercancel', cancel);
       canvas.removeEventListener('pointerleave', leave); window.removeEventListener('blur', cancel);
       canvas.classList.remove('over-football');
+      setHovered(false);
+      setFocused(false);
     };
   }, [active, reducedMotion, camera, gl, invalidate, vectors]);
 
@@ -127,11 +135,8 @@ export default function Football({ active, reducedMotion }: { active: boolean; r
       </mesh>
       <primitive object={visual.object} scale={visual.scale} dispose={null} />
     </group>
-    {active && <Html position={[0, 0.24, 0]} center zIndexRange={[12, 10]}>
-      <button type="button" className={`football-kick${hovered ? ' is-hovered' : ''}`} aria-label="Kick football"
-        onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onClick={kick}>
-        <span aria-hidden="true">Kick Me!</span>
-      </button>
-    </Html>}
+    {active && <RoomLabel position={[0, 0.24, 0]} zIndex={12} button
+      className={`football-kick${hovered ? ' is-hovered' : ''}`} text="Kick Me!" ariaLabel="Kick football"
+      onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onClick={kick} />}
   </group>;
 }

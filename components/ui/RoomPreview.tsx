@@ -1,58 +1,189 @@
 'use client';
+
+import { useRouter, usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Component, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Component, useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import type { ReviewView } from '@/lib/room-config';
 import type { EntrancePhase, Readiness } from '@/lib/room-state';
+import type { ProjectCameraMode } from '@/lib/projects-navigation';
+import { projectsNavigation } from '@/lib/projects-navigation';
+import { roomPreparation } from '@/lib/room-preparation';
+import { hotspotDestinations } from '@/lib/hotspot-destinations';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import BootScreen from './BootScreen';
 import RoomUnavailable from './RoomUnavailable';
 import HeroBrand from './HeroBrand';
 import useEntranceTimeline from '@/hooks/useEntranceTimeline';
 import { createEntranceMotion } from '@/lib/entrance';
+
 const RoomCanvas = dynamic(() => import('@/components/canvas/RoomCanvas'), { ssr: false });
-class SceneBoundary extends Component<{ children: ReactNode; onFailure: () => void }, { failed: boolean }> {
+
+class SceneBoundary extends Component<{ children: ReactNode; onFailure: (error: Error) => void }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
-  componentDidCatch(error: Error) { console.error('Room rendering failed:', error); this.props.onFailure(); }
+  componentDidCatch(error: Error) { this.props.onFailure(error); }
   render() { return this.state.failed ? null : this.props.children; }
 }
-export default function RoomPreview({ view }: { view: ReviewView }) {
+
+export default function RoomPreview({
+  view,
+  roomActive,
+  directReturn,
+  returnRequested,
+  onTransitionStart,
+  onReturnComplete,
+}: {
+  view: ReviewView;
+  roomActive: boolean;
+  directReturn: boolean;
+  returnRequested: boolean;
+  onTransitionStart: () => void;
+  onReturnComplete: () => void;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [directEntry] = useState(directReturn);
+  const projectMode = useSyncExternalStore(
+    projectsNavigation.subscribeMode,
+    projectsNavigation.getMode,
+    () => 'explore' as ProjectCameraMode,
+  );
+  const opening = useRef(false);
   const [phase, setPhase] = useState<EntrancePhase>('loading');
   const [readiness, setReadiness] = useState<Readiness>('initializing');
   const [failed, setFailed] = useState(false);
   const [hint, setHint] = useState(true);
   const surface = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLDivElement>(null);
-  const motion = useRef(createEntranceMotion());
+  const [initialMotion] = useState(() => {
+    const value = createEntranceMotion();
+    if (directEntry) Object.assign(value.lights, { monitors: 1, pc: 1, lamp: 1, room: 1 });
+    return value;
+  });
+  const motion = useRef(initialMotion);
   const reducedMotion = useReducedMotion();
-  const onFailure = useCallback(() => setFailed(true), []);
+
+  const handleFailure = useCallback((error: Error, logError: boolean) => {
+    if (logError) console.error('Room initialization failed:', error);
+    projectsNavigation.saved = null;
+    projectsNavigation.visited = false;
+    projectsNavigation.setMode('paused');
+    roomPreparation.fail(error);
+    setFailed(true);
+  }, []);
+  const onFailure = useCallback((error = new Error('Room initialization failed.')) => {
+    handleFailure(error, true);
+  }, [handleFailure]);
+
   const onReadiness = useCallback((stage: Readiness) => {
     setReadiness(stage);
-    if (stage === 'ready') setPhase(previous => previous === 'loading' ? 'ready' : previous);
+    if (stage === 'ready') {
+      roomPreparation.markSceneReady();
+      setPhase(previous => previous === 'loading' ? (directEntry ? 'exploring' : 'ready') : previous);
+    }
+  }, [directEntry]);
+
+  const onProgress = useCallback((loaded: number, total: number, active: boolean) => {
+    roomPreparation.reportAssets(loaded, total, active);
   }, []);
+
   const onEntered = useCallback(() => setPhase('exploring'), []);
   const onGesture = useCallback(() => setHint(false), []);
-  useEntranceTimeline({ root, motion, phase, reducedMotion, view, onEntered });
+
+  const onOpenProjects = useCallback(() => {
+    if (opening.current || phase !== 'exploring' || projectMode !== 'explore') return;
+    opening.current = true;
+    projectsNavigation.setMode('opening');
+    router.prefetch(hotspotDestinations.projects.route);
+  }, [phase, projectMode, router]);
+
+  const onProjectSettled = useCallback(() => {
+    if (projectMode === 'opening') {
+      router.push(hotspotDestinations.projects.route);
+    } else if (projectMode === 'returning') {
+      opening.current = false;
+      onReturnComplete();
+    }
+  }, [onReturnComplete, projectMode, router]);
+
   useEffect(() => {
-    if (phase === 'exploring') surface.current?.querySelector('canvas')?.focus({ preventScroll: true });
-  }, [phase]);
-  if (failed) return <RoomUnavailable />;
-  return <div ref={root} className="room-experience" data-phase={phase} data-readiness={readiness} data-reduced-motion={reducedMotion}>
-    <div className="room-surface" ref={surface}>
-      <SceneBoundary onFailure={onFailure}>
-        <RoomCanvas view={view} phase={phase} reducedMotion={reducedMotion} onReadiness={onReadiness}
-          motion={motion} onGesture={onGesture} onFailure={onFailure} fallback={<p>Your browser does not support the room canvas.</p>} />
-      </SceneBoundary>
+    if (pathname.startsWith('/work') && projectMode === 'opening') {
+      projectsNavigation.setMode('paused');
+      return;
+    }
+    if (pathname.startsWith('/work') && projectMode === 'explore' && projectsNavigation.visited) {
+      projectsNavigation.setMode('paused');
+      return;
+    }
+    if (pathname === '/' && projectMode === 'paused' && !returnRequested && !projectsNavigation.saved) {
+      opening.current = false;
+      projectsNavigation.setMode('explore');
+    }
+  }, [pathname, phase, projectMode, onTransitionStart, returnRequested]);
+
+  useEffect(() => {
+    if (!returnRequested || readiness !== 'ready' || phase !== 'exploring' || projectMode === 'returning') return;
+    opening.current = true;
+    onTransitionStart();
+    projectsNavigation.setMode('returning');
+  }, [returnRequested, readiness, phase, projectMode, onTransitionStart]);
+
+  useEntranceTimeline({ root, motion, phase, reducedMotion, view, onEntered });
+
+  useEffect(() => {
+    if (phase === 'exploring' && projectMode === 'explore' && roomActive) {
+      surface.current?.querySelector('canvas')?.focus({ preventScroll: true });
+    }
+  }, [phase, projectMode, roomActive]);
+
+  if (failed) {
+    return <div className="room-experience"><RoomUnavailable /></div>;
+  }
+
+  return (
+    <div
+      ref={root}
+      className="room-experience"
+      data-phase={phase}
+      data-project-mode={projectMode}
+      data-readiness={readiness}
+      data-reduced-motion={reducedMotion}
+      aria-hidden={!roomActive}
+      inert={!roomActive}
+    >
+      <div className="room-surface" ref={surface}>
+        <SceneBoundary onFailure={onFailure}>
+          <RoomCanvas
+            directStart={directEntry}
+            roomActive={roomActive}
+            view={view}
+            phase={phase}
+            reducedMotion={reducedMotion}
+            onReadiness={onReadiness}
+            onProgress={onProgress}
+            motion={motion}
+            projectMode={projectMode}
+            onProjectSettled={onProjectSettled}
+            onOpenProjects={onOpenProjects}
+            onGesture={onGesture}
+            onFailure={onFailure}
+            fallback={<p>Your browser does not support the room canvas.</p>}
+          />
+        </SceneBoundary>
+      </div>
+      {!directEntry && phase !== 'exploring' && <BootScreen phase={phase} readiness={readiness} reducedMotion={reducedMotion} onEnter={() => setPhase('entering')} />}
+      {(phase === 'entering' || phase === 'exploring') && (
+        <>
+          <header className="preview-header pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-6">
+            <div><p className="brand">dhomhafiz<span>.dev</span></p></div>
+          </header>
+          {phase === 'entering' && <button className="intro-skip" aria-label="Skip introduction" type="button">Skip intro</button>}
+          {hint && phase === 'exploring' && <p className="explore-hint" aria-live="polite">Drag to explore</p>}
+        </>
+      )}
+      {projectMode === 'opening' && <div className="projects-transition-cover" aria-hidden="true" />}
+      <HeroBrand active={phase === 'entering' || phase === 'exploring'} settled={phase === 'exploring'} />
+      <noscript><style>{'.boot-screen { display: none; }'}</style><section className="scene-message no-script"><h1>Mohd Hafiz’s workspace</h1><p>A personal developer room with guitars and a gravel bike. Enable JavaScript for the interactive room. Portfolio content arrives in a later phase.</p></section></noscript>
     </div>
-    {phase !== 'exploring' && <BootScreen phase={phase} readiness={readiness} reducedMotion={reducedMotion} onEnter={() => setPhase('entering')} />}
-    {(phase === 'entering' || phase === 'exploring') && <>
-      <header className="preview-header pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-6">
-        <div><p className="brand">dhomhafiz<span>.dev</span></p></div>
-      </header>
-      {phase === 'entering' && <button className="intro-skip" aria-label="Skip introduction" type="button">Skip intro <span aria-hidden="true">↘</span></button>}
-      {hint && phase === 'exploring' && <p className="explore-hint" aria-live="polite">Drag to explore <span aria-hidden="true">↔</span></p>}
-    </>}
-    <HeroBrand active={phase === 'entering' || phase === 'exploring'} settled={phase === 'exploring'} />
-    <noscript><style>{'.boot-screen { display: none; }'}</style><section className="scene-message no-script"><h1>Mohd Hafiz’s workspace</h1><p>A personal developer room with guitars and a gravel bike. Enable JavaScript for the interactive room. Portfolio content arrives in a later phase.</p></section></noscript>
-  </div>;
+  );
 }
