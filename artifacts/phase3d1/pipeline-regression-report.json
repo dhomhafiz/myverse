@@ -1,0 +1,10 @@
+{
+  "results": [
+    "Baseline reproduction: a loading lifecycle change cancels the ready RAF and the sent latch prevents recovery",
+    "Fixed pipeline resumes after loading changes; readiness requires a completed draw, is idempotent and cleans up",
+    "Asset completion alone cannot authorize scene readiness or a transition",
+    "Late prefetch completions cannot regress ready/transitioning lifecycle state",
+    "Cancelled attempts cannot publish readiness/failure or complete a later navigation",
+    "Retry invalidates failed callbacks; repeated return requests do not create new attempts"
+  ]
+}

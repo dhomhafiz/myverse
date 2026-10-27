@@ -1,0 +1,1296 @@
+{
+  "base": "http://127.0.0.1:3026",
+  "results": [
+    {
+      "pass": true,
+      "label": "/skills direct entry has no room renderer"
+    },
+    {
+      "pass": true,
+      "label": "/skills starts at configured RIGHT monitor focus"
+    },
+    {
+      "pass": true,
+      "label": "/skills dollies to Home"
+    },
+    {
+      "pass": true,
+      "label": "/skills all real readiness gates satisfied"
+    },
+    {
+      "pass": true,
+      "label": "/skills Free Look receives keyboard focus"
+    },
+    {
+      "pass": true,
+      "label": "/skills direct entry has no room renderer"
+    },
+    {
+      "pass": true,
+      "label": "/skills starts at configured RIGHT monitor focus"
+    },
+    {
+      "pass": true,
+      "label": "/skills dollies to Home"
+    },
+    {
+      "pass": true,
+      "label": "/skills all real readiness gates satisfied"
+    },
+    {
+      "pass": true,
+      "label": "/skills Free Look receives keyboard focus"
+    },
+    {
+      "pass": true,
+      "label": "/skills direct entry has no room renderer"
+    },
+    {
+      "pass": true,
+      "label": "/skills starts at configured RIGHT monitor focus"
+    },
+    {
+      "pass": true,
+      "label": "/skills dollies to Home"
+    },
+    {
+      "pass": true,
+      "label": "/skills all real readiness gates satisfied"
+    },
+    {
+      "pass": true,
+      "label": "/skills Free Look receives keyboard focus"
+    },
+    {
+      "pass": true,
+      "label": "/work direct entry has no room renderer"
+    },
+    {
+      "pass": true,
+      "label": "/work starts at configured LEFT monitor focus"
+    },
+    {
+      "pass": true,
+      "label": "/work dollies to Home"
+    },
+    {
+      "pass": true,
+      "label": "/work all real readiness gates satisfied"
+    },
+    {
+      "pass": true,
+      "label": "/work Free Look receives keyboard focus"
+    },
+    {
+      "pass": true,
+      "label": "/work/netflix direct entry has no room renderer"
+    },
+    {
+      "pass": true,
+      "label": "/work/netflix starts at configured LEFT monitor focus"
+    },
+    {
+      "pass": true,
+      "label": "/work/netflix dollies to Home"
+    },
+    {
+      "pass": true,
+      "label": "/work/netflix all real readiness gates satisfied"
+    },
+    {
+      "pass": true,
+      "label": "/work/netflix Free Look receives keyboard focus"
+    },
+    {
+      "pass": true,
+      "label": "/work/project-preview direct entry has no room renderer"
+    },
+    {
+      "pass": true,
+      "label": "/work/project-preview starts at configured LEFT monitor focus"
+    },
+    {
+      "pass": true,
+      "label": "/work/project-preview dollies to Home"
+    },
+    {
+      "pass": true,
+      "label": "/work/project-preview all real readiness gates satisfied"
+    },
+    {
+      "pass": true,
+      "label": "/work/project-preview Free Look receives keyboard focus"
+    },
+    {
+      "pass": true,
+      "label": "/skills retains Canvas cycle 0"
+    },
+    {
+      "pass": true,
+      "label": "shared hover underline /skills"
+    },
+    {
+      "pass": true,
+      "label": "persistent return has no loader 0"
+    },
+    {
+      "pass": true,
+      "label": "saved Free Look restored 0"
+    },
+    {
+      "pass": true,
+      "label": "no repeated boot 0"
+    },
+    {
+      "pass": true,
+      "label": "/work retains Canvas cycle 1"
+    },
+    {
+      "pass": true,
+      "label": "shared hover underline /work"
+    },
+    {
+      "pass": true,
+      "label": "persistent return has no loader 1"
+    },
+    {
+      "pass": true,
+      "label": "saved Free Look restored 1"
+    },
+    {
+      "pass": true,
+      "label": "no repeated boot 1"
+    },
+    {
+      "pass": true,
+      "label": "/skills retains Canvas cycle 2"
+    },
+    {
+      "pass": true,
+      "label": "persistent return has no loader 2"
+    },
+    {
+      "pass": true,
+      "label": "saved Free Look restored 2"
+    },
+    {
+      "pass": true,
+      "label": "no repeated boot 2"
+    },
+    {
+      "pass": true,
+      "label": "/work retains Canvas cycle 3"
+    },
+    {
+      "pass": true,
+      "label": "persistent return has no loader 3"
+    },
+    {
+      "pass": true,
+      "label": "saved Free Look restored 3"
+    },
+    {
+      "pass": true,
+      "label": "no repeated boot 3"
+    },
+    {
+      "pass": true,
+      "label": "/skills retains Canvas cycle 4"
+    },
+    {
+      "pass": true,
+      "label": "persistent return has no loader 4"
+    },
+    {
+      "pass": true,
+      "label": "saved Free Look restored 4"
+    },
+    {
+      "pass": true,
+      "label": "no repeated boot 4"
+    },
+    {
+      "pass": true,
+      "label": "chair hierarchy and pose remain unchanged over five cycles"
+    },
+    {
+      "pass": true,
+      "label": "/skills direct entry has no room renderer"
+    },
+    {
+      "pass": true,
+      "label": "cancel removes attempt; late callbacks cannot navigate"
+    },
+    {
+      "pass": true,
+      "label": "skills-after-cancel starts at configured RIGHT monitor focus"
+    },
+    {
+      "pass": true,
+      "label": "skills-after-cancel dollies to Home"
+    },
+    {
+      "pass": true,
+      "label": "skills-after-cancel all real readiness gates satisfied"
+    },
+    {
+      "pass": true,
+      "label": "skills-after-cancel Free Look receives keyboard focus"
+    },
+    {
+      "pass": true,
+      "label": "/skills direct entry has no room renderer"
+    },
+    {
+      "pass": true,
+      "label": "failure explains actual failed condition"
+    },
+    {
+      "pass": true,
+      "label": "Retry remounts failed attempt and returns successfully"
+    },
+    {
+      "pass": true,
+      "label": "Browser Back/Forward restores destination and room"
+    },
+    {
+      "pass": true,
+      "label": "mobile has no horizontal document overflow"
+    },
+    {
+      "pass": true,
+      "label": "reduced motion disables shared sweep transition"
+    },
+    {
+      "pass": true,
+      "label": "touch activates shared return"
+    },
+    {
+      "pass": true,
+      "label": "no unexpected runtime errors or React root unmount errors"
+    }
+  ],
+  "errors": [
+    [
+      {
+        "type": "string",
+        "value": "Room initialization failed:"
+      },
+      {
+        "type": "object",
+        "subtype": "error",
+        "className": "Error",
+        "description": "Error: The room graphics context was lost.\n    at HTMLCanvasElement.e (http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:12:107167)\n    at <anonymous>:1:48",
+        "objectId": "2044118960234992471.10.1",
+        "preview": {
+          "type": "object",
+          "subtype": "error",
+          "description": "Error: The room graphics context was lost.\n    at HTMLCanvasElement.e (http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:12:107167)\n    at <anonymous>:1:48",
+          "overflow": false,
+          "properties": [
+            {
+              "name": "stack",
+              "type": "string",
+              "value": "Error: The room graphics context was lost.\n    at …z_hj8pe9-yg.js:12:107167)\n    at <anonymous>:1:48"
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "value": "The room graphics context was lost."
+            }
+          ]
+        }
+      }
+    ]
+  ],
+  "samples": [
+    {
+      "label": "/skills",
+      "draws": [
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,frame"
+        },
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            0.24048284999999997,
+            1.35901775,
+            -0.5170366999999999
+          ],
+          "fov": 46.72142,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.20391065,
+            1.57786525,
+            1.4963602999999999
+          ],
+          "fov": 64.22922,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.3299607500000001,
+            1.59696375,
+            1.6720665
+          ],
+          "fov": 65.7571,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "transitioning",
+          "pending": ""
+        }
+      ],
+      "state": {
+        "route": "/",
+        "status": "sceneReady",
+        "pending": "",
+        "room": {
+          "phase": "exploring",
+          "navigationMode": "explore",
+          "readiness": "ready",
+          "reducedMotion": "false"
+        },
+        "canvas": 1
+      },
+      "pose": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.10360582214071021,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "label": "/skills",
+      "draws": [
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,shaders,frame"
+        },
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,frame"
+        },
+        {
+          "position": [
+            -0.06515160000000003,
+            1.405326,
+            -0.09100079999999988
+          ],
+          "fov": 50.42608,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.17928870000000008,
+            1.4226195000000001,
+            0.06809940000000014
+          ],
+          "fov": 51.80956,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.20701925,
+            1.57833625,
+            1.5006935
+          ],
+          "fov": 64.26689999999999,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "transitioning",
+          "pending": ""
+        }
+      ],
+      "state": {
+        "route": "/",
+        "status": "sceneReady",
+        "pending": "",
+        "room": {
+          "phase": "exploring",
+          "navigationMode": "explore",
+          "readiness": "ready",
+          "reducedMotion": "false"
+        },
+        "canvas": 1
+      },
+      "pose": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.10360582214071021,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "label": "/skills",
+      "draws": [
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,shaders,frame"
+        },
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,frame"
+        },
+        {
+          "position": [
+            0.03470144999999997,
+            1.39019675,
+            -0.2301898999999999
+          ],
+          "fov": 49.21574,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.28213650000000007,
+            1.4382025,
+            0.21146300000000007
+          ],
+          "fov": 53.0562,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.2443142,
+            1.583987,
+            1.5526804
+          ],
+          "fov": 64.71896,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "transitioning",
+          "pending": ""
+        }
+      ],
+      "state": {
+        "route": "/",
+        "status": "sceneReady",
+        "pending": "",
+        "room": {
+          "phase": "exploring",
+          "navigationMode": "explore",
+          "readiness": "ready",
+          "reducedMotion": "false"
+        },
+        "canvas": 1
+      },
+      "pose": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.10360582214071021,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "label": "/work",
+      "draws": [
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,shaders,frame"
+        },
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,shaders,frame"
+        },
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,frame"
+        },
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.87139395,
+            1.4159207500000002,
+            0.006470900000000057
+          ],
+          "fov": 51.27366,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.9310724,
+            1.438874,
+            0.21764079999999997
+          ],
+          "fov": 53.10992,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.00512495,
+            1.46735575,
+            0.47967289999999996
+          ],
+          "fov": 55.38846,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.3494429500000003,
+            1.5997857500000001,
+            1.6980289
+          ],
+          "fov": 65.98286,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.3498518000000002,
+            1.5999430000000001,
+            1.6994755999999998
+          ],
+          "fov": 65.99543999999999,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "sceneReady",
+          "pending": ""
+        }
+      ],
+      "state": {
+        "route": "/",
+        "status": "sceneReady",
+        "pending": "",
+        "room": {
+          "phase": "exploring",
+          "navigationMode": "explore",
+          "readiness": "ready",
+          "reducedMotion": "false"
+        },
+        "canvas": 1
+      },
+      "pose": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.10360582214071021,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "label": "/work/netflix",
+      "draws": [
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,shaders,frame"
+        },
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,shaders,frame"
+        },
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,frame"
+        },
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.8933646,
+            1.424371,
+            0.0842132000000001
+          ],
+          "fov": 51.94968,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.9490813,
+            1.4458005,
+            0.2813646000000001
+          ],
+          "fov": 53.66404,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.03172945,
+            1.4775882500000002,
+            0.5738118999999999
+          ],
+          "fov": 56.20706,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.34238005,
+            1.59706925,
+            1.6730371
+          ],
+          "fov": 65.76554,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "transitioning",
+          "pending": ""
+        }
+      ],
+      "state": {
+        "route": "/",
+        "status": "sceneReady",
+        "pending": "",
+        "room": {
+          "phase": "exploring",
+          "navigationMode": "explore",
+          "readiness": "ready",
+          "reducedMotion": "false"
+        },
+        "canvas": 1
+      },
+      "pose": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.10360582214071021,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "label": "/work/project-preview",
+      "draws": [
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,shaders,frame"
+        },
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,shaders,frame"
+        },
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,frame"
+        },
+        {
+          "position": [
+            -0.7,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.8618083999999999,
+            1.412234,
+            -0.027447199999999894
+          ],
+          "fov": 50.978719999999996,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.9124096,
+            1.431696,
+            0.15160320000000016
+          ],
+          "fov": 52.53568,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.3151665000000001,
+            1.5866025000000001,
+            1.5767429999999998
+          ],
+          "fov": 64.9282,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "transitioning",
+          "pending": ""
+        }
+      ],
+      "state": {
+        "route": "/",
+        "status": "sceneReady",
+        "pending": "",
+        "room": {
+          "phase": "exploring",
+          "navigationMode": "explore",
+          "readiness": "ready",
+          "reducedMotion": "false"
+        },
+        "canvas": 1
+      },
+      "pose": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.10360582214071021,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "cycle": 0,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "returned": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "cycle": 1,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "returned": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "cycle": 2,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "returned": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "cycle": 3,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "returned": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "cycle": 4,
+      "saved": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      },
+      "returned": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.23896911972336138,
+          0
+        ],
+        "fov": 66
+      }
+    },
+    {
+      "label": "skills-after-cancel",
+      "draws": [
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,shaders,frame"
+        },
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "assetsLoaded",
+          "pending": "camera,frame"
+        },
+        {
+          "position": [
+            0.3,
+            1.35,
+            -0.5999999999999999
+          ],
+          "fov": 46,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            0.10679324999999998,
+            1.37927375,
+            -0.33068149999999985
+          ],
+          "fov": 48.3419,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            0.04437044999999995,
+            1.38873175,
+            -0.24366789999999988
+          ],
+          "fov": 49.09854,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.04383524999999999,
+            1.40209625,
+            -0.12071449999999995
+          ],
+          "fov": 50.167699999999996,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -0.11759025000000006,
+            1.4132712500000002,
+            -0.01790449999999988
+          ],
+          "fov": 51.0617,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.3104825,
+            1.5940125,
+            1.644915
+          ],
+          "fov": 65.521,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.32813585,
+            1.59668725,
+            1.6695227000000001
+          ],
+          "fov": 65.73498,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.3409662500000001,
+            1.5986312500000002,
+            1.6874074999999997
+          ],
+          "fov": 65.8905,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.3470168,
+            1.599548,
+            1.6958415999999998
+          ],
+          "fov": 65.96384,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "transitioning",
+          "pending": ""
+        },
+        {
+          "position": [
+            -1.35,
+            1.6,
+            1.7
+          ],
+          "fov": 66,
+          "status": "sceneReady",
+          "pending": ""
+        }
+      ],
+      "state": {
+        "route": "/",
+        "status": "sceneReady",
+        "pending": "",
+        "room": {
+          "phase": "exploring",
+          "navigationMode": "explore",
+          "readiness": "ready",
+          "reducedMotion": "false"
+        },
+        "canvas": 1
+      },
+      "pose": {
+        "position": [
+          -1.35,
+          1.6,
+          1.7
+        ],
+        "rotation": [
+          -0.1036058221407102,
+          -0.34396911972336136,
+          0
+        ],
+        "fov": 66
+      }
+    }
+  ],
+  "captures": [
+    "01-skills-loading",
+    "02-skills-finalizing",
+    "03-skills-return-home",
+    "04-skills-idle",
+    "05-skills-hover",
+    "06-skills-focus",
+    "07-work-idle",
+    "08-work-hover",
+    "09-five-cycles-home",
+    "10-recoverable-failure",
+    "11-mobile-skills"
+  ]
+}

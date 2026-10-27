@@ -1,19 +1,20 @@
 'use client';
 import { useEffect, useMemo, useRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { addAfterEffect, useFrame, useThree } from '@react-three/fiber';
 import { MathUtils, PerspectiveCamera, Vector3, Euler, Quaternion } from 'three';
 import { gsap } from 'gsap';
-import { projectsNavigation, type ProjectCameraMode } from '@/lib/projects-navigation';
+import { hotspotNavigation, type HotspotNavigationMode } from '@/lib/hotspot-navigation';
 import { cameraAnchors } from '@/lib/room-config';
 import type { MutableRefObject } from 'react';
 import { bikeReview, room, type ReviewView } from '@/lib/room-config';
 import { freeLook, type CameraMode, type EntrancePhase } from '@/lib/room-state';
 import { entrance, poseValues, type EntranceMotion } from '@/lib/entrance';
-import { hotspotDestinations } from '@/lib/hotspot-destinations';
+import { getHotspotDestination } from '@/lib/hotspot-destinations';
 
-export default function CameraRig({ view, phase, reducedMotion, motion, onGesture, projectMode, onProjectSettled, directStart }: {
+export default function CameraRig({ view, phase, reducedMotion, motion, onGesture, navigationMode, onNavigationSettled, directStart, directDestinationId }: {
   view: ReviewView; phase: EntrancePhase; reducedMotion: boolean; motion: MutableRefObject<EntranceMotion>;
-  directStart: boolean; onGesture: () => void; projectMode: ProjectCameraMode; onProjectSettled: () => void;
+  directStart: boolean; directDestinationId: string; onGesture: () => void;
+  navigationMode: HotspotNavigationMode; onNavigationSettled: () => void;
 }) {
   const { gl, size, invalidate, camera } = useThree();
   const pose = view === 'bike' ? bikeReview : room.home;
@@ -21,6 +22,13 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     const dx = pose.target[0] - pose.position[0], dy = pose.target[1] - pose.position[1], dz = pose.target[2] - pose.position[2];
     return { yaw: Math.atan2(-dx, -dz), pitch: Math.atan2(dy, Math.hypot(dx, dz)) };
   }, [pose]);
+  const completion = useRef<{ callback: () => void; frame: number | null } | null>(null);
+  useEffect(() => addAfterEffect(() => {
+    const pending = completion.current;
+    if (!pending || pending.frame === null || gl.info.render.frame <= pending.frame) return;
+    completion.current = null;
+    pending.callback();
+  }), [gl]);
   const projectFrame = useRef<(() => void) | null>(null);
   const navigationMotion = useRef<{ position: Vector3; from: Quaternion; to: Quaternion; fov: number; progress: number } | null>(null);
   const restoredPosition = useRef<Vector3 | null>(null);
@@ -38,7 +46,8 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     invalidate();
   }, [phase, invalidate]);
   useEffect(() => {
-    if (projectMode === 'paused') {
+    completion.current = null;
+    if (navigationMode === 'paused') {
       mode.current = 'focus';
       navigationMotion.current = null;
       projectFrame.current = null;
@@ -46,25 +55,31 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       return;
     }
     if (!(camera instanceof PerspectiveCamera) || phase !== 'exploring') return;
-    if (projectMode === 'explore') {
+    if (navigationMode === 'explore') {
       mode.current = 'explore'; navigationMotion.current = null;
       camera.rotation.reorder('YXZ'); invalidate(); return;
     }
     mode.current = 'focus';
-    if (projectMode === 'opening') {
+    const destinationConfig = getHotspotDestination(hotspotNavigation.destinationId);
+    if (navigationMode === 'opening') {
       const rotation = new Euler().setFromQuaternion(camera.quaternion, 'YXZ');
-      projectsNavigation.saved = { position: camera.position.toArray(), rotation: [rotation.x, rotation.y, rotation.z], fov: camera.fov };
-      projectsNavigation.visited = true;
+      hotspotNavigation.saved = { position: camera.position.toArray(), rotation: [rotation.x, rotation.y, rotation.z], fov: camera.fov };
+      hotspotNavigation.visited = true;
     }
-    const monitor = cameraAnchors[hotspotDestinations.projects.focusPose];
-    const saved = projectsNavigation.saved;
-    const restore = projectMode === 'returning';
-    const destination = restore && saved ? new Vector3(...saved.position) : restore ? new Vector3(...pose.position) : new Vector3(...monitor.position);
-    const destinationRotation = restore && saved ? new Quaternion().setFromEuler(new Euler(...saved.rotation, 'YXZ')) : new Quaternion().setFromEuler(new Euler(base.pitch, base.yaw, 0, 'YXZ'));
+    const monitor = cameraAnchors[destinationConfig.focusPose];
+    const saved = hotspotNavigation.saved;
+    const restore = navigationMode === 'returning';
+    const restoreSaved = restore && saved && destinationConfig.returnTo === 'saved-camera';
+    const destination = restoreSaved ? new Vector3(...saved.position) : restore ? new Vector3(...pose.position) : new Vector3(...monitor.position);
+    const destinationRotation = restoreSaved
+      ? new Quaternion().setFromEuler(new Euler(...saved.rotation, 'YXZ'))
+      : new Quaternion().setFromEuler(new Euler(base.pitch, base.yaw, 0, 'YXZ'));
     if (!restore) {
       const dummy = camera.clone(); dummy.position.copy(destination); dummy.lookAt(new Vector3(...monitor.target)); destinationRotation.copy(dummy.quaternion);
     }
-    const destinationFov = restore ? saved?.fov ?? (size.width < size.height ? 86 : pose.fov) : size.width < size.height ? 65 : 46;
+    const destinationFov = restore
+      ? restoreSaved ? saved.fov : size.width < size.height ? 86 : pose.fov
+      : size.width < size.height ? destinationConfig.focusFov.mobile : destinationConfig.focusFov.desktop;
     const values = { position: camera.position.clone(), from: camera.quaternion.clone(), to: destinationRotation, fov: camera.fov, progress: 0 };
     navigationMotion.current = values;
     const settle = () => {
@@ -74,11 +89,12 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
         Object.assign(target.current, current.current);
         restoredPosition.current = destination.clone(); restoredFov.current = destinationFov;
       }
-      invalidate(); onProjectSettled();
+      completion.current = { callback: onNavigationSettled, frame: null };
+      invalidate();
     };
     const tween = gsap.to(values, {
       progress: 1,
-      duration: reducedMotion ? .01 : hotspotDestinations.projects.duration ?? 1.15,
+      duration: reducedMotion ? .01 : destinationConfig.duration ?? 1.15,
       ease: 'power3.inOut',
       onUpdate: invalidate,
       onComplete: settle,
@@ -90,15 +106,15 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       camera.fov = MathUtils.lerp(values.fov, destinationFov, values.progress); camera.updateProjectionMatrix();
     };
     projectFrame.current = frame;
-    return () => { tween.kill(); projectFrame.current = null; };
-  }, [projectMode, phase, camera, invalidate, reducedMotion, onProjectSettled, base, pose, size.width, size.height]);
+    return () => { tween.kill(); projectFrame.current = null; completion.current = null; };
+  }, [navigationMode, phase, camera, invalidate, reducedMotion, onNavigationSettled, base, pose, size.width, size.height]);
   useEffect(() => {
     const canvas = gl.domElement;
     canvas.setAttribute('tabindex', phase === 'exploring' ? '0' : '-1');
     canvas.setAttribute('aria-hidden', phase === 'exploring' ? 'false' : 'true');
     canvas.setAttribute('role', 'region');
     canvas.setAttribute('aria-label', 'Interactive room. Drag or swipe to look around. Arrow keys to look; Home to reset.');
-    if (phase !== 'exploring' || projectMode !== 'explore') return;
+    if (phase !== 'exploring' || navigationMode !== 'explore') return;
     let pointer: { id: number; x: number; y: number; startX: number; startY: number } | null = null;
     const rotate = (dx: number, dy: number) => {
       target.current.yaw = MathUtils.clamp(target.current.yaw + dx * 0.003, freeLook.minYaw, freeLook.maxYaw);
@@ -149,20 +165,31 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       canvas.removeEventListener('pointerup', up); canvas.removeEventListener('pointercancel', up);
       canvas.removeEventListener('lostpointercapture', up); canvas.removeEventListener('click', click, true); canvas.removeEventListener('keydown', key);
     };
-  }, [phase, projectMode, gl, invalidate, onGesture]);
+  }, [phase, navigationMode, gl, invalidate, onGesture]);
   useFrame(({ camera }, delta) => {
     if (!(camera instanceof PerspectiveCamera)) return;
     if (mode.current === 'focus') {
-      if (projectFrame.current) projectFrame.current();
+      if (projectFrame.current) {
+        projectFrame.current();
+        if (completion.current) completion.current.frame = gl.info.render.frame;
+      }
       else if (navigationMotion.current) { const values = navigationMotion.current; camera.position.copy(values.position); camera.quaternion.copy(values.to); camera.fov = values.fov; camera.updateProjectionMatrix(); }
+      else if (directStart) {
+        const focus = cameraAnchors[getHotspotDestination(directDestinationId).focusPose];
+        camera.position.set(...focus.position);
+        camera.lookAt(new Vector3(...focus.target));
+        camera.fov = size.width < size.height ? getHotspotDestination(directDestinationId).focusFov.mobile : getHotspotDestination(directDestinationId).focusFov.desktop;
+        camera.updateProjectionMatrix();
+      }
       return;
     }
     if (phase !== 'exploring') {
       if (directStart) {
-        const focus = cameraAnchors[hotspotDestinations.projects.focusPose];
+        const destination = getHotspotDestination(directDestinationId);
+        const focus = cameraAnchors[destination.focusPose];
         camera.position.set(...focus.position);
         camera.lookAt(new Vector3(...focus.target));
-        const fov = size.width < size.height ? 65 : 46;
+        const fov = size.width < size.height ? destination.focusFov.mobile : destination.focusFov.desktop;
         if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
         return;
       }

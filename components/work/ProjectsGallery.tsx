@@ -8,7 +8,7 @@ import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import ProjectMedia from './ProjectMedia';
 import GalleryLiquid from './GalleryLiquid';
-import RoomReturnControl from './RoomReturnControl';
+import ReturnToRoom from '@/components/ui/ReturnToRoom';
 
 export default function ProjectsGallery() {
   const router = useRouter();
@@ -17,15 +17,11 @@ export default function ProjectsGallery() {
   const reducedMotion = useReducedMotion();
   const root = useRef<HTMLElement>(null), content = useRef<HTMLDivElement>(null), visual = useRef<HTMLAnchorElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
-  const timeline = useRef<gsap.core.Timeline | null>(null), locked = useRef(false), leaving = useRef(false), hasRevealed = useRef(false);
+  const timeline = useRef<gsap.core.Timeline | null>(null), locked = useRef(false), hasRevealed = useRef(false);
   const project = galleryProjects[index];
-  const returnToRoom = useCallback(() => {
-    if (leaving.current) return;
-    leaving.current = true;
-    requestRoomReturn();
-  }, [requestRoomReturn]);
+  const returnToRoom = requestRoomReturn;
   const switchProject = useCallback((direction: number) => {
-    if (locked.current || leaving.current || galleryProjects.length < 2) return;
+    if (locked.current || galleryProjects.length < 2) return;
     locked.current = true; root.current?.removeAttribute('data-gallery-interactive'); timeline.current?.kill();
     timeline.current = gsap.timeline().to(content.current, { opacity: 0, duration: reducedMotion ? 0 : .22,
       onComplete: () => setIndex(value => (value + direction + galleryProjects.length) % galleryProjects.length) });
@@ -87,7 +83,7 @@ export default function ProjectsGallery() {
   }, [router, returnToRoom, switchProject]);
   return <main ref={root} className="work-shell gallery" style={{ '--project-accent': project?.accent ?? '#aaa' } as CSSProperties}>
     {project && <GalleryLiquid project={project} gallery={root} media={visual} />}
-    <header className="work-header"><Link href="/" className="work-brand" onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); returnToRoom(); } }}>MYVERSE<span> / SELECTED WORK</span></Link><nav aria-label="Return to workspace"><RoomReturnControl onRequest={returnToRoom} /></nav></header>
+    <header className="work-header"><Link href="/" className="work-brand" onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); returnToRoom(); } }}>MYVERSE<span> / SELECTED WORK</span></Link><nav aria-label="Return to workspace"><ReturnToRoom /></nav></header>
     <div className="gallery-topline"><span>INDEPENDENT DEVELOPER / KUALA LUMPUR</span><span>AN EXPLORATION OF DIGITAL EXPERIENCES</span></div>
     <div className="gallery-content" ref={content}>
       {project ? <><section className="project-info"><p className="work-eyebrow">SELECTED WORK <span>/ {String(index + 1).padStart(2, '0')}</span></p>

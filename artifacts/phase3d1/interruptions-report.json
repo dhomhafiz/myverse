@@ -1,0 +1,166 @@
+{
+  "base": "http://127.0.0.1:3026",
+  "results": [
+    {
+      "pass": true,
+      "label": "asset failure offers Retry and Cancel"
+    },
+    {
+      "pass": true,
+      "label": "Retry recovers from actual blocked model request and rejected loader cache"
+    },
+    {
+      "pass": true,
+      "label": "rapid return activation creates one pending scene"
+    },
+    {
+      "pass": true,
+      "label": "navigation away cancels intent and late network completions cannot redirect"
+    },
+    {
+      "pass": true,
+      "label": "return remains usable after route interruption"
+    },
+    {
+      "pass": true,
+      "label": "refresh Skills preserves direct-entry behavior"
+    },
+    {
+      "pass": true,
+      "label": "preparation survives an actual hidden tab"
+    },
+    {
+      "pass": true,
+      "label": "preparation completes after tab becomes visible"
+    }
+  ],
+  "errors": [
+    {
+      "exceptionId": 1,
+      "text": "Uncaught",
+      "lineNumber": 0,
+      "columnNumber": 61450,
+      "scriptId": "19",
+      "url": "http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js",
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "19",
+            "url": "http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js",
+            "lineNumber": 0,
+            "columnNumber": 61450
+          },
+          {
+            "functionName": "l",
+            "scriptId": "19",
+            "url": "http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js",
+            "lineNumber": 0,
+            "columnNumber": 2671
+          },
+          {
+            "functionName": "",
+            "scriptId": "12",
+            "url": "http://127.0.0.1:3026/_next/static/chunks/05o7gr42jqv9c.js",
+            "lineNumber": 0,
+            "columnNumber": 259002
+          }
+        ]
+      },
+      "exception": {
+        "type": "object",
+        "subtype": "error",
+        "className": "Error",
+        "description": "Error: Could not load /models/pc-balanced.glb: Failed to fetch\n    at http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:61451\n    at Object.l [as onError] (http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:2672)\n    at http://127.0.0.1:3026/_next/static/chunks/05o7gr42jqv9c.js:1:259003",
+        "objectId": "-397957034646461450.2.1",
+        "preview": {
+          "type": "object",
+          "subtype": "error",
+          "description": "Error: Could not load /models/pc-balanced.glb: Failed to fetch\n    at http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:61451\n    at Object.l [as onError] (http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:2672)\n    at http://127.0.0.1:3026/_next/static/chunks/05o7gr42jqv9c.js:1:259003",
+          "overflow": false,
+          "properties": [
+            {
+              "name": "stack",
+              "type": "string",
+              "value": "Error: Could not load /models/pc-balanced.glb: Fai…026/_next/static/chunks/05o7gr42jqv9c.js:1:259003"
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "value": "Could not load /models/pc-balanced.glb: Failed to fetch"
+            }
+          ]
+        }
+      },
+      "executionContextId": 2
+    },
+    [
+      {
+        "type": "object",
+        "subtype": "error",
+        "className": "Error",
+        "description": "Error: Could not load /models/pc-balanced.glb: Failed to fetch\n    at http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:61451\n    at Object.l [as onError] (http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:2672)\n    at http://127.0.0.1:3026/_next/static/chunks/05o7gr42jqv9c.js:1:259003",
+        "objectId": "-397957034646461450.2.2",
+        "preview": {
+          "type": "object",
+          "subtype": "error",
+          "description": "Error: Could not load /models/pc-balanced.glb: Failed to fetch\n    at http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:61451\n    at Object.l [as onError] (http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:2672)\n    at http://127.0.0.1:3026/_next/static/chunks/05o7gr42jqv9c.js:1:259003",
+          "overflow": false,
+          "properties": [
+            {
+              "name": "stack",
+              "type": "string",
+              "value": "Error: Could not load /models/pc-balanced.glb: Fai…026/_next/static/chunks/05o7gr42jqv9c.js:1:259003"
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "value": "Could not load /models/pc-balanced.glb: Failed to fetch"
+            }
+          ]
+        }
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "Room initialization failed:"
+      },
+      {
+        "type": "object",
+        "subtype": "error",
+        "className": "Error",
+        "description": "Error: Could not load /models/pc-balanced.glb: Failed to fetch\n    at http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:61451\n    at Object.l [as onError] (http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:2672)\n    at http://127.0.0.1:3026/_next/static/chunks/05o7gr42jqv9c.js:1:259003",
+        "objectId": "-397957034646461450.2.3",
+        "preview": {
+          "type": "object",
+          "subtype": "error",
+          "description": "Error: Could not load /models/pc-balanced.glb: Failed to fetch\n    at http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:61451\n    at Object.l [as onError] (http://127.0.0.1:3026/_next/static/chunks/1lz_hj8pe9-yg.js:1:2672)\n    at http://127.0.0.1:3026/_next/static/chunks/05o7gr42jqv9c.js:1:259003",
+          "overflow": false,
+          "properties": [
+            {
+              "name": "stack",
+              "type": "string",
+              "value": "Error: Could not load /models/pc-balanced.glb: Fai…026/_next/static/chunks/05o7gr42jqv9c.js:1:259003"
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "value": "Could not load /models/pc-balanced.glb: Failed to fetch"
+            }
+          ]
+        }
+      }
+    ]
+  ],
+  "captures": [
+    "12-asset-error"
+  ],
+  "samples": [
+    {
+      "hiddenState": "hidden",
+      "resumedState": "visible"
+    }
+  ],
+  "pausedRequests": 7
+}

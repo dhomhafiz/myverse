@@ -3,6 +3,7 @@ import GamingPc from './GamingPc';
 import RgbKeyboard from './RgbKeyboard';
 import GamingMouse from './GamingMouse';
 import LeftMonitorDisplay from './LeftMonitorDisplay';
+import RightMonitorDisplay from './RightMonitorDisplay';
 import { phone, room } from '@/lib/room-config';
 import type { RefObject } from 'react';
 import type { EntranceMotion } from '@/lib/entrance';
@@ -11,12 +12,9 @@ function Monitor({ name, x, yaw, active, reducedMotion }: { name: string; x: num
   const isLeft = name === 'monitor_left';
   return <group name={name} position={[x, 1.29, -0.07]} rotation={[0, yaw, 0]}>
     <Box size={[0.87, 0.51, 0.045]} color="#14191d" />
-    {isLeft ? <LeftMonitorDisplay active={active} reducedMotion={reducedMotion} /> : <>
-      <Box position={[0, 0, 0.025]} size={[0.81, 0.455, 0.009]} color="#172b40" emissive="#245078" />
-      <Box position={[-0.31, 0, 0.032]} size={[0.12, 0.41, 0.003]} color="#21394c" />
-      {Array.from({ length: 12 }, (_, i) => <Box key={i} position={[-0.05 + (i % 3) * 0.025, 0.175 - i * 0.029, 0.034]}
-        size={[0.26 + (i % 4) * 0.06, 0.006, 0.003]} color={['#86b9c5', '#c3a67d', '#6e8b9b'][i % 3]} />)}
-    </>}
+    {isLeft
+      ? <LeftMonitorDisplay active={active} reducedMotion={reducedMotion} />
+      : <RightMonitorDisplay active={active} reducedMotion={reducedMotion} />}
     <object3D name={name === 'monitor_left' ? 'screen_left_anchor' : 'screen_right_anchor'} position={[0, 0, 0.04]} />
   </group>;
 }

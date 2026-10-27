@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { findProject, galleryProjects, projects } from '@/lib/projects';
 import ProjectMedia from '@/components/work/ProjectMedia';
-import RoomReturnControl from '@/components/work/RoomReturnControl';
+import ReturnToRoom from '@/components/ui/ReturnToRoom';
 import type { CSSProperties } from 'react';
 export function generateStaticParams() { return projects.map(({ slug }) => ({ slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -19,7 +19,7 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   const previousProject = galleryProjects[(projectIndex + galleryProjects.length - 1) % galleryProjects.length];
   const nextProject = galleryProjects[(projectIndex + 1) % galleryProjects.length];
   return <main className="work-shell case-study" style={{ '--project-accent': project.accent } as CSSProperties}>
-    <header className="work-header"><Link href="/work" className="work-link">Selected work</Link><span className="work-brand">MYVERSE<span> / CASE STUDY</span></span><nav aria-label="Return to workspace"><RoomReturnControl /></nav></header>
+    <header className="work-header"><Link href="/work" className="work-link">Selected work</Link><span className="work-brand">MYVERSE<span> / CASE STUDY</span></span><nav aria-label="Return to workspace"><ReturnToRoom /></nav></header>
     <section className="case-heading"><p className="work-eyebrow">{project.category}</p><h1 tabIndex={-1}>{project.title}<span>.</span></h1><p>{project.description}</p>{project.placeholder && <p className="placeholder-notice">Content preview — project details and media pending.</p>}</section>
     <div className="case-media"><ProjectMedia project={project} priority /></div>
     <section className="case-overview"><h2>Overview</h2><div><p>{project.description}</p>{project.role && <p>Role: {project.role}</p>}{project.technologies.length > 0 && <p>Technologies used: {project.technologies.join(', ')}</p>}{project.highlights && <><h3>Implementation highlights</h3><ul>{project.highlights.map(item => <li key={item}>{item}</li>)}</ul></>}

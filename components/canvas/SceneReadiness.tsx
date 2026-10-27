@@ -1,12 +1,15 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { addAfterEffect, useFrame, useThree } from '@react-three/fiber';
 import { useProgress } from '@react-three/drei';
 import type { Readiness } from '@/lib/room-state';
-export default function SceneReadiness({ onReadiness, onProgress, onFailure }: {
+import type { ReadinessGate } from '@/lib/room-preparation';
+
+export default function SceneReadiness({ onReadiness, onProgress, onFailure, onGate }: {
   onReadiness: (stage: Readiness) => void;
   onProgress: (loaded: number, total: number, active: boolean) => void;
   onFailure: (error?: Error) => void;
+  onGate: (gate: ReadinessGate) => void;
 }) {
   const { gl, scene, camera, invalidate } = useThree();
   const active = useProgress(state => state.active);
@@ -15,7 +18,7 @@ export default function SceneReadiness({ onReadiness, onProgress, onFailure }: {
   const errors = useProgress(state => state.errors);
   const compiled = useRef(false);
   const sent = useRef(false);
-  const frame = useRef(0);
+  const candidateFrame = useRef<number | null>(null);
   const observedErrors = useRef(errors.length);
   useEffect(() => onProgress(loaded, total, active), [loaded, total, active, onProgress]);
   useEffect(() => {
@@ -24,27 +27,45 @@ export default function SceneReadiness({ onReadiness, onProgress, onFailure }: {
     onFailure(new Error(`Room asset failed to load: ${errors[errors.length - 1]}`));
   }, [errors, onFailure]);
   useEffect(() => {
-    let mounted = true;
     const lost = (event: Event) => { event.preventDefault(); onFailure(new Error('The room graphics context was lost.')); };
     gl.domElement.addEventListener('webglcontextlost', lost);
-    if (!active) {
+    return () => gl.domElement.removeEventListener('webglcontextlost', lost);
+  }, [gl, onFailure]);
+  useEffect(() => {
+    let current = true;
+    compiled.current = false;
+    candidateFrame.current = null;
+    if (!active && !sent.current) {
+      // This component commits inside the Canvas Suspense boundary, alongside room objects.
+      if (!scene.getObjectByName('room_root')) return;
+      onGate('objects');
       onReadiness('compiling');
       gl.compileAsync(scene, camera).then(() => {
-        if (mounted) { compiled.current = true; invalidate(); }
+        if (!current) return;
+        compiled.current = true;
+        onGate('shaders');
+        // The inactive room is demand-driven too: explicitly request its validation frame.
+        invalidate();
       }).catch(error => {
-        if (mounted) {
-          const failure = error instanceof Error ? error : new Error('Room shader compilation failed.');
-          onFailure(failure);
-        }
+        if (current) onFailure(error instanceof Error ? error : new Error('Room shader compilation failed.'));
       });
     }
-    return () => { mounted = false; cancelAnimationFrame(frame.current); gl.domElement.removeEventListener('webglcontextlost', lost); };
-  }, [gl, scene, camera, active, invalidate, onReadiness, onFailure]);
+    return () => { current = false; compiled.current = false; candidateFrame.current = null; };
+  }, [gl, scene, camera, active, invalidate, onReadiness, onFailure, onGate]);
   useFrame(() => {
-    if (!compiled.current || sent.current) return;
-    sent.current = true;
-    // Notify after this R3F frame has drawn, rather than at render start.
-    frame.current = requestAnimationFrame(() => onReadiness('ready'));
+    if (!compiled.current || active || sent.current || gl.getContext().isContextLost()) return;
+    // CameraRig is registered first and has applied the configured focus pose by this frame.
+    if (![...camera.position.toArray(), ...camera.quaternion.toArray(), ...camera.projectionMatrix.elements].every(Number.isFinite)) return;
+    onGate('camera');
+    candidateFrame.current = gl.info.render.frame;
   });
+  useEffect(() => addAfterEffect(() => {
+    if (sent.current || active || !compiled.current || candidateFrame.current === null) return;
+    // Observe a real completed draw, not the start of a frame or a separate browser RAF.
+    if (gl.info.render.frame <= candidateFrame.current || gl.getContext().isContextLost()) return;
+    sent.current = true;
+    onGate('frame');
+    onReadiness('ready');
+  }), [active, gl, onGate, onReadiness]);
   return null;
 }

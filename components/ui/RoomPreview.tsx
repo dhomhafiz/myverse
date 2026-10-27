@@ -5,10 +5,10 @@ import dynamic from 'next/dynamic';
 import { Component, useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import type { ReviewView } from '@/lib/room-config';
 import type { EntrancePhase, Readiness } from '@/lib/room-state';
-import type { ProjectCameraMode } from '@/lib/projects-navigation';
-import { projectsNavigation } from '@/lib/projects-navigation';
-import { roomPreparation } from '@/lib/room-preparation';
-import { hotspotDestinations } from '@/lib/hotspot-destinations';
+import type { HotspotNavigationMode } from '@/lib/hotspot-navigation';
+import { hotspotNavigation } from '@/lib/hotspot-navigation';
+import { roomPreparation, type ReadinessGate } from '@/lib/room-preparation';
+import { getHotspotDestination, getHotspotDestinationForRoute } from '@/lib/hotspot-destinations';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import BootScreen from './BootScreen';
 import RoomUnavailable from './RoomUnavailable';
@@ -37,18 +37,21 @@ export default function RoomPreview({
   roomActive: boolean;
   directReturn: boolean;
   returnRequested: boolean;
-  onTransitionStart: () => void;
+  onTransitionStart: () => boolean;
   onReturnComplete: () => void;
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const [directEntry] = useState(directReturn);
-  const projectMode = useSyncExternalStore(
-    projectsNavigation.subscribeMode,
-    projectsNavigation.getMode,
-    () => 'explore' as ProjectCameraMode,
+  const navigationMode = useSyncExternalStore(
+    hotspotNavigation.subscribeMode,
+    hotspotNavigation.getMode,
+    () => 'explore' as HotspotNavigationMode,
   );
+  const [attempt] = useState(() => roomPreparation.getSnapshot().attempt);
   const opening = useRef(false);
+  useEffect(() => { roomPreparation.initialize(attempt); }, [attempt]);
+  const onGate = useCallback((gate: ReadinessGate) => roomPreparation.signal(gate, attempt), [attempt]);
   const [phase, setPhase] = useState<EntrancePhase>('loading');
   const [readiness, setReadiness] = useState<Readiness>('initializing');
   const [failed, setFailed] = useState(false);
@@ -64,77 +67,81 @@ export default function RoomPreview({
   const reducedMotion = useReducedMotion();
 
   const handleFailure = useCallback((error: Error, logError: boolean) => {
+    if (roomPreparation.getSnapshot().attempt !== attempt) return;
     if (logError) console.error('Room initialization failed:', error);
-    projectsNavigation.saved = null;
-    projectsNavigation.visited = false;
-    projectsNavigation.setMode('paused');
-    roomPreparation.fail(error);
+    hotspotNavigation.saved = null;
+    hotspotNavigation.visited = false;
+    hotspotNavigation.setMode('paused');
+    roomPreparation.fail(error, attempt);
     setFailed(true);
-  }, []);
+  }, [attempt]);
   const onFailure = useCallback((error = new Error('Room initialization failed.')) => {
     handleFailure(error, true);
   }, [handleFailure]);
 
   const onReadiness = useCallback((stage: Readiness) => {
+    if (roomPreparation.getSnapshot().attempt !== attempt || roomPreparation.getSnapshot().status === 'failed') return;
     setReadiness(stage);
     if (stage === 'ready') {
-      roomPreparation.markSceneReady();
+      roomPreparation.markSceneReady(attempt);
       setPhase(previous => previous === 'loading' ? (directEntry ? 'exploring' : 'ready') : previous);
     }
-  }, [directEntry]);
+  }, [directEntry, attempt]);
 
   const onProgress = useCallback((loaded: number, total: number, active: boolean) => {
-    roomPreparation.reportAssets(loaded, total, active);
-  }, []);
+    roomPreparation.reportAssets(loaded, total, active, attempt);
+  }, [attempt]);
 
   const onEntered = useCallback(() => setPhase('exploring'), []);
   const onGesture = useCallback(() => setHint(false), []);
 
-  const onOpenProjects = useCallback(() => {
-    if (opening.current || phase !== 'exploring' || projectMode !== 'explore') return;
+  const onOpenDestination = useCallback((destinationId: string) => {
+    if (opening.current || phase !== 'exploring' || navigationMode !== 'explore') return;
     opening.current = true;
-    projectsNavigation.setMode('opening');
-    router.prefetch(hotspotDestinations.projects.route);
-  }, [phase, projectMode, router]);
+    onGesture();
+    hotspotNavigation.open(destinationId);
+    router.prefetch(getHotspotDestination(destinationId).route);
+  }, [phase, navigationMode, onGesture, router]);
 
-  const onProjectSettled = useCallback(() => {
-    if (projectMode === 'opening') {
-      router.push(hotspotDestinations.projects.route);
-    } else if (projectMode === 'returning') {
+  const onNavigationSettled = useCallback(() => {
+    if (roomPreparation.getSnapshot().attempt !== attempt) return;
+    if (hotspotNavigation.getMode() === 'opening') {
+      router.push(getHotspotDestination(hotspotNavigation.destinationId).route);
+    } else if (hotspotNavigation.getMode() === 'returning') {
       opening.current = false;
       onReturnComplete();
     }
-  }, [onReturnComplete, projectMode, router]);
+  }, [onReturnComplete, router, attempt]);
 
   useEffect(() => {
-    if (pathname.startsWith('/work') && projectMode === 'opening') {
-      projectsNavigation.setMode('paused');
+    if (pathname !== '/' && navigationMode === 'opening' &&
+      getHotspotDestinationForRoute(pathname).id === hotspotNavigation.destinationId) {
+      hotspotNavigation.setMode('paused');
       return;
     }
-    if (pathname.startsWith('/work') && projectMode === 'explore' && projectsNavigation.visited) {
-      projectsNavigation.setMode('paused');
+    if (pathname !== '/' && navigationMode === 'explore' && hotspotNavigation.visited) {
+      hotspotNavigation.setMode('paused');
       return;
     }
-    if (pathname === '/' && projectMode === 'paused' && !returnRequested && !projectsNavigation.saved) {
+    if (pathname === '/' && navigationMode === 'paused' && !returnRequested && !hotspotNavigation.saved) {
       opening.current = false;
-      projectsNavigation.setMode('explore');
+      hotspotNavigation.setMode('explore');
     }
-  }, [pathname, phase, projectMode, onTransitionStart, returnRequested]);
+  }, [pathname, phase, navigationMode, returnRequested]);
 
   useEffect(() => {
-    if (!returnRequested || readiness !== 'ready' || phase !== 'exploring' || projectMode === 'returning') return;
+    if (!returnRequested || readiness !== 'ready' || phase !== 'exploring' || navigationMode === 'returning') return;
     opening.current = true;
-    onTransitionStart();
-    projectsNavigation.setMode('returning');
-  }, [returnRequested, readiness, phase, projectMode, onTransitionStart]);
+    if (onTransitionStart()) hotspotNavigation.setMode('returning');
+  }, [returnRequested, readiness, phase, navigationMode, onTransitionStart]);
 
   useEntranceTimeline({ root, motion, phase, reducedMotion, view, onEntered });
 
   useEffect(() => {
-    if (phase === 'exploring' && projectMode === 'explore' && roomActive) {
+    if (phase === 'exploring' && navigationMode === 'explore' && roomActive) {
       surface.current?.querySelector('canvas')?.focus({ preventScroll: true });
     }
-  }, [phase, projectMode, roomActive]);
+  }, [phase, navigationMode, roomActive]);
 
   if (failed) {
     return <div className="room-experience"><RoomUnavailable /></div>;
@@ -145,7 +152,7 @@ export default function RoomPreview({
       ref={root}
       className="room-experience"
       data-phase={phase}
-      data-project-mode={projectMode}
+      data-navigation-mode={navigationMode}
       data-readiness={readiness}
       data-reduced-motion={reducedMotion}
       aria-hidden={!roomActive}
@@ -161,10 +168,14 @@ export default function RoomPreview({
             reducedMotion={reducedMotion}
             onReadiness={onReadiness}
             onProgress={onProgress}
+            onGate={onGate}
             motion={motion}
-            projectMode={projectMode}
-            onProjectSettled={onProjectSettled}
-            onOpenProjects={onOpenProjects}
+            navigationMode={navigationMode}
+            onNavigationSettled={onNavigationSettled}
+            onOpenDestination={onOpenDestination}
+            directDestinationId={pathname === '/' && hotspotNavigation.destinationId
+              ? hotspotNavigation.destinationId
+              : getHotspotDestinationForRoute(pathname).id}
             onGesture={onGesture}
             onFailure={onFailure}
             fallback={<p>Your browser does not support the room canvas.</p>}
@@ -181,7 +192,7 @@ export default function RoomPreview({
           {hint && phase === 'exploring' && <p className="explore-hint" aria-live="polite">Drag to explore</p>}
         </>
       )}
-      {projectMode === 'opening' && <div className="projects-transition-cover" aria-hidden="true" />}
+      {navigationMode === 'opening' && <div className="hotspot-transition-cover" aria-hidden="true" />}
       <HeroBrand active={phase === 'entering' || phase === 'exploring'} settled={phase === 'exploring'} />
       <noscript><style>{'.boot-screen { display: none; }'}</style><section className="scene-message no-script"><h1>Mohd Hafiz’s workspace</h1><p>A personal developer room with guitars and a gravel bike. Enable JavaScript for the interactive room. Portfolio content arrives in a later phase.</p></section></noscript>
     </div>
