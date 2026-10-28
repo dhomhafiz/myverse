@@ -53,11 +53,17 @@ export default function ContactPage() {
       <LiquidSodaBackground className="contact-liquid" area={root} interactionReadyAttribute="data-contact-visible" viewport />
       <div className="contact-content">
         <header className="contact-header">
-          <p className="contact-eyebrow contact-reveal">MYVERSE / CONTACT</p>
+          <div className="contact-brand skills-brand contact-reveal">
+            <p className="contact-eyebrow">MYVERSE / CONTACT</p>
+            <span className="skills-online"><i aria-hidden="true" /> ONLINE</span>
+          </div>
           <nav aria-label="Return to workspace" className="contact-return contact-reveal">
             <ReturnToRoom size="prominent" />
           </nav>
-          <section className="contact-hero" aria-labelledby="contact-title">
+        </header>
+
+        <section className="contact-main" aria-labelledby="contact-title">
+          <div className="contact-hero">
             <p className="contact-kicker contact-reveal">START A CONVERSATION</p>
             <h1 ref={heading} id="contact-title" tabIndex={-1} className="contact-title contact-reveal">
               HAVE A PROJECT IN MIND?<br />
@@ -67,26 +73,27 @@ export default function ContactPage() {
               Tell me a little about what you&apos;re building and what you have in mind.
               I&apos;d love to hear about it.
             </p>
-          </section>
-        </header>
+            <p className="contact-availability contact-reveal">OPEN FOR ENQUIRIES</p>
+          </div>
 
-        <section className="contact-methods" aria-label="Contact methods">
-          {contactMethods.map(method => (
-            <div className="contact-card-entrance contact-reveal" key={method.id}>
-              <ContactCard method={method} />
-            </div>
-          ))}
+          <section className="contact-methods" aria-label="Contact methods">
+            {contactMethods.map(method => (
+              <div className="contact-card-entrance contact-reveal" key={method.id}>
+                <ContactCard method={method} />
+              </div>
+            ))}
+          </section>
+
+          <nav className="contact-social-links contact-reveal" aria-label="Social profiles">
+            {contactSocialLinks.map(link => (
+              <a href={link.href} key={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+            ))}
+          </nav>
         </section>
 
         <footer className="contact-footer contact-reveal">
           <span>MYVERSE / PERSONAL PORTFOLIO</span>
-          {contactSocialLinks.length > 0 ? (
-            <nav aria-label="Social links">
-              {contactSocialLinks.map(link => (
-                <a href={link.href} key={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
-              ))}
-            </nav>
-          ) : <span>CONTACT / CONNECTIONS</span>}
+          <span>CONTACT / CONNECTIONS</span>
         </footer>
       </div>
     </main>

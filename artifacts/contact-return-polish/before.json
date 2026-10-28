@@ -1,0 +1,338 @@
+{
+  "results": [],
+  "samples": [
+    {
+      "route": "/contact",
+      "width": 1366,
+      "height": 1000,
+      "menu": {
+        "x": 1066.484375,
+        "y": 28,
+        "width": 71.28125,
+        "height": 44,
+        "top": 28,
+        "right": 1137.765625,
+        "bottom": 72,
+        "left": 1066.484375
+      },
+      "back": {
+        "x": 1149.765625,
+        "y": 28,
+        "width": 161.609375,
+        "height": 44,
+        "top": 28,
+        "right": 1311.375,
+        "bottom": 72,
+        "left": 1149.765625
+      },
+      "menuStyle": {
+        "padding": "8px 10px",
+        "border": "1px solid rgba(213, 224, 226, 0.16)",
+        "borderRadius": "0px",
+        "font": "10px / 10px \"Space Mono\", \"Space Mono Fallback\", monospace",
+        "fontSize": "10px",
+        "lineHeight": "10px"
+      },
+      "backStyle": {
+        "padding": "10px 5px",
+        "border": "",
+        "borderRadius": "0px",
+        "font": "14px / 21px \"Space Mono\", \"Space Mono Fallback\", monospace",
+        "fontSize": "14px",
+        "lineHeight": "21px"
+      },
+      "gap": "12px",
+      "main": {
+        "x": 171,
+        "y": 124.296875,
+        "width": 1024,
+        "height": 765.328125,
+        "top": 124.296875,
+        "right": 1195,
+        "bottom": 889.625,
+        "left": 171
+      },
+      "hero": {
+        "x": 171,
+        "y": 174.296875,
+        "width": 1024,
+        "height": 269.4375,
+        "top": 174.296875,
+        "right": 1195,
+        "bottom": 443.734375,
+        "left": 171
+      },
+      "cards": {
+        "x": 171,
+        "y": 483.734375,
+        "width": 1024,
+        "height": 293.890625,
+        "top": 483.734375,
+        "right": 1195,
+        "bottom": 777.625,
+        "left": 171
+      },
+      "social": {
+        "x": 171,
+        "y": 795.625,
+        "width": 1024,
+        "height": 44,
+        "top": 795.625,
+        "right": 1195,
+        "bottom": 839.625,
+        "left": 171
+      },
+      "header": {
+        "x": 0,
+        "y": 28,
+        "width": 1366,
+        "height": 49,
+        "top": 28,
+        "right": 1366,
+        "bottom": 77,
+        "left": 0
+      },
+      "footer": {
+        "x": 54.640625,
+        "y": 936.90625,
+        "width": 1256.71875,
+        "height": 39.09375,
+        "top": 936.90625,
+        "right": 1311.359375,
+        "bottom": 976,
+        "left": 54.640625
+      },
+      "overflow": false
+    },
+    {
+      "route": "/contact",
+      "width": 390,
+      "height": 844,
+      "menu": {
+        "x": 140.546875,
+        "y": 18,
+        "width": 67.28125,
+        "height": 44,
+        "top": 18,
+        "right": 207.828125,
+        "bottom": 62,
+        "left": 140.546875
+      },
+      "back": {
+        "x": 215.828125,
+        "y": 18,
+        "width": 150.78125,
+        "height": 44,
+        "top": 18,
+        "right": 366.609375,
+        "bottom": 62,
+        "left": 215.828125
+      },
+      "menuStyle": {
+        "padding": "8px",
+        "border": "1px solid rgba(213, 224, 226, 0.16)",
+        "borderRadius": "0px",
+        "font": "10px / 10px \"Space Mono\", \"Space Mono Fallback\", monospace",
+        "fontSize": "10px",
+        "lineHeight": "10px"
+      },
+      "backStyle": {
+        "padding": "10px 5px",
+        "border": "",
+        "borderRadius": "0px",
+        "font": "13px / 19.5px \"Space Mono\", \"Space Mono Fallback\", monospace",
+        "fontSize": "13px",
+        "lineHeight": "19.5px"
+      },
+      "gap": "8px",
+      "main": {
+        "x": 16,
+        "y": 70,
+        "width": 358,
+        "height": 976.59375,
+        "top": 70,
+        "right": 374,
+        "bottom": 1046.59375,
+        "left": 16
+      },
+      "hero": {
+        "x": 16,
+        "y": 112.1875,
+        "width": 358,
+        "height": 286.4375,
+        "top": 112.1875,
+        "right": 374,
+        "bottom": 398.625,
+        "left": 16
+      },
+      "cards": {
+        "x": 16,
+        "y": 420.625,
+        "width": 358,
+        "height": 521.78125,
+        "top": 420.625,
+        "right": 374,
+        "bottom": 942.40625,
+        "left": 16
+      },
+      "social": {
+        "x": 16,
+        "y": 960.40625,
+        "width": 358,
+        "height": 44,
+        "top": 960.40625,
+        "right": 374,
+        "bottom": 1004.40625,
+        "left": 16
+      },
+      "header": {
+        "x": 0,
+        "y": 18,
+        "width": 390,
+        "height": 52,
+        "top": 18,
+        "right": 390,
+        "bottom": 70,
+        "left": 0
+      },
+      "footer": {
+        "x": 23.40625,
+        "y": 1046.59375,
+        "width": 343.1875,
+        "height": 66.1875,
+        "top": 1046.59375,
+        "right": 366.59375,
+        "bottom": 1112.78125,
+        "left": 23.40625
+      },
+      "overflow": false
+    },
+    {
+      "route": "/skills",
+      "width": 1366,
+      "height": 1100,
+      "menu": {
+        "x": 1066.484375,
+        "y": 38,
+        "width": 71.28125,
+        "height": 44,
+        "top": 38,
+        "right": 1137.765625,
+        "bottom": 82,
+        "left": 1066.484375
+      },
+      "back": {
+        "x": 1149.765625,
+        "y": 38,
+        "width": 161.609375,
+        "height": 44,
+        "top": 38,
+        "right": 1311.375,
+        "bottom": 82,
+        "left": 1149.765625
+      },
+      "menuStyle": {
+        "padding": "8px 10px",
+        "border": "1px solid rgba(213, 224, 226, 0.16)",
+        "borderRadius": "0px",
+        "font": "10px / 10px \"Space Mono\", \"Space Mono Fallback\", monospace",
+        "fontSize": "10px",
+        "lineHeight": "10px"
+      },
+      "backStyle": {
+        "padding": "10px 5px",
+        "border": "",
+        "borderRadius": "0px",
+        "font": "14px / 21px \"Space Mono\", \"Space Mono Fallback\", monospace",
+        "fontSize": "14px",
+        "lineHeight": "21px"
+      },
+      "gap": "12px",
+      "header": {
+        "x": 0,
+        "y": 38,
+        "width": 1366,
+        "height": 350.5,
+        "top": 38,
+        "right": 1366,
+        "bottom": 388.5,
+        "left": 0
+      },
+      "footer": {
+        "x": 54.640625,
+        "y": 1112.390625,
+        "width": 1256.71875,
+        "height": 33.59375,
+        "top": 1112.390625,
+        "right": 1311.359375,
+        "bottom": 1145.984375,
+        "left": 54.640625
+      },
+      "overflow": false
+    },
+    {
+      "route": "/skills",
+      "width": 390,
+      "height": 844,
+      "menu": {
+        "x": 140.546875,
+        "y": 24,
+        "width": 67.28125,
+        "height": 44,
+        "top": 24,
+        "right": 207.828125,
+        "bottom": 68,
+        "left": 140.546875
+      },
+      "back": {
+        "x": 215.828125,
+        "y": 24,
+        "width": 150.78125,
+        "height": 44,
+        "top": 24,
+        "right": 366.609375,
+        "bottom": 68,
+        "left": 215.828125
+      },
+      "menuStyle": {
+        "padding": "8px",
+        "border": "1px solid rgba(213, 224, 226, 0.16)",
+        "borderRadius": "0px",
+        "font": "10px / 10px \"Space Mono\", \"Space Mono Fallback\", monospace",
+        "fontSize": "10px",
+        "lineHeight": "10px"
+      },
+      "backStyle": {
+        "padding": "10px 5px",
+        "border": "",
+        "borderRadius": "0px",
+        "font": "13px / 19.5px \"Space Mono\", \"Space Mono Fallback\", monospace",
+        "fontSize": "13px",
+        "lineHeight": "19.5px"
+      },
+      "gap": "8px",
+      "header": {
+        "x": 0,
+        "y": 24,
+        "width": 390,
+        "height": 312.203125,
+        "top": 24,
+        "right": 390,
+        "bottom": 336.203125,
+        "left": 0
+      },
+      "footer": {
+        "x": 23.40625,
+        "y": 1497.1875,
+        "width": 343.1875,
+        "height": 56.1875,
+        "top": 1497.1875,
+        "right": 366.59375,
+        "bottom": 1553.375,
+        "left": 23.40625
+      },
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

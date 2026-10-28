@@ -1,0 +1,9 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "both centered full-card links activate with preserved destinations"
+    }
+  ],
+  "errors": []
+}

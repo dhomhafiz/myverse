@@ -1,0 +1,575 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "heading and intro present, redundant label removed"
+    },
+    {
+      "pass": true,
+      "label": "all unique verified tags and four full contexts exist in initial HTML"
+    },
+    {
+      "pass": true,
+      "label": "four Title Case categories"
+    },
+    {
+      "pass": true,
+      "label": "desktop four cards, readable padded chips, no overflow"
+    },
+    {
+      "pass": true,
+      "label": "desktop bottom action rows align"
+    },
+    {
+      "pass": true,
+      "label": "one plus/minus per card in bottom action row"
+    },
+    {
+      "pass": true,
+      "label": "card 1 expands without clipping or lost focus"
+    },
+    {
+      "pass": true,
+      "label": "card 1 collapses by keyboard"
+    },
+    {
+      "pass": true,
+      "label": "card 2 expands without clipping or lost focus"
+    },
+    {
+      "pass": true,
+      "label": "card 2 collapses by keyboard"
+    },
+    {
+      "pass": true,
+      "label": "card 3 expands without clipping or lost focus"
+    },
+    {
+      "pass": true,
+      "label": "card 3 collapses by keyboard"
+    },
+    {
+      "pass": true,
+      "label": "card 4 expands without clipping or lost focus"
+    },
+    {
+      "pass": true,
+      "label": "card 4 collapses by keyboard"
+    },
+    {
+      "pass": true,
+      "label": "GlobalNavigation portal links remain interactive"
+    },
+    {
+      "pass": true,
+      "label": "menu closes without invoking page return"
+    },
+    {
+      "pass": true,
+      "label": "Projects CTA uses approved filled primary treatment"
+    },
+    {
+      "pass": true,
+      "label": "Projects CTA navigates directly in same document"
+    },
+    {
+      "pass": true,
+      "label": "mobile readable single-column cards, no overflow"
+    },
+    {
+      "pass": true,
+      "label": "mobile tags wrap within card bounds"
+    },
+    {
+      "pass": true,
+      "label": "Contact CTA supports keyboard and direct destination navigation"
+    },
+    {
+      "pass": true,
+      "label": "reduced-motion CTA styling"
+    },
+    {
+      "pass": true,
+      "label": "shared ReturnToRoom starts without duplicate canvas"
+    },
+    {
+      "pass": true,
+      "label": "return cancellation keeps Skills available"
+    }
+  ],
+  "samples": [
+    {
+      "desktop": {
+        "cards": [
+          {
+            "x": 123,
+            "y": 530.890625,
+            "width": 554,
+            "height": 234,
+            "top": 530.890625,
+            "right": 677,
+            "bottom": 764.890625,
+            "left": 123
+          },
+          {
+            "x": 689,
+            "y": 530.890625,
+            "width": 554,
+            "height": 234,
+            "top": 530.890625,
+            "right": 1243,
+            "bottom": 764.890625,
+            "left": 689
+          },
+          {
+            "x": 123,
+            "y": 776.890625,
+            "width": 554,
+            "height": 234,
+            "top": 776.890625,
+            "right": 677,
+            "bottom": 1010.890625,
+            "left": 123
+          },
+          {
+            "x": 689,
+            "y": 776.890625,
+            "width": 554,
+            "height": 234,
+            "top": 776.890625,
+            "right": 1243,
+            "bottom": 1010.890625,
+            "left": 689
+          }
+        ],
+        "actions": [
+          {
+            "x": 146,
+            "y": 701.890625,
+            "width": 508,
+            "height": 42,
+            "top": 701.890625,
+            "right": 654,
+            "bottom": 743.890625,
+            "left": 146
+          },
+          {
+            "x": 712,
+            "y": 701.890625,
+            "width": 508,
+            "height": 42,
+            "top": 701.890625,
+            "right": 1220,
+            "bottom": 743.890625,
+            "left": 712
+          },
+          {
+            "x": 146,
+            "y": 947.890625,
+            "width": 508,
+            "height": 42,
+            "top": 947.890625,
+            "right": 654,
+            "bottom": 989.890625,
+            "left": 146
+          },
+          {
+            "x": 712,
+            "y": 947.890625,
+            "width": 508,
+            "height": 42,
+            "top": 947.890625,
+            "right": 1220,
+            "bottom": 989.890625,
+            "left": 712
+          }
+        ],
+        "chips": [
+          {
+            "text": "React",
+            "x": 146,
+            "y": 637.484375,
+            "width": 61.78125,
+            "height": 35.5,
+            "top": 637.484375,
+            "right": 207.78125,
+            "bottom": 672.984375,
+            "left": 146
+          },
+          {
+            "text": "Next.js",
+            "x": 215.78125,
+            "y": 637.484375,
+            "width": 77.703125,
+            "height": 35.5,
+            "top": 637.484375,
+            "right": 293.484375,
+            "bottom": 672.984375,
+            "left": 215.78125
+          },
+          {
+            "text": "JavaScript",
+            "x": 301.484375,
+            "y": 637.484375,
+            "width": 101.5625,
+            "height": 35.5,
+            "top": 637.484375,
+            "right": 403.046875,
+            "bottom": 672.984375,
+            "left": 301.484375
+          },
+          {
+            "text": "TypeScript",
+            "x": 411.046875,
+            "y": 637.484375,
+            "width": 101.5625,
+            "height": 35.5,
+            "top": 637.484375,
+            "right": 512.609375,
+            "bottom": 672.984375,
+            "left": 411.046875
+          },
+          {
+            "text": "Three.js",
+            "x": 712,
+            "y": 637.484375,
+            "width": 85.65625,
+            "height": 35.5,
+            "top": 637.484375,
+            "right": 797.65625,
+            "bottom": 672.984375,
+            "left": 712
+          },
+          {
+            "text": "React Three Fiber",
+            "x": 805.65625,
+            "y": 637.484375,
+            "width": 157.265625,
+            "height": 35.5,
+            "top": 637.484375,
+            "right": 962.921875,
+            "bottom": 672.984375,
+            "left": 805.65625
+          },
+          {
+            "text": "Drei",
+            "x": 970.921875,
+            "y": 637.484375,
+            "width": 53.828125,
+            "height": 35.5,
+            "top": 637.484375,
+            "right": 1024.75,
+            "bottom": 672.984375,
+            "left": 970.921875
+          },
+          {
+            "text": "GSAP",
+            "x": 146,
+            "y": 883.484375,
+            "width": 53.828125,
+            "height": 35.5,
+            "top": 883.484375,
+            "right": 199.828125,
+            "bottom": 918.984375,
+            "left": 146
+          },
+          {
+            "text": "CSS",
+            "x": 207.828125,
+            "y": 883.484375,
+            "width": 45.875,
+            "height": 35.5,
+            "top": 883.484375,
+            "right": 253.703125,
+            "bottom": 918.984375,
+            "left": 207.828125
+          },
+          {
+            "text": "Tailwind CSS",
+            "x": 261.703125,
+            "y": 883.484375,
+            "width": 117.484375,
+            "height": 35.5,
+            "top": 883.484375,
+            "right": 379.1875,
+            "bottom": 918.984375,
+            "left": 261.703125
+          },
+          {
+            "text": "Git",
+            "x": 712,
+            "y": 883.484375,
+            "width": 45.875,
+            "height": 35.5,
+            "top": 883.484375,
+            "right": 757.875,
+            "bottom": 918.984375,
+            "left": 712
+          },
+          {
+            "text": "GitHub",
+            "x": 765.875,
+            "y": 883.484375,
+            "width": 69.75,
+            "height": 35.5,
+            "top": 883.484375,
+            "right": 835.625,
+            "bottom": 918.984375,
+            "left": 765.875
+          },
+          {
+            "text": "ESLint",
+            "x": 843.625,
+            "y": 883.484375,
+            "width": 69.75,
+            "height": 35.5,
+            "top": 883.484375,
+            "right": 913.375,
+            "bottom": 918.984375,
+            "left": 843.625
+          }
+        ],
+        "font": "13px",
+        "padding": "7px 10px",
+        "overflow": false
+      }
+    },
+    {
+      "mobile": {
+        "cards": [
+          {
+            "x": 16,
+            "y": 426.59375,
+            "width": 358,
+            "height": 240.09375,
+            "top": 426.59375,
+            "right": 374,
+            "bottom": 666.6875,
+            "left": 16
+          },
+          {
+            "x": 16,
+            "y": 675.6875,
+            "width": 358,
+            "height": 234,
+            "top": 675.6875,
+            "right": 374,
+            "bottom": 909.6875,
+            "left": 16
+          },
+          {
+            "x": 16,
+            "y": 918.6875,
+            "width": 358,
+            "height": 234,
+            "top": 918.6875,
+            "right": 374,
+            "bottom": 1152.6875,
+            "left": 16
+          },
+          {
+            "x": 16,
+            "y": 1161.7685546875,
+            "width": 358,
+            "height": 234,
+            "top": 1161.7685546875,
+            "right": 374,
+            "bottom": 1395.7685546875,
+            "left": 16
+          }
+        ],
+        "actions": [
+          {
+            "x": 35,
+            "y": 605.6875,
+            "width": 320,
+            "height": 42,
+            "top": 605.6875,
+            "right": 355,
+            "bottom": 647.6875,
+            "left": 35
+          },
+          {
+            "x": 35,
+            "y": 848.6875,
+            "width": 320,
+            "height": 42,
+            "top": 848.6875,
+            "right": 355,
+            "bottom": 890.6875,
+            "left": 35
+          },
+          {
+            "x": 35,
+            "y": 1091.6875,
+            "width": 320,
+            "height": 42,
+            "top": 1091.6875,
+            "right": 355,
+            "bottom": 1133.6875,
+            "left": 35
+          },
+          {
+            "x": 35,
+            "y": 1334.7685546875,
+            "width": 320,
+            "height": 42,
+            "top": 1334.7685546875,
+            "right": 355,
+            "bottom": 1376.7685546875,
+            "left": 35
+          }
+        ],
+        "chips": [
+          {
+            "text": "React",
+            "x": 35,
+            "y": 526.6875,
+            "width": 61.78125,
+            "height": 35.5,
+            "top": 526.6875,
+            "right": 96.78125,
+            "bottom": 562.1875,
+            "left": 35
+          },
+          {
+            "text": "Next.js",
+            "x": 104.78125,
+            "y": 526.6875,
+            "width": 77.703125,
+            "height": 35.5,
+            "top": 526.6875,
+            "right": 182.484375,
+            "bottom": 562.1875,
+            "left": 104.78125
+          },
+          {
+            "text": "JavaScript",
+            "x": 190.484375,
+            "y": 526.6875,
+            "width": 101.5625,
+            "height": 35.5,
+            "top": 526.6875,
+            "right": 292.046875,
+            "bottom": 562.1875,
+            "left": 190.484375
+          },
+          {
+            "text": "TypeScript",
+            "x": 35,
+            "y": 570.1875,
+            "width": 101.5625,
+            "height": 35.5,
+            "top": 570.1875,
+            "right": 136.5625,
+            "bottom": 605.6875,
+            "left": 35
+          },
+          {
+            "text": "Three.js",
+            "x": 35,
+            "y": 775.78125,
+            "width": 85.65625,
+            "height": 35.5,
+            "top": 775.78125,
+            "right": 120.65625,
+            "bottom": 811.28125,
+            "left": 35
+          },
+          {
+            "text": "React Three Fiber",
+            "x": 128.65625,
+            "y": 775.78125,
+            "width": 157.265625,
+            "height": 35.5,
+            "top": 775.78125,
+            "right": 285.921875,
+            "bottom": 811.28125,
+            "left": 128.65625
+          },
+          {
+            "text": "Drei",
+            "x": 293.921875,
+            "y": 775.78125,
+            "width": 53.828125,
+            "height": 35.5,
+            "top": 775.78125,
+            "right": 347.75,
+            "bottom": 811.28125,
+            "left": 293.921875
+          },
+          {
+            "text": "GSAP",
+            "x": 35,
+            "y": 1018.78125,
+            "width": 53.828125,
+            "height": 35.5,
+            "top": 1018.78125,
+            "right": 88.828125,
+            "bottom": 1054.28125,
+            "left": 35
+          },
+          {
+            "text": "CSS",
+            "x": 96.828125,
+            "y": 1018.78125,
+            "width": 45.875,
+            "height": 35.5,
+            "top": 1018.78125,
+            "right": 142.703125,
+            "bottom": 1054.28125,
+            "left": 96.828125
+          },
+          {
+            "text": "Tailwind CSS",
+            "x": 150.703125,
+            "y": 1018.78125,
+            "width": 117.484375,
+            "height": 35.5,
+            "top": 1018.78125,
+            "right": 268.1875,
+            "bottom": 1054.28125,
+            "left": 150.703125
+          },
+          {
+            "text": "Git",
+            "x": 35,
+            "y": 1261.8623046875,
+            "width": 45.875,
+            "height": 35.5,
+            "top": 1261.8623046875,
+            "right": 80.875,
+            "bottom": 1297.3623046875,
+            "left": 35
+          },
+          {
+            "text": "GitHub",
+            "x": 88.875,
+            "y": 1261.8623046875,
+            "width": 69.75,
+            "height": 35.5,
+            "top": 1261.8623046875,
+            "right": 158.625,
+            "bottom": 1297.3623046875,
+            "left": 88.875
+          },
+          {
+            "text": "ESLint",
+            "x": 166.625,
+            "y": 1261.8623046875,
+            "width": 69.75,
+            "height": 35.5,
+            "top": 1261.8623046875,
+            "right": 236.375,
+            "bottom": 1297.3623046875,
+            "left": 166.625
+          }
+        ],
+        "font": "13px",
+        "padding": "7px 10px",
+        "overflow": false
+      }
+    }
+  ],
+  "errors": []
+}

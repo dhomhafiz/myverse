@@ -1,0 +1,17 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "shared Return cyan hover accent"
+    },
+    {
+      "pass": true,
+      "label": "Return mobile touch action"
+    },
+    {
+      "pass": true,
+      "label": "native touch activates shared room return"
+    }
+  ],
+  "errors": []
+}

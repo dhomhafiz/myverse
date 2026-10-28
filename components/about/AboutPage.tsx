@@ -1,6 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { gsap } from 'gsap';
 import { aboutCards } from '@/lib/about';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
@@ -9,7 +11,7 @@ import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
 import ReturnToRoom from '@/components/ui/ReturnToRoom';
 
 export default function AboutPage() {
-  const { requestRoomReturn } = useExperienceNavigation();
+  const { requestRoomReturn, navigateToDestination } = useExperienceNavigation();
   const root = useRef<HTMLElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
@@ -44,6 +46,9 @@ export default function AboutPage() {
 
   useEffect(() => {
     heading.current?.focus({ preventScroll: true });
+  }, []);
+
+  useEffect(() => {
     const key = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.key !== 'Escape') return;
@@ -54,6 +59,12 @@ export default function AboutPage() {
     window.addEventListener('keydown', key);
     return () => window.removeEventListener('keydown', key);
   }, [expanded, returnToRoom]);
+
+  const navigate = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    navigateToDestination(href);
+  };
 
   return (
     <main ref={root} className="about-dashboard" data-about-visible="">
@@ -73,35 +84,53 @@ export default function AboutPage() {
           <nav aria-label="Return to workspace" className="skills-return about-reveal">
             <ReturnToRoom size="prominent" onActivate={stopLiquid} />
           </nav>
-          <h1 ref={heading} tabIndex={-1} className="skills-title about-reveal">ABOUT ME<span>_</span></h1>
-          <p className="skills-subtitle about-reveal">THE PERSON BEHIND THE CODE</p>
         </header>
+
+        <section className="about-hero" aria-labelledby="about-title">
+          <div className="about-hero-copy about-reveal">
+            <h1 ref={heading} id="about-title" tabIndex={-1} className="skills-title">ABOUT ME<span>_</span></h1>
+            <p className="about-identity">CREATIVE DEVELOPER / KUALA LUMPUR</p>
+            <p className="about-introduction">I build interactive web experiences by combining software engineering, design and a curiosity for how things work.</p>
+          </div>
+          <figure className="about-portrait">
+            <Image src="/images/about-portrait-original.png" width={1122} height={1402}
+              alt="Portrait of Mohd Hafiz"
+              sizes="(max-width: 760px) 200px, 301px" loading="eager" />
+          </figure>
+        </section>
 
         <section className="skills-section" aria-labelledby="about-section-title">
           <div className="skills-section-heading about-reveal">
             <h2 id="about-section-title">A LITTLE CONTEXT</h2>
-            <p>OPEN A CARD TO READ MORE</p>
           </div>
           <div className="skills-grid">
             {aboutCards.map((card, index) => {
               const isExpanded = expanded === card.id;
               const detailsId = `about-context-${card.id}`;
+              const titleId = `about-title-${card.id}`;
+              const actionId = `about-action-${card.id}`;
+              const summaryId = `about-summary-${card.id}`;
               return (
                 <article className={`skill-card about-reveal${isExpanded ? ' is-expanded' : ''}`} key={card.id}>
+                  <h3 id={titleId} className="sr-only">{card.title}</h3>
                   <button
                     className="skill-card-toggle"
                     type="button"
                     aria-expanded={isExpanded}
                     aria-controls={detailsId}
+                    aria-labelledby={`${titleId} ${actionId}`}
+                    aria-describedby={summaryId}
                     onClick={() => setExpanded(current => current === card.id ? null : card.id)}
                   >
                     <span className="skill-card-topline">
                       <span>{String(index + 1).padStart(2, '0')} / 04</span>
+                    </span>
+                    <span className="skill-category" aria-hidden="true">{card.title}</span>
+                    <span id={summaryId} className="about-card-summary">{card.summary}</span>
+                    <span className="skill-card-prompt">
+                      <span id={actionId}>{isExpanded ? 'CLOSE CONTEXT' : 'VIEW CONTEXT'}</span>
                       <span className="skill-card-indicator" aria-hidden="true">{isExpanded ? '−' : '+'}</span>
                     </span>
-                    <span className="skill-category">{card.title}</span>
-                    <span className="about-card-summary">{card.summary}</span>
-                    <span className="skill-card-prompt">{isExpanded ? 'CLOSE DETAILS' : 'VIEW CONTEXT'}</span>
                   </button>
                   <div className="skill-context" id={detailsId} hidden={!isExpanded}>
                     <p className="skill-context-label">A LITTLE MORE</p>
@@ -111,6 +140,14 @@ export default function AboutPage() {
               );
             })}
           </div>
+        </section>
+
+        <section className="about-next-steps about-reveal" aria-labelledby="about-next-steps-title">
+          <h2 id="about-next-steps-title" className="sr-only">Explore my work or get in touch</h2>
+          <Link className="about-cta about-cta--primary" href="/contact" prefetch={false}
+            onClick={event => navigate(event, '/contact')}>GET IN TOUCH</Link>
+          <Link className="about-cta" href="/work" prefetch={false}
+            onClick={event => navigate(event, '/work')}>SEE MY WORKS</Link>
         </section>
 
         <footer className="skills-footer about-reveal">

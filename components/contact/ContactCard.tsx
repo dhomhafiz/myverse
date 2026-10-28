@@ -2,9 +2,9 @@
 
 function ContactIcon({ method }: { method: ContactMethod['id'] }) {
   return method === 'email' ? (
-    <svg className="contact-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-      <rect x="7" y="13" width="50" height="38" rx="5" />
-      <path d="m9 16 23 19 23-19M9 48l15-14m31 14L40 34" strokeLinejoin="round" />
+    <svg className="contact-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
+      <rect x="3" y="9" width="58" height="46" rx="5" />
+      <path d="m5 12 27 22 27-22M5 52l18-16m36 16L41 36" strokeLinejoin="round" strokeLinecap="round" />
     </svg>
   ) : (
     <svg className="contact-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -17,7 +17,6 @@ export default function ContactCard({ method }: { method: ContactMethod }) {
   const content = <>
     <div className="contact-card-topline">
       <ContactIcon method={method.id} />
-      <span className="contact-card-index">/ {method.id === 'email' ? '01' : '02'}</span>
     </div>
     <h2>{method.title}</h2>
     <p className="contact-description">{method.description}</p>

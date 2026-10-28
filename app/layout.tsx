@@ -3,6 +3,7 @@ import { Space_Mono, Work_Sans } from 'next/font/google';
 import './globals.css';
 import ExperienceShell from '@/components/ui/ExperienceShell';
 import { NO_INDEX, OWNER_NAME, SITE_NAME, SITE_URL } from '@/lib/site';
+import { CONTACT_EMAIL, contactSocialLinks } from '@/lib/contact';
 
 const workSans = Work_Sans({ subsets: ['latin'], display: 'swap', variable: '--font-work-sans' });
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap', variable: '--font-space-mono' });
@@ -19,6 +20,8 @@ const structuredData = {
       '@id': `${SITE_URL}#person`,
       name: OWNER_NAME,
       url: SITE_URL.toString(),
+      email: CONTACT_EMAIL,
+      sameAs: contactSocialLinks.map(link => link.href),
       jobTitle: 'Creative Developer and Web Designer',
       address: {
         '@type': 'PostalAddress',

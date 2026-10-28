@@ -1,0 +1,226 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "existing whole-card anchors preserved without nested controls"
+    },
+    {
+      "pass": true,
+      "label": "official email and exact encoded subject"
+    },
+    {
+      "pass": true,
+      "label": "existing WhatsApp number preserved with encoded enquiry"
+    },
+    {
+      "pass": true,
+      "label": "decorative numbers removed and icons decorative"
+    },
+    {
+      "pass": true,
+      "label": "three approved secure social links"
+    },
+    {
+      "pass": true,
+      "label": "availability and shared ONLINE interface status"
+    },
+    {
+      "pass": true,
+      "label": "readable labels and matching icon boxes"
+    },
+    {
+      "pass": true,
+      "label": "desktop footer near bottom and chrome gutters preserved"
+    },
+    {
+      "pass": true,
+      "label": "one existing Person entity, approved email/socials and preserved properties"
+    },
+    {
+      "pass": true,
+      "label": "card 1 existing hover lift preserved"
+    },
+    {
+      "pass": true,
+      "label": "card 2 existing hover lift preserved"
+    },
+    {
+      "pass": true,
+      "label": "both full-card pointer activations captured without opening external apps"
+    },
+    {
+      "pass": true,
+      "label": "Email card keyboard activation"
+    },
+    {
+      "pass": true,
+      "label": "global portal menu remains interactive"
+    },
+    {
+      "pass": true,
+      "label": "menu Escape restores focus without page return"
+    },
+    {
+      "pass": true,
+      "label": "mobile readable stacked cards and wrapping social targets without overflow"
+    },
+    {
+      "pass": true,
+      "label": "mobile full-card WhatsApp touch activation"
+    },
+    {
+      "pass": true,
+      "label": "social text link pointer activation"
+    },
+    {
+      "pass": true,
+      "label": "mobile natural scrolling reaches footer"
+    },
+    {
+      "pass": true,
+      "label": "reduced motion styles retained"
+    },
+    {
+      "pass": true,
+      "label": "shared ReturnToRoom starts without duplicate canvas"
+    },
+    {
+      "pass": true,
+      "label": "room return cancellation keeps Contact available"
+    }
+  ],
+  "samples": [
+    {
+      "desktop": {
+        "hrefs": [
+          "mailto:build@dhomhafiz.dev?subject=Project%20Enquiry",
+          "https://wa.me/60197860823?text=Hi%20Hafiz%2C%20I'm%20interested%20in%20discussing%20a%20website%20project."
+        ],
+        "socials": [
+          {
+            "href": "https://www.linkedin.com/in/mohd-hafiz-abd-rahim-b23a9667/",
+            "rel": "noopener noreferrer",
+            "target": "_blank"
+          },
+          {
+            "href": "https://www.facebook.com/profile.php?id=100064737337327",
+            "rel": "noopener noreferrer",
+            "target": "_blank"
+          },
+          {
+            "href": "https://www.instagram.com/dhomhafiz/",
+            "rel": "noopener noreferrer",
+            "target": "_blank"
+          }
+        ],
+        "footer": {
+          "x": 54.640625,
+          "y": 936.90625,
+          "width": 1256.71875,
+          "height": 39.09375,
+          "top": 936.90625,
+          "right": 1311.359375,
+          "bottom": 976,
+          "left": 54.640625
+        },
+        "brand": {
+          "x": 54.625,
+          "y": 28,
+          "width": 1011.859375,
+          "height": 17.59375,
+          "top": 28,
+          "right": 1066.484375,
+          "bottom": 45.59375,
+          "left": 54.625
+        },
+        "icons": [
+          {
+            "x": 196,
+            "y": 506.734375,
+            "width": 64,
+            "height": 64,
+            "top": 506.734375,
+            "right": 260,
+            "bottom": 570.734375,
+            "left": 196
+          },
+          {
+            "x": 716,
+            "y": 506.734375,
+            "width": 64,
+            "height": 64,
+            "top": 506.734375,
+            "right": 780,
+            "bottom": 570.734375,
+            "left": 716
+          }
+        ],
+        "nested": 0,
+        "desc": "14px",
+        "details": "14px",
+        "action": "13px"
+      }
+    },
+    {
+      "mobile": {
+        "overflow": false,
+        "cards": [
+          {
+            "x": 16,
+            "y": 420.625,
+            "width": 358,
+            "height": 253.890625,
+            "top": 420.625,
+            "right": 374,
+            "bottom": 674.515625,
+            "left": 16
+          },
+          {
+            "x": 16,
+            "y": 688.515625,
+            "width": 358,
+            "height": 253.890625,
+            "top": 688.515625,
+            "right": 374,
+            "bottom": 942.40625,
+            "left": 16
+          }
+        ],
+        "socials": [
+          {
+            "x": 16,
+            "y": 960.40625,
+            "width": 63.65625,
+            "height": 44,
+            "top": 960.40625,
+            "right": 79.65625,
+            "bottom": 1004.40625,
+            "left": 16
+          },
+          {
+            "x": 103.65625,
+            "y": 960.40625,
+            "width": 63.65625,
+            "height": 44,
+            "top": 960.40625,
+            "right": 167.3125,
+            "bottom": 1004.40625,
+            "left": 103.65625
+          },
+          {
+            "x": 191.3125,
+            "y": 960.40625,
+            "width": 71.609375,
+            "height": 44,
+            "top": 960.40625,
+            "right": 262.921875,
+            "bottom": 1004.40625,
+            "left": 191.3125
+          }
+        ],
+        "desc": "14px"
+      }
+    }
+  ],
+  "errors": []
+}

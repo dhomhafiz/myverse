@@ -1,0 +1,599 @@
+[
+  {
+    "route": "/about",
+    "width": 1366,
+    "header": {
+      "x": 0,
+      "y": 38,
+      "width": 1366,
+      "height": 324.3125
+    },
+    "brand": {
+      "x": 54.625,
+      "y": 38,
+      "width": 1011.859375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 1066.484375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 54.640625,
+      "y": 951.625,
+      "width": 1256.71875,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title about-reveal",
+        "x": 123,
+        "y": 186,
+        "width": 1120,
+        "height": 136.3125
+      },
+      {
+        "class": "skills-subtitle about-reveal",
+        "x": 123,
+        "y": 344.3125,
+        "width": 1120,
+        "height": 18
+      },
+      {
+        "class": "skills-section",
+        "x": 123,
+        "y": 452.3125,
+        "width": 1120,
+        "height": 471.3125
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/about",
+    "width": 900,
+    "header": {
+      "x": 0,
+      "y": 38,
+      "width": 900,
+      "height": 291.671875
+    },
+    "brand": {
+      "x": 36,
+      "y": 38,
+      "width": 583.109375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 619.109375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 36,
+      "y": 912.984375,
+      "width": 828,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title about-reveal",
+        "x": 48,
+        "y": 186,
+        "width": 804,
+        "height": 103.671875
+      },
+      {
+        "class": "skills-subtitle about-reveal",
+        "x": 48,
+        "y": 311.671875,
+        "width": 804,
+        "height": 18
+      },
+      {
+        "class": "skills-section",
+        "x": 48,
+        "y": 419.671875,
+        "width": 804,
+        "height": 465.3125
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/about",
+    "width": 390,
+    "header": {
+      "x": 0,
+      "y": 24,
+      "width": 390,
+      "height": 206.265625
+    },
+    "brand": {
+      "x": 23.390625,
+      "y": 24,
+      "width": 117.484375,
+      "height": 37.59375
+    },
+    "right": {
+      "x": 140.875,
+      "y": 24,
+      "width": 225.734375,
+      "height": 49
+    },
+    "footer": {
+      "x": 23.40625,
+      "y": 1210.890625,
+      "width": 343.1875,
+      "height": 56.1875
+    },
+    "main": [
+      {
+        "class": "skills-title about-reveal",
+        "x": 16,
+        "y": 149,
+        "width": 358,
+        "height": 48.671875
+      },
+      {
+        "class": "skills-subtitle about-reveal",
+        "x": 16,
+        "y": 212.671875,
+        "width": 358,
+        "height": 17.59375
+      },
+      {
+        "class": "skills-section",
+        "x": 16,
+        "y": 285.265625,
+        "width": 358,
+        "height": 897.625
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "13px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/contact",
+    "width": 1366,
+    "header": {
+      "x": 0,
+      "y": 28,
+      "width": 1366,
+      "height": 325.34375
+    },
+    "brand": {
+      "x": 54.625,
+      "y": 28,
+      "width": 1011.859375,
+      "height": 30.59375
+    },
+    "right": {
+      "x": 1066.484375,
+      "y": 28,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 54.640625,
+      "y": 700.828125,
+      "width": 1256.71875,
+      "height": 34.59375
+    },
+    "main": [
+      {
+        "class": "contact-hero",
+        "x": 171,
+        "y": 122,
+        "width": 1024,
+        "height": 231.34375
+      },
+      {
+        "class": "contact-title contact-reveal",
+        "x": 171,
+        "y": 157.59375,
+        "width": 1024,
+        "height": 126.75
+      },
+      {
+        "class": "contact-methods",
+        "x": 171,
+        "y": 389.34375,
+        "width": 1024,
+        "height": 287.484375
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/contact",
+    "width": 900,
+    "header": {
+      "x": 0,
+      "y": 28,
+      "width": 900,
+      "height": 282.09375
+    },
+    "brand": {
+      "x": 36,
+      "y": 28,
+      "width": 583.109375,
+      "height": 30.59375
+    },
+    "right": {
+      "x": 619.109375,
+      "y": 28,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 36,
+      "y": 652.765625,
+      "width": 828,
+      "height": 34.59375
+    },
+    "main": [
+      {
+        "class": "contact-hero",
+        "x": 48,
+        "y": 122,
+        "width": 804,
+        "height": 188.09375
+      },
+      {
+        "class": "contact-title contact-reveal",
+        "x": 48,
+        "y": 157.59375,
+        "width": 804,
+        "height": 83.5
+      },
+      {
+        "class": "contact-methods",
+        "x": 48,
+        "y": 346.09375,
+        "width": 804,
+        "height": 282.671875
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/contact",
+    "width": 390,
+    "header": {
+      "x": 0,
+      "y": 18,
+      "width": 390,
+      "height": 310.15625
+    },
+    "brand": {
+      "x": 23.390625,
+      "y": 18,
+      "width": 90,
+      "height": 41
+    },
+    "right": {
+      "x": 140.546875,
+      "y": 18,
+      "width": 226.0625,
+      "height": 49
+    },
+    "footer": {
+      "x": 23.40625,
+      "y": 870.71875,
+      "width": 343.1875,
+      "height": 57.1875
+    },
+    "main": [
+      {
+        "class": "contact-hero",
+        "x": 16,
+        "y": 89,
+        "width": 358,
+        "height": 239.15625
+      },
+      {
+        "class": "contact-title contact-reveal",
+        "x": 16,
+        "y": 120.59375,
+        "width": 358,
+        "height": 127.25
+      },
+      {
+        "class": "contact-methods",
+        "x": 16,
+        "y": 350.15625,
+        "width": 358,
+        "height": 496.5625
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "13px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/credits",
+    "width": 1366,
+    "header": {
+      "x": 0,
+      "y": 38,
+      "width": 1366,
+      "height": 389.3125
+    },
+    "brand": {
+      "x": 54.625,
+      "y": 38,
+      "width": 1011.859375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 1066.484375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 54.640625,
+      "y": 1476.265625,
+      "width": 1256.71875,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title credits-reveal",
+        "x": 123,
+        "y": 186,
+        "width": 1120,
+        "height": 136.3125
+      },
+      {
+        "class": "skills-subtitle credits-reveal",
+        "x": 123,
+        "y": 344.3125,
+        "width": 1120,
+        "height": 18
+      },
+      {
+        "class": "credits-intro credits-reveal",
+        "x": 123,
+        "y": 378.3125,
+        "width": 760,
+        "height": 49
+      },
+      {
+        "class": "credits-section",
+        "x": 123,
+        "y": 499.3125,
+        "width": 1120,
+        "height": 948.953125
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/credits",
+    "width": 900,
+    "header": {
+      "x": 0,
+      "y": 38,
+      "width": 900,
+      "height": 356.671875
+    },
+    "brand": {
+      "x": 36,
+      "y": 38,
+      "width": 583.109375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 619.109375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 36,
+      "y": 1515.0625,
+      "width": 828,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title credits-reveal",
+        "x": 48,
+        "y": 186,
+        "width": 804,
+        "height": 103.671875
+      },
+      {
+        "class": "skills-subtitle credits-reveal",
+        "x": 48,
+        "y": 311.671875,
+        "width": 804,
+        "height": 18
+      },
+      {
+        "class": "credits-intro credits-reveal",
+        "x": 48,
+        "y": 345.671875,
+        "width": 760,
+        "height": 49
+      },
+      {
+        "class": "credits-section",
+        "x": 48,
+        "y": 466.671875,
+        "width": 804,
+        "height": 1020.390625
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/credits",
+    "width": 390,
+    "header": {
+      "x": 0,
+      "y": 24,
+      "width": 390,
+      "height": 318.546875
+    },
+    "brand": {
+      "x": 23.390625,
+      "y": 24,
+      "width": 117.15625,
+      "height": 55.1875
+    },
+    "right": {
+      "x": 140.546875,
+      "y": 24,
+      "width": 226.0625,
+      "height": 49
+    },
+    "footer": {
+      "x": 23.40625,
+      "y": 2438.8125,
+      "width": 343.1875,
+      "height": 56.1875
+    },
+    "main": [
+      {
+        "class": "skills-title credits-reveal",
+        "x": 16,
+        "y": 155.1875,
+        "width": 358,
+        "height": 65.265625
+      },
+      {
+        "class": "skills-subtitle credits-reveal",
+        "x": 16,
+        "y": 235.453125,
+        "width": 358,
+        "height": 17.59375
+      },
+      {
+        "class": "credits-intro credits-reveal",
+        "x": 16,
+        "y": 269.046875,
+        "width": 358,
+        "height": 73.5
+      },
+      {
+        "class": "credits-section",
+        "x": 16,
+        "y": 390.546875,
+        "width": 358,
+        "height": 2020.265625
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "13px"
+      }
+    ],
+    "overflow": false
+  }
+]

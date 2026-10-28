@@ -1,0 +1,1052 @@
+[
+  {
+    "route": "/work",
+    "width": 1366,
+    "header": {
+      "x": 54.625,
+      "y": 0,
+      "width": 1256.75,
+      "height": 99
+    },
+    "brand": {
+      "x": 54.625,
+      "y": 38.5,
+      "width": 193.484375,
+      "height": 21
+    },
+    "right": {
+      "x": 1028.09375,
+      "y": 15,
+      "width": 283.28125,
+      "height": 68
+    },
+    "footer": {
+      "x": 54.625,
+      "y": 801,
+      "width": 1256.75,
+      "height": 99
+    },
+    "main": [
+      {
+        "class": "gallery-content",
+        "x": 54.625,
+        "y": 138,
+        "width": 1256.75,
+        "height": 663
+      },
+      {
+        "class": "",
+        "x": 54.625,
+        "y": 221.5,
+        "width": 540.609375,
+        "height": 291
+      }
+    ],
+    "fonts": [
+      {
+        "class": "work-brand",
+        "text": "MYVERSE / SELECTED WORK",
+        "size": "14px"
+      },
+      {
+        "class": "",
+        "text": " / SELECTED WORK",
+        "size": "9px"
+      },
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "11px"
+      },
+      {
+        "class": "gallery-edition",
+        "text": "A COLLECTION OF IDEAS,BUILT FOR THE WEB.",
+        "size": "8px"
+      },
+      {
+        "class": "",
+        "text": "Previous",
+        "size": "18px"
+      },
+      {
+        "class": "",
+        "text": "Next",
+        "size": "18px"
+      },
+      {
+        "class": "gallery-key-hint",
+        "text": "USE ARROW KEYS TO EXPLORE / ESC TO RETURN",
+        "size": "7px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/work",
+    "width": 900,
+    "header": {
+      "x": 36,
+      "y": 0,
+      "width": 828,
+      "height": 99
+    },
+    "brand": {
+      "x": 36,
+      "y": 38.5,
+      "width": 193.484375,
+      "height": 21
+    },
+    "right": {
+      "x": 580.71875,
+      "y": 15,
+      "width": 283.28125,
+      "height": 68
+    },
+    "footer": {
+      "x": 36,
+      "y": 801,
+      "width": 828,
+      "height": 99
+    },
+    "main": [
+      {
+        "class": "gallery-content",
+        "x": 36,
+        "y": 138,
+        "width": 828,
+        "height": 663
+      },
+      {
+        "class": "",
+        "x": 36,
+        "y": 221.5,
+        "width": 356.203125,
+        "height": 191.71875
+      }
+    ],
+    "fonts": [
+      {
+        "class": "work-brand",
+        "text": "MYVERSE / SELECTED WORK",
+        "size": "14px"
+      },
+      {
+        "class": "",
+        "text": " / SELECTED WORK",
+        "size": "9px"
+      },
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "11px"
+      },
+      {
+        "class": "gallery-edition",
+        "text": "A COLLECTION OF IDEAS,BUILT FOR THE WEB.",
+        "size": "8px"
+      },
+      {
+        "class": "",
+        "text": "Previous",
+        "size": "18px"
+      },
+      {
+        "class": "",
+        "text": "Next",
+        "size": "18px"
+      },
+      {
+        "class": "gallery-key-hint",
+        "text": "USE ARROW KEYS TO EXPLORE / ESC TO RETURN",
+        "size": "7px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/work",
+    "width": 390,
+    "header": {
+      "x": 23.390625,
+      "y": 0,
+      "width": 343.21875,
+      "height": 121
+    },
+    "brand": {
+      "x": 23.390625,
+      "y": 25,
+      "width": 76.921875,
+      "height": 45.5
+    },
+    "right": {
+      "x": 114.3125,
+      "y": 25,
+      "width": 252.296875,
+      "height": 80
+    },
+    "footer": {
+      "x": 23.390625,
+      "y": 801,
+      "width": 343.21875,
+      "height": 99
+    },
+    "main": [
+      {
+        "class": "gallery-content",
+        "x": 23.390625,
+        "y": 151.5,
+        "width": 343.21875,
+        "height": 649.5
+      },
+      {
+        "class": "",
+        "x": 23.390625,
+        "y": 228,
+        "width": 343.21875,
+        "height": 186
+      }
+    ],
+    "fonts": [
+      {
+        "class": "work-brand",
+        "text": "MYVERSE / SELECTED WORK",
+        "size": "11px"
+      },
+      {
+        "class": "",
+        "text": " / SELECTED WORK",
+        "size": "7px"
+      },
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "11px"
+      },
+      {
+        "class": "gallery-edition",
+        "text": "A COLLECTION OF IDEAS,BUILT FOR THE WEB.",
+        "size": "8px"
+      },
+      {
+        "class": "",
+        "text": "Previous",
+        "size": "18px"
+      },
+      {
+        "class": "",
+        "text": "Next",
+        "size": "18px"
+      },
+      {
+        "class": "gallery-key-hint",
+        "text": "USE ARROW KEYS TO EXPLORE / ESC TO RETURN",
+        "size": "7px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/skills",
+    "width": 1366,
+    "header": {
+      "x": 123,
+      "y": 38,
+      "width": 1120,
+      "height": 324.3125
+    },
+    "brand": {
+      "x": 123,
+      "y": 38,
+      "width": 875.109375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 998.109375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 123,
+      "y": 943.5,
+      "width": 1120,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title skills-reveal",
+        "x": 123,
+        "y": 186,
+        "width": 1120,
+        "height": 136.3125
+      },
+      {
+        "class": "skills-subtitle skills-reveal",
+        "x": 123,
+        "y": 344.3125,
+        "width": 1120,
+        "height": 18
+      },
+      {
+        "class": "skills-section",
+        "x": 123,
+        "y": 452.3125,
+        "width": 1120,
+        "height": 463.1875
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/skills",
+    "width": 900,
+    "header": {
+      "x": 48,
+      "y": 38,
+      "width": 804,
+      "height": 291.671875
+    },
+    "brand": {
+      "x": 48,
+      "y": 38,
+      "width": 559.109375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 607.109375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 48,
+      "y": 910.859375,
+      "width": 804,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title skills-reveal",
+        "x": 48,
+        "y": 186,
+        "width": 804,
+        "height": 103.671875
+      },
+      {
+        "class": "skills-subtitle skills-reveal",
+        "x": 48,
+        "y": 311.671875,
+        "width": 804,
+        "height": 18
+      },
+      {
+        "class": "skills-section",
+        "x": 48,
+        "y": 419.671875,
+        "width": 804,
+        "height": 463.1875
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/skills",
+    "width": 390,
+    "header": {
+      "x": 16,
+      "y": 24,
+      "width": 358,
+      "height": 229.046875
+    },
+    "brand": {
+      "x": 16,
+      "y": 24,
+      "width": 131.9375,
+      "height": 55.1875
+    },
+    "right": {
+      "x": 147.9375,
+      "y": 24,
+      "width": 226.0625,
+      "height": 49
+    },
+    "footer": {
+      "x": 16,
+      "y": 1190.921875,
+      "width": 358,
+      "height": 56.1875
+    },
+    "main": [
+      {
+        "class": "skills-title skills-reveal",
+        "x": 16,
+        "y": 155.1875,
+        "width": 358,
+        "height": 65.265625
+      },
+      {
+        "class": "skills-subtitle skills-reveal",
+        "x": 16,
+        "y": 235.453125,
+        "width": 358,
+        "height": 17.59375
+      },
+      {
+        "class": "skills-section",
+        "x": 16,
+        "y": 308.046875,
+        "width": 358,
+        "height": 854.875
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "13px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/about",
+    "width": 1366,
+    "header": {
+      "x": 123,
+      "y": 38,
+      "width": 1120,
+      "height": 324.3125
+    },
+    "brand": {
+      "x": 123,
+      "y": 38,
+      "width": 875.109375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 998.109375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 123,
+      "y": 951.625,
+      "width": 1120,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title about-reveal",
+        "x": 123,
+        "y": 186,
+        "width": 1120,
+        "height": 136.3125
+      },
+      {
+        "class": "skills-subtitle about-reveal",
+        "x": 123,
+        "y": 344.3125,
+        "width": 1120,
+        "height": 18
+      },
+      {
+        "class": "skills-section",
+        "x": 123,
+        "y": 452.3125,
+        "width": 1120,
+        "height": 471.3125
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/about",
+    "width": 900,
+    "header": {
+      "x": 48,
+      "y": 38,
+      "width": 804,
+      "height": 291.671875
+    },
+    "brand": {
+      "x": 48,
+      "y": 38,
+      "width": 559.109375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 607.109375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 48,
+      "y": 912.984375,
+      "width": 804,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title about-reveal",
+        "x": 48,
+        "y": 186,
+        "width": 804,
+        "height": 103.671875
+      },
+      {
+        "class": "skills-subtitle about-reveal",
+        "x": 48,
+        "y": 311.671875,
+        "width": 804,
+        "height": 18
+      },
+      {
+        "class": "skills-section",
+        "x": 48,
+        "y": 419.671875,
+        "width": 804,
+        "height": 465.3125
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/about",
+    "width": 390,
+    "header": {
+      "x": 16,
+      "y": 24,
+      "width": 358,
+      "height": 206.265625
+    },
+    "brand": {
+      "x": 16,
+      "y": 24,
+      "width": 131.9375,
+      "height": 37.59375
+    },
+    "right": {
+      "x": 147.9375,
+      "y": 24,
+      "width": 226.0625,
+      "height": 49
+    },
+    "footer": {
+      "x": 16,
+      "y": 1210.890625,
+      "width": 358,
+      "height": 56.1875
+    },
+    "main": [
+      {
+        "class": "skills-title about-reveal",
+        "x": 16,
+        "y": 149,
+        "width": 358,
+        "height": 48.671875
+      },
+      {
+        "class": "skills-subtitle about-reveal",
+        "x": 16,
+        "y": 212.671875,
+        "width": 358,
+        "height": 17.59375
+      },
+      {
+        "class": "skills-section",
+        "x": 16,
+        "y": 285.265625,
+        "width": 358,
+        "height": 897.625
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "13px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/contact",
+    "width": 1366,
+    "header": {
+      "x": 171,
+      "y": 28,
+      "width": 1024,
+      "height": 325.34375
+    },
+    "brand": {
+      "x": 171,
+      "y": 28,
+      "width": 765.109375,
+      "height": 30.59375
+    },
+    "right": {
+      "x": 950.109375,
+      "y": 28,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 171,
+      "y": 700.828125,
+      "width": 1024,
+      "height": 34.59375
+    },
+    "main": [
+      {
+        "class": "contact-hero",
+        "x": 171,
+        "y": 122,
+        "width": 1024,
+        "height": 231.34375
+      },
+      {
+        "class": "contact-title contact-reveal",
+        "x": 171,
+        "y": 157.59375,
+        "width": 1024,
+        "height": 126.75
+      },
+      {
+        "class": "contact-methods",
+        "x": 171,
+        "y": 389.34375,
+        "width": 1024,
+        "height": 287.484375
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/contact",
+    "width": 900,
+    "header": {
+      "x": 48,
+      "y": 28,
+      "width": 804,
+      "height": 282.09375
+    },
+    "brand": {
+      "x": 48,
+      "y": 28,
+      "width": 545.109375,
+      "height": 30.59375
+    },
+    "right": {
+      "x": 607.109375,
+      "y": 28,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 48,
+      "y": 652.765625,
+      "width": 804,
+      "height": 34.59375
+    },
+    "main": [
+      {
+        "class": "contact-hero",
+        "x": 48,
+        "y": 122,
+        "width": 804,
+        "height": 188.09375
+      },
+      {
+        "class": "contact-title contact-reveal",
+        "x": 48,
+        "y": 157.59375,
+        "width": 804,
+        "height": 83.5
+      },
+      {
+        "class": "contact-methods",
+        "x": 48,
+        "y": 346.09375,
+        "width": 804,
+        "height": 282.671875
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/contact",
+    "width": 390,
+    "header": {
+      "x": 16,
+      "y": 18,
+      "width": 358,
+      "height": 310.15625
+    },
+    "brand": {
+      "x": 16,
+      "y": 18,
+      "width": 90,
+      "height": 41
+    },
+    "right": {
+      "x": 147.9375,
+      "y": 18,
+      "width": 226.0625,
+      "height": 49
+    },
+    "footer": {
+      "x": 16,
+      "y": 870.71875,
+      "width": 358,
+      "height": 57.1875
+    },
+    "main": [
+      {
+        "class": "contact-hero",
+        "x": 16,
+        "y": 89,
+        "width": 358,
+        "height": 239.15625
+      },
+      {
+        "class": "contact-title contact-reveal",
+        "x": 16,
+        "y": 120.59375,
+        "width": 358,
+        "height": 127.25
+      },
+      {
+        "class": "contact-methods",
+        "x": 16,
+        "y": 350.15625,
+        "width": 358,
+        "height": 496.5625
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "13px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/credits",
+    "width": 1366,
+    "header": {
+      "x": 123,
+      "y": 38,
+      "width": 1120,
+      "height": 389.3125
+    },
+    "brand": {
+      "x": 123,
+      "y": 38,
+      "width": 875.109375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 998.109375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 123,
+      "y": 1476.265625,
+      "width": 1120,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title credits-reveal",
+        "x": 123,
+        "y": 186,
+        "width": 1120,
+        "height": 136.3125
+      },
+      {
+        "class": "skills-subtitle credits-reveal",
+        "x": 123,
+        "y": 344.3125,
+        "width": 1120,
+        "height": 18
+      },
+      {
+        "class": "credits-intro credits-reveal",
+        "x": 123,
+        "y": 378.3125,
+        "width": 760,
+        "height": 49
+      },
+      {
+        "class": "credits-section",
+        "x": 123,
+        "y": 499.3125,
+        "width": 1120,
+        "height": 948.953125
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/credits",
+    "width": 900,
+    "header": {
+      "x": 48,
+      "y": 38,
+      "width": 804,
+      "height": 356.671875
+    },
+    "brand": {
+      "x": 48,
+      "y": 38,
+      "width": 559.109375,
+      "height": 17.59375
+    },
+    "right": {
+      "x": 607.109375,
+      "y": 38,
+      "width": 244.890625,
+      "height": 49
+    },
+    "footer": {
+      "x": 48,
+      "y": 1515.0625,
+      "width": 804,
+      "height": 33.59375
+    },
+    "main": [
+      {
+        "class": "skills-title credits-reveal",
+        "x": 48,
+        "y": 186,
+        "width": 804,
+        "height": 103.671875
+      },
+      {
+        "class": "skills-subtitle credits-reveal",
+        "x": 48,
+        "y": 311.671875,
+        "width": 804,
+        "height": 18
+      },
+      {
+        "class": "credits-intro credits-reveal",
+        "x": 48,
+        "y": 345.671875,
+        "width": 760,
+        "height": 49
+      },
+      {
+        "class": "credits-section",
+        "x": 48,
+        "y": 466.671875,
+        "width": 804,
+        "height": 1020.390625
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "14px"
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "route": "/credits",
+    "width": 390,
+    "header": {
+      "x": 16,
+      "y": 24,
+      "width": 358,
+      "height": 318.546875
+    },
+    "brand": {
+      "x": 16,
+      "y": 24,
+      "width": 131.9375,
+      "height": 55.1875
+    },
+    "right": {
+      "x": 147.9375,
+      "y": 24,
+      "width": 226.0625,
+      "height": 49
+    },
+    "footer": {
+      "x": 16,
+      "y": 2438.8125,
+      "width": 358,
+      "height": 56.1875
+    },
+    "main": [
+      {
+        "class": "skills-title credits-reveal",
+        "x": 16,
+        "y": 155.1875,
+        "width": 358,
+        "height": 65.265625
+      },
+      {
+        "class": "skills-subtitle credits-reveal",
+        "x": 16,
+        "y": 235.453125,
+        "width": 358,
+        "height": 17.59375
+      },
+      {
+        "class": "credits-intro credits-reveal",
+        "x": 16,
+        "y": 269.046875,
+        "width": 358,
+        "height": 73.5
+      },
+      {
+        "class": "credits-section",
+        "x": 16,
+        "y": 390.546875,
+        "width": 358,
+        "height": 2020.265625
+      }
+    ],
+    "fonts": [
+      {
+        "class": "global-navigation-trigger",
+        "text": "MENU",
+        "size": "10px"
+      },
+      {
+        "class": "",
+        "text": "RETURN TO 3D ROOM",
+        "size": "13px"
+      }
+    ],
+    "overflow": false
+  }
+]

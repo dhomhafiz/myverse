@@ -1,0 +1,377 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "approved heading, introduction and identity"
+    },
+    {
+      "pass": true,
+      "label": "all four biographies present in initial HTML"
+    },
+    {
+      "pass": true,
+      "label": "desktop original image, native proportions and no upscale/overflow"
+    },
+    {
+      "pass": true,
+      "label": "desktop portrait on right and card actions align"
+    },
+    {
+      "pass": true,
+      "label": "readable descriptions, actions and footer"
+    },
+    {
+      "pass": true,
+      "label": "header and footer retain Projects gutters"
+    },
+    {
+      "pass": true,
+      "label": "card 1 expands naturally with retained focus"
+    },
+    {
+      "pass": true,
+      "label": "card 1 keyboard collapse"
+    },
+    {
+      "pass": true,
+      "label": "card 2 expands naturally with retained focus"
+    },
+    {
+      "pass": true,
+      "label": "card 2 keyboard collapse"
+    },
+    {
+      "pass": true,
+      "label": "card 3 expands naturally with retained focus"
+    },
+    {
+      "pass": true,
+      "label": "card 3 keyboard collapse"
+    },
+    {
+      "pass": true,
+      "label": "card 4 expands naturally with retained focus"
+    },
+    {
+      "pass": true,
+      "label": "card 4 keyboard collapse"
+    },
+    {
+      "pass": true,
+      "label": "global portal menu remains above portrait and text"
+    },
+    {
+      "pass": true,
+      "label": "menu Escape restores focus without room return"
+    },
+    {
+      "pass": true,
+      "label": "See my works uses direct destination navigation"
+    },
+    {
+      "pass": true,
+      "label": "mobile compact portrait after intro and before single-column cards"
+    },
+    {
+      "pass": true,
+      "label": "mobile readable single-column cards"
+    },
+    {
+      "pass": true,
+      "label": "mobile chrome gutters preserved"
+    },
+    {
+      "pass": true,
+      "label": "Get in touch uses direct destination navigation"
+    },
+    {
+      "pass": true,
+      "label": "reduced motion readable without entrance animation"
+    },
+    {
+      "pass": true,
+      "label": "shared ReturnToRoom starts without duplicate room canvas"
+    },
+    {
+      "pass": true,
+      "label": "room return cancellation keeps About available"
+    }
+  ],
+  "samples": [
+    {
+      "desktop": {
+        "width": 1366,
+        "image": {
+          "x": 981,
+          "y": 161.84375,
+          "width": 301,
+          "height": 214,
+          "top": 161.84375,
+          "right": 1282,
+          "bottom": 375.84375,
+          "left": 981
+        },
+        "natural": [
+          301,
+          214
+        ],
+        "cards": [
+          {
+            "x": 83,
+            "y": 477.484375,
+            "width": 594,
+            "height": 232,
+            "top": 477.484375,
+            "right": 677,
+            "bottom": 709.484375,
+            "left": 83
+          },
+          {
+            "x": 689,
+            "y": 477.484375,
+            "width": 594,
+            "height": 232,
+            "top": 477.484375,
+            "right": 1283,
+            "bottom": 709.484375,
+            "left": 689
+          },
+          {
+            "x": 83,
+            "y": 721.484375,
+            "width": 594,
+            "height": 232,
+            "top": 721.484375,
+            "right": 677,
+            "bottom": 953.484375,
+            "left": 83
+          },
+          {
+            "x": 689,
+            "y": 721.484375,
+            "width": 594,
+            "height": 232,
+            "top": 721.484375,
+            "right": 1283,
+            "bottom": 953.484375,
+            "left": 689
+          }
+        ],
+        "actions": [
+          {
+            "x": 106,
+            "y": 646.484375,
+            "width": 548,
+            "height": 42,
+            "top": 646.484375,
+            "right": 654,
+            "bottom": 688.484375,
+            "left": 106
+          },
+          {
+            "x": 712,
+            "y": 646.484375,
+            "width": 548,
+            "height": 42,
+            "top": 646.484375,
+            "right": 1260,
+            "bottom": 688.484375,
+            "left": 712
+          },
+          {
+            "x": 106,
+            "y": 890.484375,
+            "width": 548,
+            "height": 42,
+            "top": 890.484375,
+            "right": 654,
+            "bottom": 932.484375,
+            "left": 106
+          },
+          {
+            "x": 712,
+            "y": 890.484375,
+            "width": 548,
+            "height": 42,
+            "top": 890.484375,
+            "right": 1260,
+            "bottom": 932.484375,
+            "left": 712
+          }
+        ],
+        "hero": {
+          "x": 83,
+          "y": 157,
+          "width": 857,
+          "height": 223.6875,
+          "top": 157,
+          "right": 940,
+          "bottom": 380.6875,
+          "left": 83
+        },
+        "brand": {
+          "x": 54.625,
+          "y": 38,
+          "width": 1011.859375,
+          "height": 17.59375,
+          "top": 38,
+          "right": 1066.484375,
+          "bottom": 55.59375,
+          "left": 54.625
+        },
+        "footer": {
+          "x": 54.640625,
+          "y": 1054.984375,
+          "width": 1256.71875,
+          "height": 38.09375,
+          "top": 1054.984375,
+          "right": 1311.359375,
+          "bottom": 1093.078125,
+          "left": 54.640625
+        },
+        "overflow": false,
+        "body": "14px",
+        "action": "13px",
+        "footerFont": "13px"
+      }
+    },
+    {
+      "mobile": {
+        "width": 390,
+        "image": {
+          "x": 17,
+          "y": 312.828125,
+          "width": 241,
+          "height": 171.328125,
+          "top": 312.828125,
+          "right": 258,
+          "bottom": 484.15625,
+          "left": 17
+        },
+        "natural": [
+          301,
+          214
+        ],
+        "cards": [
+          {
+            "x": 16,
+            "y": 569.578125,
+            "width": 358,
+            "height": 218,
+            "top": 569.578125,
+            "right": 374,
+            "bottom": 787.578125,
+            "left": 16
+          },
+          {
+            "x": 16,
+            "y": 796.578125,
+            "width": 358,
+            "height": 218,
+            "top": 796.578125,
+            "right": 374,
+            "bottom": 1014.578125,
+            "left": 16
+          },
+          {
+            "x": 16,
+            "y": 1023.578125,
+            "width": 358,
+            "height": 218,
+            "top": 1023.578125,
+            "right": 374,
+            "bottom": 1241.578125,
+            "left": 16
+          },
+          {
+            "x": 16,
+            "y": 1250.66064453125,
+            "width": 358,
+            "height": 218,
+            "top": 1250.66064453125,
+            "right": 374,
+            "bottom": 1468.66064453125,
+            "left": 16
+          }
+        ],
+        "actions": [
+          {
+            "x": 35,
+            "y": 726.578125,
+            "width": 320,
+            "height": 42,
+            "top": 726.578125,
+            "right": 355,
+            "bottom": 768.578125,
+            "left": 35
+          },
+          {
+            "x": 35,
+            "y": 953.578125,
+            "width": 320,
+            "height": 42,
+            "top": 953.578125,
+            "right": 355,
+            "bottom": 995.578125,
+            "left": 35
+          },
+          {
+            "x": 35,
+            "y": 1180.578125,
+            "width": 320,
+            "height": 42,
+            "top": 1180.578125,
+            "right": 355,
+            "bottom": 1222.578125,
+            "left": 35
+          },
+          {
+            "x": 35,
+            "y": 1407.66064453125,
+            "width": 320,
+            "height": 42,
+            "top": 1407.66064453125,
+            "right": 355,
+            "bottom": 1449.66064453125,
+            "left": 35
+          }
+        ],
+        "hero": {
+          "x": 16,
+          "y": 111,
+          "width": 358,
+          "height": 176.828125,
+          "top": 111,
+          "right": 374,
+          "bottom": 287.828125,
+          "left": 16
+        },
+        "brand": {
+          "x": 23.390625,
+          "y": 24,
+          "width": 117.484375,
+          "height": 37.59375,
+          "top": 24,
+          "right": 140.875,
+          "bottom": 61.59375,
+          "left": 23.390625
+        },
+        "footer": {
+          "x": 23.40625,
+          "y": 1570.078125,
+          "width": 343.1875,
+          "height": 65.1875,
+          "top": 1570.078125,
+          "right": 366.59375,
+          "bottom": 1635.265625,
+          "left": 23.40625
+        },
+        "overflow": false,
+        "body": "14px",
+        "action": "13px",
+        "footerFont": "13px"
+      }
+    }
+  ],
+  "errors": []
+}
