@@ -1,8 +1,10 @@
-import type { Metadata } from 'next';
 import ProjectsGallery from '@/components/work/ProjectsGallery';
-export const metadata: Metadata = {
-  title: 'Selected work — Mohd Hafiz',
-  description: 'Explore selected projects in MyVerse.',
-  alternates: { canonical: '/work' },
-};
+import { createPageMetadata } from '@/lib/site';
+
+export const metadata = createPageMetadata(
+  'Selected Work | Mohd Hafiz Abd Rahim',
+  'Explore selected interactive web and installation projects by Mohd Hafiz Abd Rahim.',
+  '/work/',
+);
+
 export default function WorkPage() { return <ProjectsGallery />; }

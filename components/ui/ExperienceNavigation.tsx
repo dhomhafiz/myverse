@@ -4,6 +4,7 @@ import { createContext, useContext } from 'react';
 
 export type ExperienceNavigation = {
   requestRoomReturn: () => void;
+  navigateToDestination: (route: string) => void;
 };
 
 export const ExperienceNavigationContext = createContext<ExperienceNavigation | null>(null);

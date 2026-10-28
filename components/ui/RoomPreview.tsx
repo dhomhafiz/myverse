@@ -16,6 +16,7 @@ import RoomUnavailable from './RoomUnavailable';
 import HeroBrand from './HeroBrand';
 import useEntranceTimeline from '@/hooks/useEntranceTimeline';
 import { createEntranceMotion } from '@/lib/entrance';
+import GlobalNavigation from './GlobalNavigation';
 
 const RoomCanvas = dynamic(() => import('@/components/canvas/RoomCanvas'), { ssr: false });
 
@@ -151,6 +152,7 @@ export default function RoomPreview({
   return (
     <div
       ref={root}
+      id="top"
       className="room-experience"
       data-phase={phase}
       data-navigation-mode={navigationMode}
@@ -189,6 +191,7 @@ export default function RoomPreview({
           <header className="preview-header pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-6">
             <div><p className="brand">dhomhafiz<span>.dev</span></p></div>
           </header>
+          {roomActive && <GlobalNavigation placement="room" />}
           {phase === 'entering' && <button className="intro-skip" aria-label="Skip introduction" type="button">Skip intro</button>}
           {hint && phase === 'exploring' && <p className="explore-hint" aria-live="polite">Drag to explore</p>}
         </>

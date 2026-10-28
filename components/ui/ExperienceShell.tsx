@@ -155,6 +155,22 @@ export default function ExperienceShell({ children }: { children: ReactNode }) {
     }
   }, [router]);
 
+  const navigateToDestination = useCallback((route: string) => {
+    if (route === pathname) return;
+    if (onHomeRoute) {
+      const captureCurrentPose = hotspotNavigation.captureCurrentPose;
+      if (!captureCurrentPose) {
+        console.error('Cannot navigate from the room because its camera pose is unavailable.');
+        return;
+      }
+      captureCurrentPose();
+      hotspotNavigation.visited = true;
+      hotspotNavigation.setDestination(getHotspotDestinationForRoute(route).id);
+      hotspotNavigation.setMode('paused');
+    }
+    router.push(route);
+  }, [onHomeRoute, pathname, router]);
+
   useEffect(() => {
     if (!loaderVisible) return;
     const cancelOnEscape = (event: KeyboardEvent) => {
@@ -196,7 +212,7 @@ export default function ExperienceShell({ children }: { children: ReactNode }) {
       : 'FINALIZING SCENE...';
 
   return (
-    <ExperienceNavigationContext.Provider value={{ requestRoomReturn: startReturn }}>
+    <ExperienceNavigationContext.Provider value={{ requestRoomReturn: startReturn, navigateToDestination }}>
       <div className="experience-shell" data-route={pathname} data-room-status={preparation.status} data-room-pending={readinessGates.filter(gate => !preparation.gates.includes(gate)).join(',')}>
         <Suspense fallback={null}><ReviewViewSynchronizer onViewChange={setView} /></Suspense>
         {roomVisible && (
@@ -213,12 +229,15 @@ export default function ExperienceShell({ children }: { children: ReactNode }) {
           </div>
         )}
         <div
+          id={onHomeRoute ? 'main' : undefined}
           className={`experience-route${onHomeRoute ? ' is-home' : ''}${routeFading ? ' is-returning' : ''}`}
           aria-hidden={routeInactive}
           inert={routeInactive}
         >
           {children}
         </div>
+        {/* Outside animated/clipped routes, below the room return dialog. */}
+        <div id="myverse-navigation-layer" />
         {loaderVisible && (
           <div className="room-return-loader" role="dialog" aria-modal="true" aria-labelledby="room-return-title" onKeyDown={event => {
             if (event.key !== 'Tab') return;

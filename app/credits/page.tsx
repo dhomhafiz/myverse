@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
 import CreditsDashboard from '@/components/credits/CreditsDashboard';
+import { createPageMetadata } from '@/lib/site';
 
-export const metadata: Metadata = {
-  title: 'Credits — Mohd Hafiz',
-  description: 'Creators, sources, licenses, and modifications behind the MyVerse experience.',
-  alternates: { canonical: '/credits' },
-};
+export const metadata = createPageMetadata(
+  'Credits | Mohd Hafiz Abd Rahim',
+  'Review the creators, sources, licenses, and modifications behind the MyVerse portfolio.',
+  '/credits/',
+);
 
 export default function CreditsPage() {
   return <CreditsDashboard />;

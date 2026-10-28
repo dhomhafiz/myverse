@@ -8,6 +8,7 @@ const modeListeners = new Set<() => void>();
 
 export const hotspotNavigation: {
   saved: HotspotCameraPose | null;
+  captureCurrentPose: (() => void) | null;
   visited: boolean;
   destinationId: string | null;
   setMode: (mode: HotspotNavigationMode) => void;
@@ -17,6 +18,7 @@ export const hotspotNavigation: {
   open: (destinationId: string) => void;
 } = {
   saved: null,
+  captureCurrentPose: null,
   visited: false,
   destinationId: null,
   setMode(mode) {

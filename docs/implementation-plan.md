@@ -427,3 +427,132 @@ Each phase stops for review. Browser captures, actual checks, changed files and 
 - Updated the shared Image call from deprecated Next.js `priority` to `preload`, independent of the per-image optimization bypass. Existing gallery/hero call sites retain their high-priority intent; unprioritized images retain default lazy loading. Coming Soon returns its existing CSS artwork before this Image branch and is unaffected.
 - Files changed for this update: new `public/images/selectedwork1.webp`, `lib/projects.ts`, `components/work/ProjectMedia.tsx`, `components/work/ProjectsGallery.tsx`, `app/work/[slug]/page.tsx`, one caption rule in `app/globals.css`, and this record. Earlier unrelated uncommitted edits were preserved.
 - Validation: TypeScript, ESLint on changed TypeScript files, and git diff whitespace check. Per the owner's explicit constraint, no browser tests, production build, navigation loops or additional automated image tests were run. Crop behavior is assessed from source/layout geometry and local image inspection, not a fresh rendered-page capture. Visual approval remains PENDING; overall Phase 3 remains incomplete.
+## MyVerse v1.0 — production migration preparation (2026-10-28)
+
+### Domain decision and audit
+
+- **Approved primary-domain decision:** `https://dhomhafiz.dev/` is the canonical domain for MyVerse. This change only prepares the local MyVerse source. No deployment, DNS edit, old-repository edit, Pages-domain transfer, or production workflow run was performed.
+- The local repository is `dhomhafiz/myverse`, on branch `main`, with remote `origin` at `https://github.com/dhomhafiz/myverse.git`. There was no local `.github/workflows` directory and GitHub Actions reports no workflows for MyVerse at audit time.
+- The old public repository `dhomhafiz/dhomhafiz.dev` is accessible for read-only inspection. Its public `main` and `main-20261020-backup` refs both point to `df408c6727bc488fdb2754bd72093cc72c088e57`; the repository also exposes `backup-main`, `archive/pre-cinematic-redesign`, and `v1-pre-cinematic-redesign`. Do not treat these refs as a substitute for a verified release tag and archive.
+- The old repository has an active Pages deployment workflow on `main` that builds and uploads `./out`, plus an active validation workflow. Its public Next.js config uses static export, trailing slashes, and an empty base path. The current public homepage response is served by GitHub Pages, was last modified 20 October 2026, and the repository Pages settings themselves are not publicly inspectable. There is no public root `CNAME` file; the custom-domain claim must be confirmed in repository settings.
+- Public DNS observed at audit time: apex A records `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, and `185.199.111.153`; `www` is a CNAME to `dhomhafiz.github.io`. Authoritative nameservers are Hostinger (`hermes.dns-parking.com` and `artemis.dns-parking.com`). The observed A/CNAME TTL is 900 seconds. These records currently serve the old Pages site; preserve the values for rollback and do not change them before approval.
+- The live old sitemap lists `/`, `/demo-dental/`, `/work/still-dental/`, and `/work/netflix-squid-game-2/`. The old homepage also links `/#top`, `/#main`, `/#works`, and `/#contact`. The old homepage canonical, Open Graph URL, and Twitter card use the apex domain. Its robots file allows crawling and references the sitemap. No private GitHub Pages settings, DNS account access, Search Console data, or indexing/ranking results were available.
+
+### Backup and preservation plan
+
+Before any cutover, the owner should:
+
+1. Verify and preserve the old published commit `df408c6727bc488fdb2754bd72093cc72c088e57`; create a clearly named pre-cutover tag on that commit and verify it on GitHub. Retain `main-20261020-backup`, the existing archive/tag refs, and the source history without rewriting it.
+2. Keep both old-repository workflows and the old repository intact. Disable only the old Pages deployment workflow during the transfer; do not delete the workflow or repository.
+3. Archive the old repository and capture a dated copy of the live output, all sitemap routes, the robots file, the DNS answers, and screenshots/exports of the old and new GitHub Pages settings. The existing public branch refs are useful recovery points but are not a production-output snapshot.
+4. Verify that the backup can be built and that the Pages deployment workflow can be manually dispatched from the preserved release ref before releasing the domain.
+
+### Old-to-new URL inventory
+
+| OLD URL | NEW URL | ACTION | REDIRECT TYPE | REASON |
+|---|---|---|---|---|
+| `https://dhomhafiz.dev/` | `https://dhomhafiz.dev/` | Same path retained; replace page content at cutover | None | The primary domain and homepage path remain unchanged. |
+| `https://dhomhafiz.dev/#top` | `https://dhomhafiz.dev/#top` | Hash target retained | None; local fragment target | `#top` is a browser fragment, not a server path. |
+| `https://dhomhafiz.dev/#main` | `https://dhomhafiz.dev/#main` | Hash target retained | None; local fragment target | `#main` is a browser fragment, not a server path. |
+| `https://dhomhafiz.dev/#works` | `https://dhomhafiz.dev/work/` | Move old navigation destination | Client-side `router.replace`; not an HTTP redirect | Fragments are not sent to the server. The home compatibility handler maps this known old fragment to the selected-work route without adding a browser-history entry. |
+| `https://dhomhafiz.dev/#contact` | `https://dhomhafiz.dev/contact/` | Move old navigation destination | Client-side `router.replace`; not an HTTP redirect | Fragments are not sent to the server. The home compatibility handler maps this known old fragment to Contact without adding a browser-history entry. |
+| `https://dhomhafiz.dev/demo-dental/` | — | Discontinue; serve a real 404 unless the owner elects to preserve this content | None | This separate dental demo has no equivalent MyVerse route; do not send unrelated visitors to Home. |
+| `https://dhomhafiz.dev/work/still-dental/` | — | Discontinue; serve a real 404 unless the owner elects to preserve this content | None | This published case study has no equivalent MyVerse project; confirm its retirement before cutover. |
+| `https://dhomhafiz.dev/work/netflix-squid-game-2/` | `https://dhomhafiz.dev/work/netflix/` | Move case study content | Server-side 301 or 308 required; not available in GitHub Pages static export | The existing MyVerse Netflix case study retains the same project content at a new path. |
+
+GitHub Pages does not provide configurable server-side path redirects for this static export. Next.js static redirects, middleware/proxy, and request-time route handlers are unsupported in `output: 'export'`. Do not simulate a 301 with a homepage fallback or a Jekyll/meta-refresh page. If the Netflix path must preserve its HTTP SEO signals, use a redirect-capable edge/host such as Cloudflare Pages redirect rules or another approved host/CDN. Otherwise retain the old URL on a redirect-capable service or accept that it will return 404; do not redirect discontinued dental pages to an irrelevant destination.
+
+### SEO and crawlability implementation
+
+- `lib/site.ts` centralizes the production origin and page metadata. The root metadata now declares the canonical base, identity, locale, Open Graph/Twitter fields, and a same-origin social image. JSON-LD describes the Person and WebSite using only the supplied name, location, and positioning.
+- Home server-rendered HTML now contains the owner name, Creative Developer / Web Designer positioning, Kuala Lumpur location, a concise project description, and real links to Works, Skills, About, Contact, Credits, and the Netflix case study. The small visible overlay remains outside the WebGL boot path so crawlers do not need the 3D scene to boot.
+- Known old `#works` and `#contact` fragments are handled in the browser by replacing the current history entry with the corresponding new route; `#top` and `#main` remain valid local targets. No broad fragment redirect or homepage redirect is added.
+- Page titles/descriptions and their canonical, Open Graph, and Twitter URLs are set for Home, Works, Netflix, Skills, About Me, Contact, and Credits. The Netflix case-study image is the disclosed AI-generated concept visual already used by the project.
+- Coming Soon remains linked in navigation but is `noindex, follow`, including its `project-preview` compatibility alias. Neither placeholder URL is included in the sitemap. Published routes remain indexable.
+- `app/sitemap.ts` generates only `/`, `/work/`, `/work/netflix/`, `/skills/`, `/about/`, `/contact/`, and `/credits/`; it does not invent `lastmod` dates. `app/robots.ts` points to the production sitemap. Set `MYVERSE_NO_INDEX=true` when building a temporary preview: every route then emits `noindex, follow`, the sitemap has no URLs, and robots does not advertise a sitemap.
+- No claim is made about Google indexing or ranking. After cutover, submit the sitemap and inspect crawl/index coverage in Search Console if configured.
+
+### GitHub Pages and static-export readiness
+
+- MyVerse now opts into `output: 'export'`, `trailingSlash: true`, and `images.unoptimized: true`, with no project-repository `basePath`. This is the correct path layout for a root-mounted apex custom domain and produces directory `index.html` files for direct nested-route entry.
+- `generateStaticParams` enumerates the Netflix and Coming Soon routes, plus the existing Coming Soon alias. Since GitHub Pages cannot serve Next's redirect response, the alias serves the same noindex content with a canonical URL rather than invoking a server redirect. Unknown routes use the exported 404 page.
+- `next/image` uses the unoptimized mode required by static hosting. The existing published case-study WebP remains a direct public asset; GLB and image assets remain under `public/`. Metadata routes generate static `sitemap.xml` and `robots.txt`.
+- GitHub Pages Actions are not configured in MyVerse yet. The old repository's workflow must not be copied as an automatic push deployment: its Node setup is not aligned with MyVerse's `node >=22.20.0` requirement, and deployment must remain an explicit post-approval action. A future MyVerse Pages workflow should use Node 22.20+, `npm ci`, `npm run build`, upload `out`, and deploy only after the staging and domain-ownership gates are satisfied.
+- A GitHub project URL such as `dhomhafiz.github.io/myverse/` is not a valid preview for this root-based build without a separate base-path build. Use a temporary host serving the build at its URL root; do not add a production `basePath`.
+
+### Staging and release checks
+
+The staging build must use a temporary root-hosted URL that does not claim `dhomhafiz.dev`; build it with `MYVERSE_NO_INDEX=true npm run build`. Do not publish credentials or add a staging hostname to canonical metadata. Before requesting cutover approval, verify on that preview:
+
+- The build artifact is from the intended commit; Home HTML and metadata, JSON-LD, sitemap, robots, and the 404 output are correct.
+- Home boot and the 3D assets work; Free Look remains usable; test a reduced-motion/mobile fallback.
+- Direct entry to Works, Skills, About, Contact, Credits, Netflix, Coming Soon, and its alias works; the Netflix image loads.
+- Coming Soon remains noindex and absent from the sitemap; room return and contact actions work; nested routes refresh directly; check a desktop and narrow mobile viewport.
+
+The production runbook is intentionally gated. No DNS credentials are assumed, and no deployment, staging upload, domain change, or live-site change was made as part of this preparation.
+
+### Domain cutover runbook
+
+Only proceed after explicit approval:
+
+1. Verify the old release tag, backup branch, live-output snapshot, and old workflow recovery procedure.
+2. Complete and record the staging checks above, including the temporary build's noindex output.
+3. Preserve the old release commit and both workflows; record current Pages and DNS settings before changing either.
+4. Pause the old repository's Pages deployment automation without deleting its workflow.
+5. In the old repository's Settings → Pages, release the `dhomhafiz.dev` custom-domain claim only when the MyVerse build and recovery operator are ready.
+6. Configure MyVerse Pages to deploy from GitHub Actions and set `dhomhafiz.dev` as its custom domain. Do not configure a project `basePath`.
+7. Leave DNS unchanged if the public A/CNAME records still match GitHub Pages' current requirements. Change records only if GitHub Pages domain verification requires it; capture previous values and TTL first.
+8. Wait for GitHub Pages domain verification and the HTTPS certificate; enable Enforce HTTPS. Do not proceed while the certificate is pending or the hostname resolves to an unexpected Pages site.
+9. Manually publish the approved MyVerse build through the future/manual Pages workflow; do not use an automatic production push trigger for this cutover.
+10. Verify the apex HTTPS page, static assets, sitemap, robots, canonical/social metadata, nested direct routes, and 404 response.
+11. Add the Netflix 301/308 at the selected redirect-capable edge/host. Verify the exact status and target; verify discontinued dental paths are not redirected to Home.
+12. Monitor GitHub Pages workflow failures, TLS, broken assets/routes/contact actions, and search-crawl/index coverage. Remove the staging deployment only after post-launch checks.
+
+Expect a possible brief 404 or TLS/certificate interruption between releasing the old Pages claim and the new Pages deployment/certificate becoming active. Current DNS already points to GitHub Pages; changing A records unnecessarily increases risk and propagation time.
+
+### Rollback procedure
+
+If GitHub Pages returns 404, assets fail, nested routes break, TLS fails, the room boot sticks, or Contact/ReturnToRoom regresses:
+
+1. Stop further MyVerse deployments; preserve its build artifact and workflow logs for diagnosis.
+2. In MyVerse Settings → Pages, release the custom domain and pause its deployment workflow. Do not delete the MyVerse repository or rewrite history.
+3. Reassign `dhomhafiz.dev` to the old `dhomhafiz.dev` repository's Pages settings and restore its previous Pages source. Keep DNS at the captured pre-cutover values unless the records themselves were changed.
+4. Dispatch the preserved old `nextjs.yml` from the verified release tag/`main-20261020-backup` ref, then verify the old homepage, sitemap, robots, and representative dental/Netflix routes.
+5. If DNS was changed, restore the recorded apex A records and `www` CNAME at Hostinger. Wait for the recorded TTL and GitHub Pages TLS to settle; do not force-push or delete any old branch/tag.
+6. Re-test HTTPS and the old live URLs before announcing restoration. If the original Pages custom-domain claim cannot be restored or the certificate does not recover, keep the old source and DNS snapshots and escalate to GitHub Pages support rather than making destructive repository changes.
+
+### Blockers, warnings, and deferred v1.1 work
+
+- **Approval blockers:** No staging deployment has been uploaded or approved; Pages settings and domain ownership claims are private and need owner verification. Confirm whether the old dental demo and Still Dental case study should be retired or retained before cutover. Choose a redirect-capable service if the old Netflix case-study URL requires a real 301/308.
+- **Warnings:** Current DNS is live on GitHub Pages and must not be changed casually. The old workflow is active and could overwrite a later Pages deployment until paused. The social preview currently uses a clearly disclosed AI-generated project concept rather than a dedicated owner portrait. Search indexing and ranking cannot be guaranteed.
+- **Performance/security/content audit:** Public model files are static GLBs; the room uses one persistent React Three Fiber Canvas with demand rendering. Existing route-specific liquid backgrounds use a separate renderer and dispose their animation frame, listeners, textures, material, geometry, and renderer on cleanup. The compressed 133 KB Netflix WebP remains a direct asset. Public contact actions and credits/licenses remain in place; no new secret or dependency was added. The AI visual disclosure remains visible, and the Coming Soon entry does not invent project claims. The current asset sizes and local static smoke checks still need the focused validation recorded below.
+- **Deferred v1.1:** Real server-side redirects/redirect-host selection, post-launch crawl monitoring, and any owner-approved improvements to the social image. Pegboard remains deferred and must not be implemented as part of v1.0 migration work.
+- **Validation record:** Fill in the results of typecheck, lint, production export inspection, `git diff --check`, and short browser smoke tests after completing this migration-preparation change. No exhaustive GPU or browser loop is required.
+
+## MyVerse v1.0 — Shared Global Navigation
+
+**Implemented; lightweight technical validation recorded below. Visual approval remains pending. Overall Phase 3 remains incomplete.**
+
+- Approved menu destinations, in order: Projects (`/work`), Skills (`/skills`), About Me (`/about`), Contact (`/contact`), Back to 3D Room (`/`), and Credits (`/credits`). The menu is closed by default and adds no pages or top-level destinations.
+- One shared `GlobalNavigation` component is rendered as a compact top-right trigger over the Room and alongside the existing shared ReturnToRoom control on HTML destinations. The room's existing bottom-right Credits link remains unchanged.
+- Menu navigation between HTML destinations uses direct App Router navigation. From the Room, the camera pose is captured by the existing CameraRig, room readiness/Canvas state is retained, and the route changes without physical-hotspot focus or the boot sequence. Returning to the Room uses the existing ReturnToRoom callback and shared preparation state.
+- Active destinations expose `aria-current="page"`; the menu supports keyboard activation, Escape, outside-pointer close, focus restoration, safe-area-aware mobile placement, and reduced-motion transitions. The open-state backdrop prevents room drag/hotspot activation through the menu.
+- No added dependencies, renderer, shader, camera pose/timing changes, SEO panels, or legacy dental-route changes.
+- **Validation:** `npm run typecheck`, ESLint on the six changed TypeScript files, and `git diff --check` passed. Browser smoke was unavailable: the existing 3000/3001 previews refused connections when checked. No production build, deployment, or exhaustive testing was performed.
+- **Visual approval:** pending. Stop for user visual review; do not mark overall Phase 3 or production deployment complete.
+## MyVerse v1.0 — Global Navigation Critical Hotfix
+
+**Implemented and browser-checked locally; user visual approval pending. Production approval remains blocked pending that review.**
+
+- **Confirmed root causes:** Chromium `elementFromPoint` diagnostics on the existing preview showed Projects menu link centers hitting `.gallery-topline` / `.gallery-content`, About link centers hitting the hero `h1`, and Contact link centers hitting its headline / contact card. The menu's local `z-index` could not escape its ancestors: the Gallery header shares level 1 with later content, while GSAP leaves identity transforms on destination return wrappers and later hero/card reveals create competing stacking contexts. Destination isolation and overflow further bound the old inline panel/backdrop. Work's descendant `.work-header nav` rule also changed the expanded panel to `display:flex` with a 28px gap: the six entries became separate columns, wrapped, and escaped its 280px bounds. Work's broad button rules overrode trigger styling.
+- **Changed files:** `components/ui/GlobalNavigation.tsx`, `components/ui/ExperienceShell.tsx`, `app/globals.css`, and this implementation record. Existing unrelated edits were preserved. No page design, content, metadata, models, room camera/controller, dependencies, or deployment settings changed.
+- **Overlay hierarchy:** One stable `#myverse-navigation-layer` is a sibling of the route in the persistent shell. Existing room level 0 and destination level 30 remain; the shared menu layer is 60 and the existing return dialog is 100. React portals place panels outside animated/clipped destination ancestors and room event containers. The portal target is obtained after user interaction, avoiding server/client markup differences; each trigger/panel pair uses a unique React ID. Route identity closes stale panels, and closing/unmounting cleans up the key listener and positioning frame.
+- **Position/layout:** The panel follows the trigger's measured viewport bounds with an 8px gap, including scroll, resize and in-progress reveal movement. Safe-area padding clamps it within the viewport. It retains the charcoal/Space Mono/cyan design and 280px width, explicit block panel layout, grid lists, aligned full-width nonwrapping rows, 44px targets and an internal scrollbar only when height requires it. Work header navigation selectors now target direct children; trigger styling has its own scope.
+- **Pointer/focus behavior:** The open portal backdrop covers the viewport below the panel and remains until the outside click completes, preventing click-through to cards or the Room. The overlay root itself ignores pointers when closed. Panel interactions stop propagation to their original page ancestors. All six row centers received the intended controls and every row responded to actual mouse hover on each affected desktop route. Escape closes only the menu, outside click/CLOSE restore trigger focus, Enter navigates, Tab cycles within an open panel, and closing removes that keyboard boundary. Current destinations expose `aria-current`; the trigger exposes `aria-expanded` and its mounted panel ID. Closed panels are hidden and inert.
+- **Navigation:** Primary links and Credits still use the shared direct destination controller and App Router, with no Room detour. Back to 3D Room is now a native button calling the same `requestRoomReturn` controller and destination cleanup callback as ReturnToRoom; it has no plain `/` link that could bypass preparation through a modified click. The current trigger is focused before room return so loader cancellation can restore visible focus. The existing camera capture/saved pose path is unchanged.
+- **Focused validation:** Used the already-running preview at `http://127.0.0.1:3000`. The browser harness recorded 93 passing assertions and zero captured console errors/runtime exceptions. Desktop 1366×768: `/work`, `/work/netflix`, `/skills`, `/about`, `/contact`, `/credits` each passed portal, six-row geometry, full-width hit testing, all-row hover, viewport anchoring, no unnecessary scrollbars, and current-route checks. Actual clicks covered Work → Skills, Netflix → Projects, Skills → Contact, About → Projects, Contact → Credits, Credits → About; each preserved the document and left no stale overlay, room canvas or boot screen on direct HTML entry. Escape, outside click, Enter, Tab cycling, post-close keyboard release and current-route focus restoration passed. At 390×844, Contact's menu fit without horizontal overflow or clipped rows and touch navigation to Skills succeeded; at 390×360, the panel stayed in bounds with internal scrolling. Menu → Room completed through the existing preparation/transition path with one RoomCanvas and no Developer Boot replay.
+- **Static checks:** `npm run typecheck`, ESLint on `GlobalNavigation.tsx` and `ExperienceShell.tsx` with zero warnings, and `git diff --check` passed. No production build, deployment, dependency install, GPU profiling or stress suite was needed.
+- **Evidence:** `artifacts/navigation-hotfix/` contains visually inspected `about-desktop.png`, `contact-desktop.png`, `credits-desktop.png`, `work-desktop.png`, `skills-desktop.png`, and `contact-mobile.png`, plus the room-return capture and `results.json`. Baseline captures prefixed `before-` show the reproduced failure.
+- **Limits / review:** Validation used local Chromium emulation rather than physical mobile/Safari or a production export. The existing Free Look save/restore controller was preserved; exact camera coordinates across a Free Look round trip were not compared in this focused smoke. User visual approval is still pending; do not mark production ready, push or deploy from this result.
+
+*** End of File

@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
 import AboutPage from '@/components/about/AboutPage';
+import { createPageMetadata } from '@/lib/site';
 
-export const metadata: Metadata = {
-  title: 'About — Mohd Hafiz',
-  description: 'Meet Mohd Hafiz, the developer and web designer behind MyVerse.',
-  alternates: { canonical: '/about' },
-};
+export const metadata = createPageMetadata(
+  'About Me | Mohd Hafiz Abd Rahim',
+  'Meet Mohd Hafiz Abd Rahim, a Kuala Lumpur-based creative developer and web designer focused on interactive web experiences.',
+  '/about/',
+);
 
 export default function AboutRoute() {
   return <AboutPage />;

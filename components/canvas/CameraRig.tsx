@@ -40,6 +40,21 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
   const cinematicTarget = useMemo(() => new Vector3(), []);
   const closeValues = useMemo(() => poseValues(size.width < size.height ? entrance.mobile : entrance.desktop), [size.width, size.height]);
   useEffect(() => {
+    if (!(camera instanceof PerspectiveCamera)) return;
+    const captureCurrentPose = () => {
+      const rotation = new Euler().setFromQuaternion(camera.quaternion, 'YXZ');
+      hotspotNavigation.saved = {
+        position: camera.position.toArray(),
+        rotation: [rotation.x, rotation.y, rotation.z],
+        fov: camera.fov,
+      };
+    };
+    hotspotNavigation.captureCurrentPose = captureCurrentPose;
+    return () => {
+      if (hotspotNavigation.captureCurrentPose === captureCurrentPose) hotspotNavigation.captureCurrentPose = null;
+    };
+  }, [camera]);
+  useEffect(() => {
     mode.current = phase === 'exploring' ? 'explore' : 'transition';
     Object.assign(target.current, { yaw: 0, pitch: 0, lens: 0 });
     Object.assign(current.current, target.current);

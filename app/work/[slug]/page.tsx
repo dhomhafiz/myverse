@@ -1,23 +1,41 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { findProject, galleryProjects, projects } from '@/lib/projects';
 import ProjectMedia from '@/components/work/ProjectMedia';
 import ReturnToRoom from '@/components/ui/ReturnToRoom';
 import ComingSoonCaseStudy from '@/components/work/ComingSoonCaseStudy';
 import type { CSSProperties } from 'react';
-export function generateStaticParams() { return projects.map(({ slug }) => ({ slug })); }
+import { createPageMetadata } from '@/lib/site';
+
+export function generateStaticParams() {
+  return projects.flatMap(project => [project.slug, ...(project.aliases ?? [])].map(slug => ({ slug })));
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const project = findProject((await params).slug);
   if (!project) return { title: 'Project not found' };
-  return { title: `${project.title} — Mohd Hafiz`, description: project.description, alternates: { canonical: `/work/${project.slug}` }, robots: project.status === 'comingSoon' ? { index: false, follow: true } : undefined };
+  const metadata = createPageMetadata(
+    `${project.title} | Mohd Hafiz Abd Rahim`,
+    project.description,
+    `/work/${project.slug}/`,
+    {
+      type: 'article',
+      image: project.image
+        ? { url: project.image, alt: project.imageAlt ?? project.title }
+        : undefined,
+    },
+  );
+  return project.status === 'comingSoon'
+    ? { ...metadata, robots: { index: false, follow: true } }
+    : metadata;
 }
+
 export default async function CaseStudy({ params }: { params: Promise<{ slug: string }> }) {
   const slug = (await params).slug;
   const project = findProject(slug);
   if (!project) notFound();
-  if (slug !== project.slug) redirect(`/work/${project.slug}`);
   const projectIndex = galleryProjects.findIndex(({ slug }) => slug === project.slug);
   const previousProject = galleryProjects[(projectIndex + galleryProjects.length - 1) % galleryProjects.length];
   const nextProject = galleryProjects[(projectIndex + 1) % galleryProjects.length];
