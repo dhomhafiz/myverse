@@ -1,0 +1,58 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "published installation remains first"
+    },
+    {
+      "pass": true,
+      "label": "Netflix hero and three content sections retained"
+    },
+    {
+      "pass": true,
+      "label": "Next Chapter opens explicit unpublished page"
+    },
+    {
+      "pass": true,
+      "label": "shared liquid background and Return control reused"
+    },
+    {
+      "pass": true,
+      "label": "Back to Projects works"
+    },
+    {
+      "pass": true,
+      "label": "second gallery slot is a clickable Coming Soon entry"
+    },
+    {
+      "pass": true,
+      "label": "teaser artwork opens dedicated page"
+    },
+    {
+      "pass": true,
+      "label": "placeholder mobile has no horizontal overflow"
+    },
+    {
+      "pass": true,
+      "label": "gallery teaser mobile has no horizontal overflow"
+    },
+    {
+      "pass": true,
+      "label": "legacy preview link redirects to Coming Soon"
+    }
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "path": "/work/coming-soon",
+      "heading": "COMING SOON_"
+    }
+  ],
+  "captures": [
+    "coming-soon-desktop",
+    "coming-soon-gallery",
+    "coming-soon-mobile",
+    "smoke-failure"
+  ],
+  "failure": "Error: Timeout: room return"
+}

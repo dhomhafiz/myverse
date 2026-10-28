@@ -195,13 +195,16 @@ export default function RoomPreview({
       )}
       {navigationMode === 'opening' && <div className={`hotspot-transition-cover${hotspotNavigation.destinationId === 'iphone' ? ' is-contact' : hotspotNavigation.destinationId === 'credits' ? ' is-credits' : ''}`} aria-hidden="true" />}
       {phase === 'exploring' && roomActive && navigationMode === 'explore' && (
-        <Link className="room-credits-link" href="/credits" aria-label="Open credits and asset attributions"
-          onClick={event => {
-            event.preventDefault();
-            onOpenDestination('credits');
-          }}>
-          CREDITS
-        </Link>
+        <footer className="room-footer">
+          <Link className="room-credits-link" href="/credits" aria-label="Open credits and asset attributions"
+            onClick={event => {
+              event.preventDefault();
+              onOpenDestination('credits');
+            }}>
+            CREDITS
+          </Link>
+          <span className="room-copyright"><span className="room-copyright-mark" aria-hidden="true">©</span> 2026 ALL RIGHTS RESERVED</span>
+        </footer>
       )}
       <HeroBrand active={phase === 'entering' || phase === 'exploring'} settled={phase === 'exploring'} />
       <noscript><style>{'.boot-screen { display: none; }'}</style><section className="scene-message no-script"><h1>Mohd Hafiz’s workspace</h1><p>A personal developer room with guitars and a gravel bike. Enable JavaScript for the interactive room. Portfolio content arrives in a later phase.</p></section></noscript>
