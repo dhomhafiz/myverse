@@ -1,0 +1,433 @@
+{
+  "samples": [
+    {
+      "width": 1366,
+      "height": 768,
+      "initial": {
+        "scrollTop": 0,
+        "clientHeight": 560,
+        "scrollHeight": 753,
+        "content": {
+          "x": 54.625,
+          "y": 123.46875,
+          "width": 1256.75,
+          "height": 560.0625,
+          "top": 123.46875,
+          "right": 1311.375,
+          "bottom": 683.53125,
+          "left": 54.625
+        },
+        "style": {
+          "height": "560.062px",
+          "minHeight": "0px",
+          "overflow": "auto",
+          "alignItems": "center",
+          "gridTemplateRows": "676px",
+          "gridTemplateColumns": "540.609px 647.844px",
+          "aspectRatio": "auto",
+          "objectFit": "fill"
+        },
+        "info": {
+          "x": 54.625,
+          "y": 161.859375,
+          "width": 540.609375,
+          "height": 676,
+          "top": 161.859375,
+          "right": 595.234375,
+          "bottom": 837.859375,
+          "left": 54.625
+        },
+        "description": {
+          "x": 54.625,
+          "y": 554.359375,
+          "width": 320,
+          "height": 197.5,
+          "top": 554.359375,
+          "right": 374.625,
+          "bottom": 751.859375,
+          "left": 54.625
+        },
+        "stage": {
+          "x": 663.53125,
+          "y": 250.15625,
+          "width": 647.84375,
+          "height": 499.390625,
+          "top": 250.15625,
+          "right": 1311.375,
+          "bottom": 749.546875,
+          "left": 663.53125
+        },
+        "frame": {
+          "x": 663.53125,
+          "y": 250.15625,
+          "width": 613.78125,
+          "height": 414.703125,
+          "top": 250.15625,
+          "right": 1277.3125,
+          "bottom": 664.859375,
+          "left": 663.53125
+        },
+        "frameStyle": {
+          "height": "414.703px",
+          "minHeight": "0px",
+          "overflow": "visible",
+          "alignItems": "normal",
+          "gridTemplateRows": "none",
+          "gridTemplateColumns": "none",
+          "aspectRatio": "1.48 / 1",
+          "objectFit": "fill"
+        },
+        "imageStyle": {
+          "height": "414.703px",
+          "minHeight": "0px",
+          "overflow": "clip",
+          "alignItems": "normal",
+          "gridTemplateRows": "none",
+          "gridTemplateColumns": "none",
+          "aspectRatio": "auto",
+          "objectFit": "cover"
+        },
+        "disclosure": {
+          "x": 663.53125,
+          "y": 714.359375,
+          "width": 538.546875,
+          "height": 35.1875,
+          "top": 714.359375,
+          "right": 1202.078125,
+          "bottom": 749.546875,
+          "left": 663.53125
+        },
+        "footer": {
+          "x": 54.625,
+          "y": 683.53125,
+          "width": 1256.75,
+          "height": 84.46875,
+          "top": 683.53125,
+          "right": 1311.375,
+          "bottom": 768,
+          "left": 54.625
+        }
+      },
+      "bottom": {
+        "scrollTop": 193,
+        "clientHeight": 560,
+        "scrollHeight": 753,
+        "content": {
+          "x": 54.625,
+          "y": 123.46875,
+          "width": 1256.75,
+          "height": 560.0625,
+          "top": 123.46875,
+          "right": 1311.375,
+          "bottom": 683.53125,
+          "left": 54.625
+        },
+        "style": {
+          "height": "560.062px",
+          "minHeight": "0px",
+          "overflow": "auto",
+          "alignItems": "center",
+          "gridTemplateRows": "676px",
+          "gridTemplateColumns": "540.609px 647.844px",
+          "aspectRatio": "auto",
+          "objectFit": "fill"
+        },
+        "info": {
+          "x": 54.625,
+          "y": -31.140625,
+          "width": 540.609375,
+          "height": 676,
+          "top": -31.140625,
+          "right": 595.234375,
+          "bottom": 644.859375,
+          "left": 54.625
+        },
+        "description": {
+          "x": 54.625,
+          "y": 361.359375,
+          "width": 320,
+          "height": 197.5,
+          "top": 361.359375,
+          "right": 374.625,
+          "bottom": 558.859375,
+          "left": 54.625
+        },
+        "stage": {
+          "x": 663.53125,
+          "y": 57.15625,
+          "width": 647.84375,
+          "height": 499.390625,
+          "top": 57.15625,
+          "right": 1311.375,
+          "bottom": 556.546875,
+          "left": 663.53125
+        },
+        "frame": {
+          "x": 663.53125,
+          "y": 57.15625,
+          "width": 613.78125,
+          "height": 414.703125,
+          "top": 57.15625,
+          "right": 1277.3125,
+          "bottom": 471.859375,
+          "left": 663.53125
+        },
+        "frameStyle": {
+          "height": "414.703px",
+          "minHeight": "0px",
+          "overflow": "visible",
+          "alignItems": "normal",
+          "gridTemplateRows": "none",
+          "gridTemplateColumns": "none",
+          "aspectRatio": "1.48 / 1",
+          "objectFit": "fill"
+        },
+        "imageStyle": {
+          "height": "414.703px",
+          "minHeight": "0px",
+          "overflow": "clip",
+          "alignItems": "normal",
+          "gridTemplateRows": "none",
+          "gridTemplateColumns": "none",
+          "aspectRatio": "auto",
+          "objectFit": "cover"
+        },
+        "disclosure": {
+          "x": 663.53125,
+          "y": 521.359375,
+          "width": 538.546875,
+          "height": 35.1875,
+          "top": 521.359375,
+          "right": 1202.078125,
+          "bottom": 556.546875,
+          "left": 663.53125
+        },
+        "footer": {
+          "x": 54.625,
+          "y": 683.53125,
+          "width": 1256.75,
+          "height": 84.46875,
+          "top": 683.53125,
+          "right": 1311.375,
+          "bottom": 768,
+          "left": 54.625
+        }
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "initial": {
+        "scrollTop": 0,
+        "clientHeight": 600,
+        "scrollHeight": 928,
+        "content": {
+          "x": 23.390625,
+          "y": 151.5,
+          "width": 343.21875,
+          "height": 599.671875,
+          "top": 151.5,
+          "right": 366.609375,
+          "bottom": 751.171875,
+          "left": 23.390625
+        },
+        "style": {
+          "height": "599.672px",
+          "minHeight": "0px",
+          "overflow": "auto",
+          "alignItems": "start",
+          "gridTemplateRows": "497.078px 312.375px",
+          "gridTemplateColumns": "343.219px",
+          "aspectRatio": "auto",
+          "objectFit": "fill"
+        },
+        "info": {
+          "x": 23.390625,
+          "y": 193.6875,
+          "width": 343.21875,
+          "height": 497.078125,
+          "top": 193.6875,
+          "right": 366.609375,
+          "bottom": 690.765625,
+          "left": 23.390625
+        },
+        "description": {
+          "x": 23.390625,
+          "y": 457.1875,
+          "width": 343.21875,
+          "height": 159.578125,
+          "top": 457.1875,
+          "right": 366.609375,
+          "bottom": 616.765625,
+          "left": 23.390625
+        },
+        "stage": {
+          "x": 23.390625,
+          "y": 724.765625,
+          "width": 343.21875,
+          "height": 312.375,
+          "top": 724.765625,
+          "right": 366.609375,
+          "bottom": 1037.140625,
+          "left": 23.390625
+        },
+        "frame": {
+          "x": 23.390625,
+          "y": 724.765625,
+          "width": 343.21875,
+          "height": 236.6875,
+          "top": 724.765625,
+          "right": 366.609375,
+          "bottom": 961.453125,
+          "left": 23.390625
+        },
+        "frameStyle": {
+          "height": "236.688px",
+          "minHeight": "0px",
+          "overflow": "visible",
+          "alignItems": "normal",
+          "gridTemplateRows": "none",
+          "gridTemplateColumns": "none",
+          "aspectRatio": "1.45 / 1",
+          "objectFit": "fill"
+        },
+        "imageStyle": {
+          "height": "236.688px",
+          "minHeight": "0px",
+          "overflow": "clip",
+          "alignItems": "normal",
+          "gridTemplateRows": "none",
+          "gridTemplateColumns": "none",
+          "aspectRatio": "auto",
+          "objectFit": "cover"
+        },
+        "disclosure": {
+          "x": 23.390625,
+          "y": 1001.953125,
+          "width": 343.21875,
+          "height": 35.1875,
+          "top": 1001.953125,
+          "right": 366.609375,
+          "bottom": 1037.140625,
+          "left": 23.390625
+        },
+        "footer": {
+          "x": 23.390625,
+          "y": 751.171875,
+          "width": 343.21875,
+          "height": 92.828125,
+          "top": 751.171875,
+          "right": 366.609375,
+          "bottom": 844,
+          "left": 23.390625
+        }
+      },
+      "bottom": {
+        "scrollTop": 328,
+        "clientHeight": 600,
+        "scrollHeight": 928,
+        "content": {
+          "x": 23.390625,
+          "y": 151.5,
+          "width": 343.21875,
+          "height": 599.671875,
+          "top": 151.5,
+          "right": 366.609375,
+          "bottom": 751.171875,
+          "left": 23.390625
+        },
+        "style": {
+          "height": "599.672px",
+          "minHeight": "0px",
+          "overflow": "auto",
+          "alignItems": "start",
+          "gridTemplateRows": "497.078px 312.375px",
+          "gridTemplateColumns": "343.219px",
+          "aspectRatio": "auto",
+          "objectFit": "fill"
+        },
+        "info": {
+          "x": 23.390625,
+          "y": -134.3125,
+          "width": 343.21875,
+          "height": 497.078125,
+          "top": -134.3125,
+          "right": 366.609375,
+          "bottom": 362.765625,
+          "left": 23.390625
+        },
+        "description": {
+          "x": 23.390625,
+          "y": 129.1875,
+          "width": 343.21875,
+          "height": 159.578125,
+          "top": 129.1875,
+          "right": 366.609375,
+          "bottom": 288.765625,
+          "left": 23.390625
+        },
+        "stage": {
+          "x": 23.390625,
+          "y": 396.765625,
+          "width": 343.21875,
+          "height": 312.375,
+          "top": 396.765625,
+          "right": 366.609375,
+          "bottom": 709.140625,
+          "left": 23.390625
+        },
+        "frame": {
+          "x": 23.390625,
+          "y": 396.765625,
+          "width": 343.21875,
+          "height": 236.6875,
+          "top": 396.765625,
+          "right": 366.609375,
+          "bottom": 633.453125,
+          "left": 23.390625
+        },
+        "frameStyle": {
+          "height": "236.688px",
+          "minHeight": "0px",
+          "overflow": "visible",
+          "alignItems": "normal",
+          "gridTemplateRows": "none",
+          "gridTemplateColumns": "none",
+          "aspectRatio": "1.45 / 1",
+          "objectFit": "fill"
+        },
+        "imageStyle": {
+          "height": "236.688px",
+          "minHeight": "0px",
+          "overflow": "clip",
+          "alignItems": "normal",
+          "gridTemplateRows": "none",
+          "gridTemplateColumns": "none",
+          "aspectRatio": "auto",
+          "objectFit": "cover"
+        },
+        "disclosure": {
+          "x": 23.390625,
+          "y": 673.953125,
+          "width": 343.21875,
+          "height": 35.1875,
+          "top": 673.953125,
+          "right": 366.609375,
+          "bottom": 709.140625,
+          "left": 23.390625
+        },
+        "footer": {
+          "x": 23.390625,
+          "y": 751.171875,
+          "width": 343.21875,
+          "height": 92.828125,
+          "top": 751.171875,
+          "right": 366.609375,
+          "bottom": 844,
+          "left": 23.390625
+        }
+      }
+    }
+  ],
+  "errors": []
+}

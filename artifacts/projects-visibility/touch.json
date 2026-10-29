@@ -1,0 +1,9 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "native mobile swipe scrolls the gallery reading region"
+    }
+  ],
+  "errors": []
+}

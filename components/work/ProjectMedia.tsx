@@ -1,6 +1,14 @@
 import Image from 'next/image';
 import type { Project } from '@/lib/projects';
-export default function ProjectMedia({ project, priority = false, sizes = '(max-width: 760px) 92vw, 60vw' }: { project: Project; priority?: boolean; sizes?: string }) {
+export default function ProjectMedia({ project, priority = false, sizes = '(max-width: 760px) 92vw, 60vw', placeholderVariant = 'default' }: { project: Project; priority?: boolean; sizes?: string; placeholderVariant?: 'default' | 'status' }) {
+  if (project.status === 'comingSoon' && placeholderVariant === 'status') return <div className="coming-soon-art coming-soon-art--status">
+    <div className="coming-soon-grid" aria-hidden="true" />
+    <span className="coming-soon-status-kicker">MYVERSE / UPCOMING</span>
+    <div className="coming-soon-status-copy">
+      <p className="coming-soon-status-title">IN DEVELOPMENT</p>
+      <p>The next case study will appear here when it is ready.</p>
+    </div>
+  </div>;
   if (project.status === 'comingSoon') return <div className="project-placeholder coming-soon-art" role="img" aria-label={`Case study ${String(project.order + 1).padStart(2, '0')}: coming soon, in progress`}>
     <div className="coming-soon-grid" aria-hidden="true" />
     <span className="media-kicker">CASE STUDY {String(project.order + 1).padStart(2, '0')}</span>

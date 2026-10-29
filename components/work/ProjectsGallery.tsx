@@ -14,12 +14,41 @@ export default function ProjectsGallery() {
   const router = useRouter();
   const { requestRoomReturn } = useExperienceNavigation();
   const [index, setIndex] = useState(0);
+  const [hasMoreContent, setHasMoreContent] = useState(false);
+  const [edgeFades, setEdgeFades] = useState({ top: false, bottom: false });
   const reducedMotion = useReducedMotion();
   const root = useRef<HTMLElement>(null), content = useRef<HTMLDivElement>(null), visual = useRef<HTMLAnchorElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null), locked = useRef(false), hasRevealed = useRef(false);
   const project = galleryProjects[index];
   const returnToRoom = requestRoomReturn;
+  useEffect(() => {
+    const region = content.current;
+    if (!region) return;
+    region.scrollTop = 0;
+    let explored = false;
+    const update = () => {
+      const gallery = root.current;
+      if (gallery) {
+        const bounds = gallery.getBoundingClientRect(), readingBounds = region.getBoundingClientRect();
+        gallery.style.setProperty('--gallery-clip-top', `${Math.max(0, readingBounds.top - bounds.top)}px`);
+        gallery.style.setProperty('--gallery-clip-bottom', `${Math.max(0, bounds.bottom - readingBounds.bottom)}px`);
+        const fade = parseFloat(getComputedStyle(gallery).getPropertyValue('--gallery-edge-fade')) || 12;
+        const protectedBounds = Array.from(region.querySelectorAll('.project-image-disclosure, .project-category, .project-technologies, .work-actions, .stage-caption, .coming-soon-status'), element => element.getBoundingClientRect());
+        const intersects = (top: number, bottom: number) => protectedBounds.some(rect => rect.bottom > top && rect.top < bottom);
+        const top = region.scrollTop > 2 && !intersects(readingBounds.top, readingBounds.top + fade);
+        const bottom = region.scrollHeight - region.clientHeight - region.scrollTop > 2 && !intersects(readingBounds.bottom - fade, readingBounds.bottom);
+        setEdgeFades(current => current.top === top && current.bottom === bottom ? current : { top, bottom });
+      }
+      if (region.scrollTop > 8) explored = true;
+      setHasMoreContent(region.scrollHeight - region.clientHeight > 2 && !explored);
+    };
+    const observer = new ResizeObserver(update);
+    observer.observe(region);
+    for (const child of region.children) observer.observe(child);
+    region.addEventListener('scroll', update, { passive: true });
+    return () => { observer.disconnect(); region.removeEventListener('scroll', update); };
+  }, [index]);
   const switchProject = useCallback((direction: number) => {
     if (locked.current || galleryProjects.length < 2) return;
     locked.current = true; root.current?.removeAttribute('data-gallery-interactive'); timeline.current?.kill();
@@ -81,17 +110,26 @@ export default function ProjectsGallery() {
     };
     window.addEventListener('keydown', key); return () => { window.removeEventListener('keydown', key); };
   }, [router, returnToRoom, switchProject]);
-  return <main ref={root} className="work-shell gallery" style={{ '--project-accent': project?.accent ?? '#aaa' } as CSSProperties}>
+  return <main ref={root} className="work-shell gallery" data-slide-status={project?.status} style={{ '--project-accent': project?.accent ?? '#aaa', '--project-image-aspect': project?.imageAspectRatio ?? 1.48 } as CSSProperties}>
     {project && <LiquidSodaBackground className="gallery-liquid" project={project} area={root} media={visual} interactionReadyAttribute="data-gallery-interactive" />}
     <header className="work-header"><Link href="/" className="work-brand" onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); returnToRoom(); } }}>MYVERSE<span> / SELECTED WORK</span></Link><nav aria-label="Return to workspace"><ReturnToRoom /></nav></header>
-    <div className="gallery-topline"><span>INDEPENDENT DEVELOPER / KUALA LUMPUR</span><span>AN EXPLORATION OF DIGITAL EXPERIENCES</span></div>
-    <div className="gallery-content" ref={content}>
+    <div className="gallery-topline"><span>INDEPENDENT DEVELOPER / KUALA LUMPUR</span><span>AN EXPLORATION OF DIGITAL EXPERIENCES</span><span id="gallery-scroll-hint" className="gallery-scroll-hint" hidden={!hasMoreContent}>SCROLL FOR DETAILS ↓</span></div>
+    <div className="gallery-scroll-shell" data-fade-top={edgeFades.top} data-fade-bottom={edgeFades.bottom}>
+    <div className="gallery-content" ref={content} tabIndex={0} role="region" aria-label="Selected project details" aria-describedby={hasMoreContent ? 'gallery-scroll-hint' : undefined}>
       {project ? <><section className="project-info"><p className="work-eyebrow">SELECTED WORK <span>/ {String(index + 1).padStart(2, '0')}</span></p>
-        <h1 tabIndex={-1} ref={title}>{project.title}<span>.</span></h1><p className="project-category">{project.category}</p><p className="project-description">{project.description}</p>
-        {project.technologies.length > 0 && <ul className="project-technologies">{project.technologies.map(tech => <li key={tech}>{tech}</li>)}</ul>}
-        <div className="work-actions"><Link href={`/work/${project.slug}`}>{project.ctaLabel ?? 'View Project'}</Link>{project.demo && <a href={project.demo} target="_blank" rel="noreferrer">Live Demo</a>}</div>
+        <h1 tabIndex={-1} ref={title}>{project.title}<span>{project.status === 'comingSoon' ? '_' : '.'}</span></h1><p className="project-category">{project.category}</p><p className="project-description">{project.description}</p>
+        {project.technologies.length > 0 && <ul className="project-technologies">{project.technologies.filter(tech => tech.toLowerCase() !== project.category.toLowerCase()).map(tech => <li key={tech}>{tech}</li>)}</ul>}
+        {project.status === 'published' && <div className="work-actions"><Link href={`/work/${project.slug}`}>{project.ctaLabel ?? 'View Project'}</Link>{project.demo && <a href={project.demo} target="_blank" rel="noreferrer">Live Demo</a>}</div>}
         {project.status === 'comingSoon' && <p className="coming-soon-status">IN PROGRESS</p>}</section>
-        <div className="project-stage"><Link ref={visual} href={`/work/${project.slug}`} className="featured-project" aria-label={`View ${project.title} case study`}><ProjectMedia project={project} priority /><span className="project-frame" aria-hidden="true" /></Link><span className="stage-caption">{project.category} <span>EXPLORE THE PROJECT</span></span>{project.imageDisclosure && <p id={`${project.id}-image-disclosure`} className="project-image-disclosure">{project.imageDisclosure}</p>}</div></> : <section className="project-info"><h1 ref={title} tabIndex={-1}>Work in progress.</h1><p>Project content is being prepared.</p></section>}
+        <figure className="project-stage">
+          {project.status === 'comingSoon' ? <div className="featured-project featured-project--pending"><ProjectMedia project={project} placeholderVariant="status" /></div>
+            : <Link ref={visual} href={`/work/${project.slug}`} className="featured-project" aria-label={`View ${project.title} case study`}><ProjectMedia project={project} priority /><span className="project-frame" aria-hidden="true" /></Link>}
+          {project.status === 'published' && <figcaption>
+            {project.imageDisclosure && <p id={`${project.id}-image-disclosure`} className="project-image-disclosure">{project.imageDisclosure}</p>}
+            <div className="stage-caption"><Link className="project-explore-link" href={`/work/${project.slug}`}>EXPLORE THE PROJECT</Link></div>
+          </figcaption>}
+        </figure></> : <section className="project-info"><h1 ref={title} tabIndex={-1}>Work in progress.</h1><p>Project content is being prepared.</p></section>}
+    </div>
     </div>
     <footer className="gallery-footer"><span className="gallery-edition">A COLLECTION OF IDEAS,<br />BUILT FOR THE WEB.</span><nav aria-label="Project navigation"><button disabled={galleryProjects.length < 2} onClick={() => switchProject(-1)} aria-label="Previous Project">Previous</button><span className="project-counter" aria-live="polite" aria-atomic="true">{String(project ? index + 1 : 0).padStart(2, '0')} <span>/ {String(galleryProjects.length).padStart(2, '0')}</span></span><button disabled={galleryProjects.length < 2} onClick={() => switchProject(1)} aria-label="Next Project">Next</button></nav><span className="gallery-key-hint">USE ARROW KEYS TO EXPLORE / ESC TO RETURN</span></footer>
 

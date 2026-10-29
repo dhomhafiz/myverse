@@ -1,0 +1,99 @@
+{
+  "samples": [
+    {
+      "initial": {
+        "anchor": {
+          "x": 663.53125,
+          "y": 198,
+          "width": 621.84375,
+          "height": 349.96875,
+          "top": 198,
+          "right": 1285.375,
+          "bottom": 547.96875,
+          "left": 663.53125
+        },
+        "originalAnchor": {
+          "x": 663.53125,
+          "y": 198,
+          "width": 621.84375,
+          "height": 349.96875,
+          "top": 198,
+          "right": 1285.375,
+          "bottom": 547.96875,
+          "left": 663.53125
+        },
+        "originalConnected": true,
+        "sameAnchor": true,
+        "image": {
+          "complete": true,
+          "opacity": "0"
+        },
+        "gallery": {
+          "slideStatus": "published",
+          "galleryVisible": "",
+          "liquidReady": "true",
+          "galleryInteractive": ""
+        },
+        "contentOpacity": "1",
+        "clip": "inset(153px 0px 99px)",
+        "canvases": 1,
+        "uniforms": {
+          "mediaRect": [
+            0.48574762079062955,
+            0.3911458333333333,
+            0.4552296852122987,
+            0.38885416666666667
+          ]
+        }
+      }
+    },
+    {
+      "revisit": {
+        "anchor": {
+          "x": 663.53125,
+          "y": 198,
+          "width": 621.84375,
+          "height": 349.96875,
+          "top": 198,
+          "right": 1285.375,
+          "bottom": 547.96875,
+          "left": 663.53125
+        },
+        "originalAnchor": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        },
+        "originalConnected": false,
+        "sameAnchor": false,
+        "image": {
+          "complete": true,
+          "opacity": "0"
+        },
+        "gallery": {
+          "slideStatus": "published",
+          "liquidReady": "true",
+          "galleryVisible": "",
+          "galleryInteractive": ""
+        },
+        "contentOpacity": "1",
+        "clip": "inset(153px 0px 99px)",
+        "canvases": 1,
+        "uniforms": {
+          "mediaRect": [
+            2,
+            2,
+            0.001,
+            0.001
+          ]
+        }
+      }
+    }
+  ],
+  "errors": []
+}

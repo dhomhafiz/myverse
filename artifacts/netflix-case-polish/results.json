@@ -1,0 +1,213 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "distinct concise hero and contextual Overview 1366"
+    },
+    {
+      "pass": true,
+      "label": "correct bold uppercase project title 1366"
+    },
+    {
+      "pass": true,
+      "label": "semantic contribution bullets and three numbered steps 1366"
+    },
+    {
+      "pass": true,
+      "label": "source-backed HTML flow and separate technologies 1366"
+    },
+    {
+      "pass": true,
+      "label": "verified metadata only and canonical preserved 1366"
+    },
+    {
+      "pass": true,
+      "label": "no horizontal overflow and full image aspect 1366"
+    },
+    {
+      "pass": true,
+      "label": "all header controls fit viewport 1366"
+    },
+    {
+      "pass": true,
+      "label": "explicit readable AI disclosure 1366"
+    },
+    {
+      "pass": true,
+      "label": "technology pills fit/wrap 1366"
+    },
+    {
+      "pass": true,
+      "label": "unpublished chapter links removed, clear Back to Projects 1366"
+    },
+    {
+      "pass": true,
+      "label": "descriptive secure external source link 1366"
+    },
+    {
+      "pass": true,
+      "label": "external coverage keyboard activation 1366"
+    },
+    {
+      "pass": true,
+      "label": "shared MENU remains interactive 1366"
+    },
+    {
+      "pass": true,
+      "label": "distinct concise hero and contextual Overview 390"
+    },
+    {
+      "pass": true,
+      "label": "correct bold uppercase project title 390"
+    },
+    {
+      "pass": true,
+      "label": "semantic contribution bullets and three numbered steps 390"
+    },
+    {
+      "pass": true,
+      "label": "source-backed HTML flow and separate technologies 390"
+    },
+    {
+      "pass": true,
+      "label": "verified metadata only and canonical preserved 390"
+    },
+    {
+      "pass": true,
+      "label": "no horizontal overflow and full image aspect 390"
+    },
+    {
+      "pass": true,
+      "label": "all header controls fit viewport 390"
+    },
+    {
+      "pass": true,
+      "label": "explicit readable AI disclosure 390"
+    },
+    {
+      "pass": true,
+      "label": "technology pills fit/wrap 390"
+    },
+    {
+      "pass": true,
+      "label": "unpublished chapter links removed, clear Back to Projects 390"
+    },
+    {
+      "pass": true,
+      "label": "descriptive secure external source link 390"
+    },
+    {
+      "pass": true,
+      "label": "external coverage keyboard activation 390"
+    },
+    {
+      "pass": true,
+      "label": "shared MENU remains interactive 390"
+    },
+    {
+      "pass": true,
+      "label": "full content/lists/flow in initial HTML, no duplicate Person"
+    },
+    {
+      "pass": true,
+      "label": "shared Return begins without duplicate room canvas"
+    },
+    {
+      "pass": true,
+      "label": "Back to Projects navigation works"
+    }
+  ],
+  "samples": [
+    {
+      "width": 1366,
+      "title": "Interactive Poll System.",
+      "hero": "A physical voting experience connecting audience input to a live digital counter.",
+      "overview": "Developed for the Netflix Squid Game 2 promotional activation at MRT Ampang Park, Kuala Lumpur, this Python-based installation invited visitors to vote through physical inputs. Visitors could choose to continue or withdraw, with each selection reflected in an interactive voting counter.",
+      "bullets": [
+        "Developed the Python voting application logic.",
+        "Integrated physical voting inputs for the Continue and Withdraw choices.",
+        "Implemented counter updates for each voting selection."
+      ],
+      "steps": [
+        "01 / ChooseA visitor selects a voting option through the physical input.",
+        "02 / ProcessThe Python application handles the selection.",
+        "03 / DisplayThe counter reflects the updated voting result."
+      ],
+      "flow": [
+        "Physical Input",
+        "Python Application",
+        "Voting Counter"
+      ],
+      "technologies": [
+        "Python",
+        "Hardware Integration",
+        "Interactive Installation"
+      ],
+      "meta": [
+        "Project Type",
+        "Location"
+      ],
+      "overflow": false,
+      "image": {
+        "x": 81.953125,
+        "y": 518.765625,
+        "width": 1202.09375,
+        "height": 676.53125,
+        "top": 518.765625,
+        "right": 1284.046875,
+        "bottom": 1195.296875,
+        "left": 81.953125
+      },
+      "viewport": 1366,
+      "bodyFont": "15px",
+      "padding": "36px",
+      "canonical": "https://dhomhafiz.dev/work/netflix/"
+    },
+    {
+      "width": 390,
+      "title": "Interactive Poll System.",
+      "hero": "A physical voting experience connecting audience input to a live digital counter.",
+      "overview": "Developed for the Netflix Squid Game 2 promotional activation at MRT Ampang Park, Kuala Lumpur, this Python-based installation invited visitors to vote through physical inputs. Visitors could choose to continue or withdraw, with each selection reflected in an interactive voting counter.",
+      "bullets": [
+        "Developed the Python voting application logic.",
+        "Integrated physical voting inputs for the Continue and Withdraw choices.",
+        "Implemented counter updates for each voting selection."
+      ],
+      "steps": [
+        "01 / ChooseA visitor selects a voting option through the physical input.",
+        "02 / ProcessThe Python application handles the selection.",
+        "03 / DisplayThe counter reflects the updated voting result."
+      ],
+      "flow": [
+        "Physical Input",
+        "Python Application",
+        "Voting Counter"
+      ],
+      "technologies": [
+        "Python",
+        "Hardware Integration",
+        "Interactive Installation"
+      ],
+      "meta": [
+        "Project Type",
+        "Location"
+      ],
+      "overflow": false,
+      "image": {
+        "x": 23.390625,
+        "y": 637.328125,
+        "width": 343.21875,
+        "height": 193.15625,
+        "top": 637.328125,
+        "right": 366.609375,
+        "bottom": 830.484375,
+        "left": 23.390625
+      },
+      "viewport": 390,
+      "bodyFont": "15px",
+      "padding": "28px",
+      "canonical": "https://dhomhafiz.dev/work/netflix/"
+    }
+  ],
+  "errors": []
+}

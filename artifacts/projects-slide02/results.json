@@ -1,0 +1,522 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "Slide 01 hint shown before exploration 1366"
+    },
+    {
+      "pass": true,
+      "label": "hint stays hidden after returning to top 1366"
+    },
+    {
+      "pass": true,
+      "label": "IN PROGRESS fully visible initially 1366"
+    },
+    {
+      "pass": true,
+      "label": "protected labels and no horizontal overflow 1366"
+    },
+    {
+      "pass": true,
+      "label": "one truthful initial scroll hint rule 1366"
+    },
+    {
+      "pass": true,
+      "label": "single title/context, no fake CTAs or progress animation 1366"
+    },
+    {
+      "pass": true,
+      "label": "readable static status card 1366"
+    },
+    {
+      "pass": true,
+      "label": "bottom content clear of footer 1366"
+    },
+    {
+      "pass": true,
+      "label": "published disclaimer, image ratio, links and hint preserved 1366"
+    },
+    {
+      "pass": true,
+      "label": "Slide 01 hint shown before exploration 390"
+    },
+    {
+      "pass": true,
+      "label": "hint stays hidden after returning to top 390"
+    },
+    {
+      "pass": true,
+      "label": "IN PROGRESS fully visible initially 390"
+    },
+    {
+      "pass": true,
+      "label": "protected labels and no horizontal overflow 390"
+    },
+    {
+      "pass": true,
+      "label": "one truthful initial scroll hint rule 390"
+    },
+    {
+      "pass": true,
+      "label": "single title/context, no fake CTAs or progress animation 390"
+    },
+    {
+      "pass": true,
+      "label": "readable static status card 390"
+    },
+    {
+      "pass": true,
+      "label": "bottom content clear of footer 390"
+    },
+    {
+      "pass": true,
+      "label": "published disclaimer, image ratio, links and hint preserved 390"
+    },
+    {
+      "pass": true,
+      "label": "existing shared top fade protects short viewport card"
+    },
+    {
+      "pass": true,
+      "label": "Slide 01 View Project keyboard route preserved"
+    }
+  ],
+  "samples": [
+    {
+      "width": 1366,
+      "height": 768,
+      "initial": {
+        "top": 0,
+        "height": 548,
+        "scroll": 548,
+        "region": {
+          "x": 54.625,
+          "y": 135.46875,
+          "width": 1256.75,
+          "height": 548.0625,
+          "top": 135.46875,
+          "right": 1311.375,
+          "bottom": 683.53125,
+          "left": 54.625
+        },
+        "label": {
+          "x": 54.625,
+          "y": 111.46875,
+          "width": 225.21875,
+          "height": 12,
+          "top": 111.46875,
+          "right": 279.84375,
+          "bottom": 123.46875,
+          "left": 54.625
+        },
+        "status": {
+          "x": 54.625,
+          "y": 491.21875,
+          "width": 439.140625,
+          "height": 19.1875,
+          "top": 491.21875,
+          "right": 493.765625,
+          "bottom": 510.40625,
+          "left": 54.625
+        },
+        "card": {
+          "x": 562.0625,
+          "y": 158.5,
+          "width": 723.3125,
+          "height": 260,
+          "top": 158.5,
+          "right": 1285.375,
+          "bottom": 418.5,
+          "left": 562.0625
+        },
+        "footer": {
+          "x": 54.625,
+          "y": 683.53125,
+          "width": 1256.75,
+          "height": 84.46875,
+          "top": 683.53125,
+          "right": 1311.375,
+          "bottom": 768,
+          "left": 54.625
+        },
+        "hint": false,
+        "fadeTop": "false",
+        "fadeBottom": "false",
+        "overflow": false
+      }
+    },
+    {
+      "width": 1366,
+      "mid": {
+        "top": 0,
+        "height": 548,
+        "scroll": 548,
+        "region": {
+          "x": 54.625,
+          "y": 135.46875,
+          "width": 1256.75,
+          "height": 548.0625,
+          "top": 135.46875,
+          "right": 1311.375,
+          "bottom": 683.53125,
+          "left": 54.625
+        },
+        "label": {
+          "x": 54.625,
+          "y": 111.46875,
+          "width": 225.21875,
+          "height": 12,
+          "top": 111.46875,
+          "right": 279.84375,
+          "bottom": 123.46875,
+          "left": 54.625
+        },
+        "status": {
+          "x": 54.625,
+          "y": 491.21875,
+          "width": 439.140625,
+          "height": 19.1875,
+          "top": 491.21875,
+          "right": 493.765625,
+          "bottom": 510.40625,
+          "left": 54.625
+        },
+        "card": {
+          "x": 562.0625,
+          "y": 158.5,
+          "width": 723.3125,
+          "height": 260,
+          "top": 158.5,
+          "right": 1285.375,
+          "bottom": 418.5,
+          "left": 562.0625
+        },
+        "footer": {
+          "x": 54.625,
+          "y": 683.53125,
+          "width": 1256.75,
+          "height": 84.46875,
+          "top": 683.53125,
+          "right": 1311.375,
+          "bottom": 768,
+          "left": 54.625
+        },
+        "hint": false,
+        "fadeTop": "false",
+        "fadeBottom": "false",
+        "overflow": false
+      }
+    },
+    {
+      "width": 1366,
+      "bottom": {
+        "top": 0,
+        "height": 548,
+        "scroll": 548,
+        "region": {
+          "x": 54.625,
+          "y": 135.46875,
+          "width": 1256.75,
+          "height": 548.0625,
+          "top": 135.46875,
+          "right": 1311.375,
+          "bottom": 683.53125,
+          "left": 54.625
+        },
+        "label": {
+          "x": 54.625,
+          "y": 111.46875,
+          "width": 225.21875,
+          "height": 12,
+          "top": 111.46875,
+          "right": 279.84375,
+          "bottom": 123.46875,
+          "left": 54.625
+        },
+        "status": {
+          "x": 54.625,
+          "y": 491.21875,
+          "width": 439.140625,
+          "height": 19.1875,
+          "top": 491.21875,
+          "right": 493.765625,
+          "bottom": 510.40625,
+          "left": 54.625
+        },
+        "card": {
+          "x": 562.0625,
+          "y": 158.5,
+          "width": 723.3125,
+          "height": 260,
+          "top": 158.5,
+          "right": 1285.375,
+          "bottom": 418.5,
+          "left": 562.0625
+        },
+        "footer": {
+          "x": 54.625,
+          "y": 683.53125,
+          "width": 1256.75,
+          "height": 84.46875,
+          "top": 683.53125,
+          "right": 1311.375,
+          "bottom": 768,
+          "left": 54.625
+        },
+        "hint": false,
+        "fadeTop": "false",
+        "fadeBottom": "false",
+        "overflow": false
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "initial": {
+        "top": 0,
+        "height": 588,
+        "scroll": 588,
+        "region": {
+          "x": 23.390625,
+          "y": 163.5,
+          "width": 343.21875,
+          "height": 587.671875,
+          "top": 163.5,
+          "right": 366.609375,
+          "bottom": 751.171875,
+          "left": 23.390625
+        },
+        "label": {
+          "x": 23.390625,
+          "y": 141,
+          "width": 197.078125,
+          "height": 10.5,
+          "top": 141,
+          "right": 220.46875,
+          "bottom": 151.5,
+          "left": 23.390625
+        },
+        "status": {
+          "x": 23.390625,
+          "y": 388.40625,
+          "width": 331.21875,
+          "height": 19.1875,
+          "top": 388.40625,
+          "right": 354.609375,
+          "bottom": 407.59375,
+          "left": 23.390625
+        },
+        "card": {
+          "x": 23.390625,
+          "y": 441.59375,
+          "width": 331.21875,
+          "height": 216,
+          "top": 441.59375,
+          "right": 354.609375,
+          "bottom": 657.59375,
+          "left": 23.390625
+        },
+        "footer": {
+          "x": 23.390625,
+          "y": 751.171875,
+          "width": 343.21875,
+          "height": 92.828125,
+          "top": 751.171875,
+          "right": 366.609375,
+          "bottom": 844,
+          "left": 23.390625
+        },
+        "hint": false,
+        "fadeTop": "false",
+        "fadeBottom": "false",
+        "overflow": false
+      }
+    },
+    {
+      "width": 390,
+      "mid": {
+        "top": 0,
+        "height": 588,
+        "scroll": 588,
+        "region": {
+          "x": 23.390625,
+          "y": 163.5,
+          "width": 343.21875,
+          "height": 587.671875,
+          "top": 163.5,
+          "right": 366.609375,
+          "bottom": 751.171875,
+          "left": 23.390625
+        },
+        "label": {
+          "x": 23.390625,
+          "y": 141,
+          "width": 197.078125,
+          "height": 10.5,
+          "top": 141,
+          "right": 220.46875,
+          "bottom": 151.5,
+          "left": 23.390625
+        },
+        "status": {
+          "x": 23.390625,
+          "y": 388.40625,
+          "width": 331.21875,
+          "height": 19.1875,
+          "top": 388.40625,
+          "right": 354.609375,
+          "bottom": 407.59375,
+          "left": 23.390625
+        },
+        "card": {
+          "x": 23.390625,
+          "y": 441.59375,
+          "width": 331.21875,
+          "height": 216,
+          "top": 441.59375,
+          "right": 354.609375,
+          "bottom": 657.59375,
+          "left": 23.390625
+        },
+        "footer": {
+          "x": 23.390625,
+          "y": 751.171875,
+          "width": 343.21875,
+          "height": 92.828125,
+          "top": 751.171875,
+          "right": 366.609375,
+          "bottom": 844,
+          "left": 23.390625
+        },
+        "hint": false,
+        "fadeTop": "false",
+        "fadeBottom": "false",
+        "overflow": false
+      }
+    },
+    {
+      "width": 390,
+      "bottom": {
+        "top": 0,
+        "height": 588,
+        "scroll": 588,
+        "region": {
+          "x": 23.390625,
+          "y": 163.5,
+          "width": 343.21875,
+          "height": 587.671875,
+          "top": 163.5,
+          "right": 366.609375,
+          "bottom": 751.171875,
+          "left": 23.390625
+        },
+        "label": {
+          "x": 23.390625,
+          "y": 141,
+          "width": 197.078125,
+          "height": 10.5,
+          "top": 141,
+          "right": 220.46875,
+          "bottom": 151.5,
+          "left": 23.390625
+        },
+        "status": {
+          "x": 23.390625,
+          "y": 388.40625,
+          "width": 331.21875,
+          "height": 19.1875,
+          "top": 388.40625,
+          "right": 354.609375,
+          "bottom": 407.59375,
+          "left": 23.390625
+        },
+        "card": {
+          "x": 23.390625,
+          "y": 441.59375,
+          "width": 331.21875,
+          "height": 216,
+          "top": 441.59375,
+          "right": 354.609375,
+          "bottom": 657.59375,
+          "left": 23.390625
+        },
+        "footer": {
+          "x": 23.390625,
+          "y": 751.171875,
+          "width": 343.21875,
+          "height": 92.828125,
+          "top": 751.171875,
+          "right": 366.609375,
+          "bottom": 844,
+          "left": 23.390625
+        },
+        "hint": false,
+        "fadeTop": "false",
+        "fadeBottom": "false",
+        "overflow": false
+      }
+    },
+    {
+      "short": {
+        "top": 348,
+        "height": 165,
+        "scroll": 513,
+        "region": {
+          "x": 23.390625,
+          "y": 163.5,
+          "width": 343.21875,
+          "height": 164.5,
+          "top": 163.5,
+          "right": 366.609375,
+          "bottom": 328,
+          "left": 23.390625
+        },
+        "label": {
+          "x": 23.390625,
+          "y": 141,
+          "width": 197.078125,
+          "height": 10.5,
+          "top": 141,
+          "right": 220.46875,
+          "bottom": 151.5,
+          "left": 23.390625
+        },
+        "status": {
+          "x": 23.390625,
+          "y": 35.09375,
+          "width": 331.21875,
+          "height": 19.1875,
+          "top": 35.09375,
+          "right": 354.609375,
+          "bottom": 54.28125,
+          "left": 23.390625
+        },
+        "card": {
+          "x": 23.390625,
+          "y": 88.28125,
+          "width": 331.21875,
+          "height": 216,
+          "top": 88.28125,
+          "right": 354.609375,
+          "bottom": 304.28125,
+          "left": 23.390625
+        },
+        "footer": {
+          "x": 23.390625,
+          "y": 328,
+          "width": 343.21875,
+          "height": 72,
+          "top": 328,
+          "right": 366.609375,
+          "bottom": 400,
+          "left": 23.390625
+        },
+        "hint": false,
+        "fadeTop": "true",
+        "fadeBottom": "false",
+        "overflow": false
+      }
+    }
+  ],
+  "errors": []
+}

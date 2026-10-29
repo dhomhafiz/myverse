@@ -1,0 +1,13 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "Slide 02 reduced-motion keyboard scrolling"
+    },
+    {
+      "pass": true,
+      "label": "Slide 02 native mobile swipe scrolling"
+    }
+  ],
+  "errors": []
+}

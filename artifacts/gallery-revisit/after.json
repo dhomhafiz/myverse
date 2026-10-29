@@ -1,0 +1,221 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "Room preparation completed before gallery journey A"
+    },
+    {
+      "pass": true,
+      "label": "after-initial-room-entry same renderer, visible reveal and reset scroll"
+    },
+    {
+      "pass": true,
+      "label": "after-initial-room-entry pointer impulses reach existing shader"
+    },
+    {
+      "pass": true,
+      "label": "after-initial-room-entry visible image pixels respond to ripple"
+    },
+    {
+      "pass": true,
+      "label": "after-A-next-wrap same renderer, visible reveal and reset scroll"
+    },
+    {
+      "pass": true,
+      "label": "after-A-next-wrap pointer impulses reach existing shader"
+    },
+    {
+      "pass": true,
+      "label": "after-A-next-wrap visible image pixels respond to ripple"
+    },
+    {
+      "pass": true,
+      "label": "after-second-room-entry same renderer, visible reveal and reset scroll"
+    },
+    {
+      "pass": true,
+      "label": "after-second-room-entry pointer impulses reach existing shader"
+    },
+    {
+      "pass": true,
+      "label": "after-second-room-entry visible image pixels respond to ripple"
+    },
+    {
+      "pass": true,
+      "label": "after-B-previous-next same renderer, visible reveal and reset scroll"
+    },
+    {
+      "pass": true,
+      "label": "after-B-previous-next pointer impulses reach existing shader"
+    },
+    {
+      "pass": true,
+      "label": "after-B-previous-next visible image pixels respond to ripple"
+    },
+    {
+      "pass": true,
+      "label": "after-repeat-2 same renderer, visible reveal and reset scroll"
+    },
+    {
+      "pass": true,
+      "label": "after-repeat-2 pointer impulses reach existing shader"
+    },
+    {
+      "pass": true,
+      "label": "after-repeat-2 visible image pixels respond to ripple"
+    },
+    {
+      "pass": true,
+      "label": "after-repeat-3 same renderer, visible reveal and reset scroll"
+    },
+    {
+      "pass": true,
+      "label": "after-repeat-3 pointer impulses reach existing shader"
+    },
+    {
+      "pass": true,
+      "label": "after-repeat-3 visible image pixels respond to ripple"
+    },
+    {
+      "pass": true,
+      "label": "revisit scrolling and full disclosure preserved"
+    },
+    {
+      "pass": true,
+      "label": "mobile revisit retains visible image or static fallback"
+    },
+    {
+      "pass": true,
+      "label": "View Project still opens published Netflix case study"
+    }
+  ],
+  "samples": [
+    {
+      "label": "after-initial-room-entry",
+      "mediaRect": [
+        0.48574762079062955,
+        0.3911458333333333,
+        0.4552296852122987,
+        0.38885416666666667
+      ],
+      "imageRect": {
+        "x": 663.53125,
+        "y": 198,
+        "width": 621.84375,
+        "height": 349.96875,
+        "top": 198,
+        "right": 1285.375,
+        "bottom": 547.96875,
+        "left": 663.53125
+      },
+      "pixelMeanDifference": 13.418576719203877,
+      "changedFraction": 0.33782757459735824
+    },
+    {
+      "label": "after-A-next-wrap",
+      "mediaRect": [
+        0.48574762079062955,
+        0.3911458333333333,
+        0.4552296852122987,
+        0.38885416666666667
+      ],
+      "imageRect": {
+        "x": 663.53125,
+        "y": 198,
+        "width": 621.84375,
+        "height": 349.96875,
+        "top": 198,
+        "right": 1285.375,
+        "bottom": 547.96875,
+        "left": 663.53125
+      },
+      "pixelMeanDifference": 13.530993822375684,
+      "changedFraction": 0.3440819298616494
+    },
+    {
+      "label": "after-second-room-entry",
+      "mediaRect": [
+        0.48574762079062955,
+        0.3911458333333333,
+        0.4552296852122987,
+        0.38885416666666667
+      ],
+      "imageRect": {
+        "x": 663.53125,
+        "y": 198,
+        "width": 621.84375,
+        "height": 349.96875,
+        "top": 198,
+        "right": 1285.375,
+        "bottom": 547.96875,
+        "left": 663.53125
+      },
+      "pixelMeanDifference": 13.623869588706457,
+      "changedFraction": 0.34269137716393017
+    },
+    {
+      "label": "after-B-previous-next",
+      "mediaRect": [
+        0.48574762079062955,
+        0.3911458333333333,
+        0.4552296852122987,
+        0.38885416666666667
+      ],
+      "imageRect": {
+        "x": 663.53125,
+        "y": 198,
+        "width": 621.84375,
+        "height": 349.96875,
+        "top": 198,
+        "right": 1285.375,
+        "bottom": 547.96875,
+        "left": 663.53125
+      },
+      "pixelMeanDifference": 13.441696223741182,
+      "changedFraction": 0.34064626249814045
+    },
+    {
+      "label": "after-repeat-2",
+      "mediaRect": [
+        0.48574762079062955,
+        0.3911458333333333,
+        0.4552296852122987,
+        0.38885416666666667
+      ],
+      "imageRect": {
+        "x": 663.53125,
+        "y": 198,
+        "width": 621.84375,
+        "height": 349.96875,
+        "top": 198,
+        "right": 1285.375,
+        "bottom": 547.96875,
+        "left": 663.53125
+      },
+      "pixelMeanDifference": 13.618551664200314,
+      "changedFraction": 0.3391946382292376
+    },
+    {
+      "label": "after-repeat-3",
+      "mediaRect": [
+        0.48574762079062955,
+        0.3911458333333333,
+        0.4552296852122987,
+        0.38885416666666667
+      ],
+      "imageRect": {
+        "x": 663.53125,
+        "y": 198,
+        "width": 621.84375,
+        "height": 349.96875,
+        "top": 198,
+        "right": 1285.375,
+        "bottom": 547.96875,
+        "left": 663.53125
+      },
+      "pixelMeanDifference": 13.418536004823089,
+      "changedFraction": 0.33473328165738847
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,391 @@
+{
+  "results": [
+    {
+      "pass": true,
+      "label": "no horizontal overflow and visible scroll cue 1366"
+    },
+    {
+      "pass": true,
+      "label": "whole source aspect preserves signage and baked badge 1366"
+    },
+    {
+      "pass": true,
+      "label": "readable description and complete caption styling 1366"
+    },
+    {
+      "pass": true,
+      "label": "desktop disclosure visible in initial view"
+    },
+    {
+      "pass": true,
+      "label": "keyboard PageDown scrolls focused reading region 1366"
+    },
+    {
+      "pass": true,
+      "label": "native gallery scrolling 1366"
+    },
+    {
+      "pass": true,
+      "label": "actual bottom exposes full disclosure and CTA above footer 1366"
+    },
+    {
+      "pass": true,
+      "label": "complete approved description and explicit disclosure 1366"
+    },
+    {
+      "pass": true,
+      "label": "entire paragraph can be brought above footer 1366"
+    },
+    {
+      "pass": true,
+      "label": "no horizontal overflow and visible scroll cue 390"
+    },
+    {
+      "pass": true,
+      "label": "whole source aspect preserves signage and baked badge 390"
+    },
+    {
+      "pass": true,
+      "label": "readable description and complete caption styling 390"
+    },
+    {
+      "pass": true,
+      "label": "keyboard PageDown scrolls focused reading region 390"
+    },
+    {
+      "pass": true,
+      "label": "native gallery scrolling 390"
+    },
+    {
+      "pass": true,
+      "label": "actual bottom exposes full disclosure and CTA above footer 390"
+    },
+    {
+      "pass": true,
+      "label": "complete approved description and explicit disclosure 390"
+    },
+    {
+      "pass": true,
+      "label": "entire paragraph can be brought above footer 390"
+    },
+    {
+      "pass": true,
+      "label": "disclosure exists in initial HTML"
+    },
+    {
+      "pass": true,
+      "label": "Explore CTA keyboard navigation uses existing case-study route"
+    },
+    {
+      "pass": true,
+      "label": "project switching resets reading position without changing navigation"
+    },
+    {
+      "pass": true,
+      "label": "Previous and Next gallery navigation preserved"
+    },
+    {
+      "pass": true,
+      "label": "shared menu portal intact"
+    },
+    {
+      "pass": true,
+      "label": "shared Return starts without duplicate canvas"
+    }
+  ],
+  "samples": [
+    {
+      "width": 1366,
+      "initial": {
+        "top": 0,
+        "height": 557,
+        "scrollHeight": 742,
+        "rect": {
+          "x": 54.625,
+          "y": 126.46875,
+          "width": 1256.75,
+          "height": 557.0625,
+          "top": 126.46875,
+          "right": 1311.375,
+          "bottom": 683.53125,
+          "left": 54.625
+        },
+        "description": {
+          "x": 54.625,
+          "y": 558.859375,
+          "width": 376.984375,
+          "height": 171.5,
+          "top": 558.859375,
+          "right": 431.609375,
+          "bottom": 730.359375,
+          "left": 54.625
+        },
+        "descriptionText": "A Python-based interactive voting installation developed for Netflix's Squid Game 2 promotional activation at Ampang Park MRT Station, Kuala Lumpur. Physical voting inputs let visitors choose whether to continue or withdraw, with each selection reflected in an interactive voting counter.",
+        "frame": {
+          "x": 663.53125,
+          "y": 164.859375,
+          "width": 637.84375,
+          "height": 358.96875,
+          "top": 164.859375,
+          "right": 1301.375,
+          "bottom": 523.828125,
+          "left": 663.53125
+        },
+        "disclosure": {
+          "x": 663.53125,
+          "y": 537.828125,
+          "width": 637.84375,
+          "height": 44.1875,
+          "top": 537.828125,
+          "right": 1301.375,
+          "bottom": 582.015625,
+          "left": 663.53125
+        },
+        "disclosureText": "AI-generated concept visual. Illustrative representation, not an actual event photograph.",
+        "cta": {
+          "x": 1094.28125,
+          "y": 598.015625,
+          "width": 207.09375,
+          "height": 44,
+          "top": 598.015625,
+          "right": 1301.375,
+          "bottom": 642.015625,
+          "left": 1094.28125
+        },
+        "footer": {
+          "x": 54.625,
+          "y": 683.53125,
+          "width": 1256.75,
+          "height": 84.46875,
+          "top": 683.53125,
+          "right": 1311.375,
+          "bottom": 768,
+          "left": 54.625
+        },
+        "hint": true,
+        "fit": "contain",
+        "overflow": false
+      }
+    },
+    {
+      "width": 1366,
+      "bottom": {
+        "top": 182,
+        "height": 560,
+        "scrollHeight": 742,
+        "rect": {
+          "x": 54.625,
+          "y": 123.46875,
+          "width": 1256.75,
+          "height": 560.0625,
+          "top": 123.46875,
+          "right": 1311.375,
+          "bottom": 683.53125,
+          "left": 54.625
+        },
+        "description": {
+          "x": 54.625,
+          "y": 373.859375,
+          "width": 376.984375,
+          "height": 171.5,
+          "top": 373.859375,
+          "right": 431.609375,
+          "bottom": 545.359375,
+          "left": 54.625
+        },
+        "descriptionText": "A Python-based interactive voting installation developed for Netflix's Squid Game 2 promotional activation at Ampang Park MRT Station, Kuala Lumpur. Physical voting inputs let visitors choose whether to continue or withdraw, with each selection reflected in an interactive voting counter.",
+        "frame": {
+          "x": 663.53125,
+          "y": -20.140625,
+          "width": 637.84375,
+          "height": 358.96875,
+          "top": -20.140625,
+          "right": 1301.375,
+          "bottom": 338.828125,
+          "left": 663.53125
+        },
+        "disclosure": {
+          "x": 663.53125,
+          "y": 352.828125,
+          "width": 637.84375,
+          "height": 44.1875,
+          "top": 352.828125,
+          "right": 1301.375,
+          "bottom": 397.015625,
+          "left": 663.53125
+        },
+        "disclosureText": "AI-generated concept visual. Illustrative representation, not an actual event photograph.",
+        "cta": {
+          "x": 1094.28125,
+          "y": 413.015625,
+          "width": 207.09375,
+          "height": 44,
+          "top": 413.015625,
+          "right": 1301.375,
+          "bottom": 457.015625,
+          "left": 1094.28125
+        },
+        "footer": {
+          "x": 54.625,
+          "y": 683.53125,
+          "width": 1256.75,
+          "height": 84.46875,
+          "top": 683.53125,
+          "right": 1311.375,
+          "bottom": 768,
+          "left": 54.625
+        },
+        "hint": false,
+        "fit": "contain",
+        "overflow": false
+      }
+    },
+    {
+      "width": 390,
+      "initial": {
+        "top": 0,
+        "height": 589,
+        "scrollHeight": 1057,
+        "rect": {
+          "x": 23.390625,
+          "y": 162,
+          "width": 343.21875,
+          "height": 589.171875,
+          "top": 162,
+          "right": 366.609375,
+          "bottom": 751.171875,
+          "left": 23.390625
+        },
+        "description": {
+          "x": 23.390625,
+          "y": 469.1875,
+          "width": 343.21875,
+          "height": 196,
+          "top": 469.1875,
+          "right": 366.609375,
+          "bottom": 665.1875,
+          "left": 23.390625
+        },
+        "descriptionText": "A Python-based interactive voting installation developed for Netflix's Squid Game 2 promotional activation at Ampang Park MRT Station, Kuala Lumpur. Physical voting inputs let visitors choose whether to continue or withdraw, with each selection reflected in an interactive voting counter.",
+        "frame": {
+          "x": 23.390625,
+          "y": 806.5625,
+          "width": 343.21875,
+          "height": 193.15625,
+          "top": 806.5625,
+          "right": 366.609375,
+          "bottom": 999.71875,
+          "left": 23.390625
+        },
+        "disclosure": {
+          "x": 23.390625,
+          "y": 1013.71875,
+          "width": 343.21875,
+          "height": 66.28125,
+          "top": 1013.71875,
+          "right": 366.609375,
+          "bottom": 1080,
+          "left": 23.390625
+        },
+        "disclosureText": "AI-generated concept visual. Illustrative representation, not an actual event photograph.",
+        "cta": {
+          "x": 23.390625,
+          "y": 1127.1875,
+          "width": 207.09375,
+          "height": 44,
+          "top": 1127.1875,
+          "right": 230.484375,
+          "bottom": 1171.1875,
+          "left": 23.390625
+        },
+        "footer": {
+          "x": 23.390625,
+          "y": 751.171875,
+          "width": 343.21875,
+          "height": 92.828125,
+          "top": 751.171875,
+          "right": 366.609375,
+          "bottom": 844,
+          "left": 23.390625
+        },
+        "hint": true,
+        "fit": "contain",
+        "overflow": false
+      }
+    },
+    {
+      "width": 390,
+      "bottom": {
+        "top": 457,
+        "height": 600,
+        "scrollHeight": 1057,
+        "rect": {
+          "x": 23.390625,
+          "y": 151.5,
+          "width": 343.21875,
+          "height": 599.671875,
+          "top": 151.5,
+          "right": 366.609375,
+          "bottom": 751.171875,
+          "left": 23.390625
+        },
+        "description": {
+          "x": 23.390625,
+          "y": 1.6875,
+          "width": 343.21875,
+          "height": 196,
+          "top": 1.6875,
+          "right": 366.609375,
+          "bottom": 197.6875,
+          "left": 23.390625
+        },
+        "descriptionText": "A Python-based interactive voting installation developed for Netflix's Squid Game 2 promotional activation at Ampang Park MRT Station, Kuala Lumpur. Physical voting inputs let visitors choose whether to continue or withdraw, with each selection reflected in an interactive voting counter.",
+        "frame": {
+          "x": 23.390625,
+          "y": 339.0625,
+          "width": 343.21875,
+          "height": 193.15625,
+          "top": 339.0625,
+          "right": 366.609375,
+          "bottom": 532.21875,
+          "left": 23.390625
+        },
+        "disclosure": {
+          "x": 23.390625,
+          "y": 546.21875,
+          "width": 343.21875,
+          "height": 66.28125,
+          "top": 546.21875,
+          "right": 366.609375,
+          "bottom": 612.5,
+          "left": 23.390625
+        },
+        "disclosureText": "AI-generated concept visual. Illustrative representation, not an actual event photograph.",
+        "cta": {
+          "x": 23.390625,
+          "y": 659.6875,
+          "width": 207.09375,
+          "height": 44,
+          "top": 659.6875,
+          "right": 230.484375,
+          "bottom": 703.6875,
+          "left": 23.390625
+        },
+        "footer": {
+          "x": 23.390625,
+          "y": 751.171875,
+          "width": 343.21875,
+          "height": 92.828125,
+          "top": 751.171875,
+          "right": 366.609375,
+          "bottom": 844,
+          "left": 23.390625
+        },
+        "hint": false,
+        "fit": "contain",
+        "overflow": false
+      }
+    }
+  ],
+  "errors": []
+}

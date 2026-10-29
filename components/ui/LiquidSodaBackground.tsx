@@ -127,7 +127,7 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
 
   useEffect(() => {
     if (!enabled) return;
-    const element = host.current, target = area.current, imageLink = media?.current ?? null;
+    const element = host.current, target = area.current;
     if (!element || !target) return;
     const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
     let dispose: (() => void) | undefined;
@@ -158,6 +158,8 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
       const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
       let frame = 0, disposed = false, texture: Texture | null = null, revision = 0;
       let mediaReady = false, shaderFailed = false;
+      let observedImageLink: HTMLAnchorElement | null = null;
+      let mediaLayoutNodes: HTMLElement[] = [];
       renderer.debug.onShaderError = () => { shaderFailed = true; target.removeAttribute('data-liquid-ready'); console.error('Gallery liquid shader failed; static media retained.'); };
       const render = () => {
         frame = 0;
@@ -171,6 +173,19 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
       };
       const requestRender = () => { if (!frame && !disposed && !document.hidden) frame = requestAnimationFrame(render); };
       const measure = () => {
+        // Gallery slides can replace the anchor without replacing this engine.
+        // Measure and observe the current node, never a detached mount-time node.
+        const imageLink = media?.current ?? null;
+        if (imageLink !== observedImageLink) {
+          for (const node of mediaLayoutNodes) observer.unobserve(node);
+          observedImageLink = imageLink;
+          mediaLayoutNodes = [];
+          // A scroll-hint/header resize can move the image without resizing it.
+          for (let node: HTMLElement | null = imageLink; node && node !== target && target.contains(node); node = node.parentElement) {
+            mediaLayoutNodes.push(node);
+            observer.observe(node);
+          }
+        }
         const bounds = viewport
           ? { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight }
           : target.getBoundingClientRect();
@@ -217,7 +232,6 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
       };
       const lost = (event: Event) => { event.preventDefault(); dispose?.(); dispose = undefined; };
       const observer = new ResizeObserver(measure); observer.observe(target);
-      if (imageLink) observer.observe(imageLink);
       const field = createPointerRipples(target, requestRender, {
         interactive: () => (!interactionReadyAttribute || target.hasAttribute(interactionReadyAttribute)) && !target.closest('[inert]'),
         viewport,
