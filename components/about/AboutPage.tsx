@@ -5,10 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { aboutCards } from '@/lib/about';
+import { PROFESSIONAL_TITLE } from '@/lib/site';
+import ExperienceTimeline from '@/components/about/ExperienceTimeline';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
-import ReturnToRoom from '@/components/ui/ReturnToRoom';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function AboutPage() {
   const { requestRoomReturn, navigateToDestination } = useExperienceNavigation();
@@ -76,21 +78,14 @@ export default function AboutPage() {
         enabled={liquidActive}
       />
       <div className="skills-content">
-        <header className="skills-header">
-          <div className="skills-brand about-reveal">
-            <p className="skills-eyebrow">MYVERSE / ABOUT</p>
-            <span className="skills-online"><i aria-hidden="true" /> ONLINE</span>
-          </div>
-          <nav aria-label="Return to workspace" className="skills-return about-reveal">
-            <ReturnToRoom size="prominent" onActivate={stopLiquid} />
-          </nav>
-        </header>
+        <PageHeader label="ABOUT" className="about-reveal" onReturn={stopLiquid} />
 
         <section className="about-hero" aria-labelledby="about-title">
           <div className="about-hero-copy about-reveal">
             <h1 ref={heading} id="about-title" tabIndex={-1} className="skills-title">ABOUT ME<span>_</span></h1>
-            <p className="about-identity">CREATIVE DEVELOPER / KUALA LUMPUR</p>
+            <p className="about-identity">{PROFESSIONAL_TITLE} / KUALA LUMPUR</p>
             <p className="about-introduction">I build interactive web experiences by combining software engineering, design and a curiosity for how things work.</p>
+            <p className="about-transition">Years of building enterprise applications taught me to value structure, reliability and performance. Today, I bring that engineering foundation into creative web development — exploring interaction, motion and immersive 3D experiences without losing sight of how things work underneath.</p>
           </div>
           <figure className="about-portrait">
             <Image src="/images/about-portrait-original.png" width={1122} height={1402}
@@ -142,12 +137,17 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <ExperienceTimeline />
+
         <section className="about-next-steps about-reveal" aria-labelledby="about-next-steps-title">
-          <h2 id="about-next-steps-title" className="sr-only">Explore my work or get in touch</h2>
-          <Link className="about-cta about-cta--primary" href="/contact" prefetch={false}
-            onClick={event => navigate(event, '/contact')}>GET IN TOUCH</Link>
-          <Link className="about-cta" href="/work" prefetch={false}
-            onClick={event => navigate(event, '/work')}>SEE MY WORKS</Link>
+          <h2 id="about-next-steps-title">Interested in working together?</h2>
+          <p>Whether it&apos;s a business website or an interactive digital experience, I&apos;d love to hear what you&apos;re building.</p>
+          <div className="about-next-steps-actions">
+            <Link className="about-cta about-cta--primary" href="/contact" prefetch={false}
+              onClick={event => navigate(event, '/contact')}>GET IN TOUCH</Link>
+            <Link className="about-cta" href="/work" prefetch={false}
+              onClick={event => navigate(event, '/work')}>SEE MY WORK</Link>
+          </div>
         </section>
 
         <footer className="skills-footer about-reveal">

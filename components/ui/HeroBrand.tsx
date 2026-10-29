@@ -1,3 +1,5 @@
+import { PROFESSIONAL_TITLE } from '@/lib/site';
+
 export default function HeroBrand({ active, settled }: { active: boolean; settled: boolean }) {
   return <>
     <div className="intro-scanlines" aria-hidden="true" />
@@ -24,7 +26,7 @@ export default function HeroBrand({ active, settled }: { active: boolean; settle
         </span>
       </h1>
       <p className="hero-caption">Hello, World!<span className="hero-caption-cursor" aria-hidden="true">█</span></p>
-      <p className={`brand-subtitle${settled ? ' is-settled' : ''}`} aria-hidden={!settled}>Web Designer | Kuala Lumpur, MY</p>
+      <p className={`brand-subtitle${settled ? ' is-settled' : ''}`} aria-hidden={!settled}>{PROFESSIONAL_TITLE} | KUALA LUMPUR, MY</p>
       <span className="brand-anchor" aria-hidden="true">MOHD HAFIZ</span>
     </div>
   </>;

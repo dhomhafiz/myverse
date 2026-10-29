@@ -10,7 +10,8 @@ const primaryDestinations = [
   { number: '01', label: 'PROJECTS', href: '/work' },
   { number: '02', label: 'SKILLS', href: '/skills' },
   { number: '03', label: 'ABOUT ME', href: '/about' },
-  { number: '04', label: 'CONTACT', href: '/contact' },
+  { number: '04', label: 'BEYOND THE CODE', href: '/beyond' },
+  { number: '05', label: 'CONTACT', href: '/contact' },
 ] as const;
 
 function normalizedPath(pathname: string) {

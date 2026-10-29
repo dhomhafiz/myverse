@@ -5,9 +5,10 @@ import { roomPreparation, initialRoomPreparationSnapshot, roomAssetPercent } fro
 import { useExperienceNavigation } from './ExperienceNavigation';
 import GlobalNavigation from './GlobalNavigation';
 
-export default function ReturnToRoom({ size = 'default', onActivate }: {
+export default function ReturnToRoom({ size = 'default', onActivate, includeNavigation = true }: {
   size?: 'default' | 'prominent';
   onActivate?: () => void;
+  includeNavigation?: boolean;
 }) {
   const preparation = useSyncExternalStore(
     roomPreparation.subscribe, roomPreparation.getSnapshot, () => initialRoomPreparationSnapshot,
@@ -31,7 +32,7 @@ export default function ReturnToRoom({ size = 'default', onActivate }: {
   };
   return (
     <div className="room-navigation-controls">
-      <GlobalNavigation onReturn={onActivate} />
+      {includeNavigation && <GlobalNavigation onReturn={onActivate} />}
       <div className={`room-return-control${size === 'prominent' ? ' room-return-control--prominent' : ''}`} aria-busy={pending && !failed}>
         <button type="button" onClick={activate} disabled={pending && !failed}>
           {label}

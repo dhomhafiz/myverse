@@ -65,9 +65,5 @@ export default function Workstation({ active, reducedMotion, motion }: {
     </group>
     <object3D name={phone.hotspotAnchor.name} position={phone.hotspotAnchor.position} />
     <Box name="audio_interface" position={[0.69, 0.825, -0.1]} size={[0.16, 0.06, 0.12]} color="#765047" />
-    <group name="plant_small" position={[0.62, 0.84, -0.25]}>
-      <mesh><cylinderGeometry args={[0.065, 0.05, 0.1, 8]} /><meshStandardMaterial color="#b3aca0" /></mesh>
-      <mesh position={[0, 0.12, 0]}><icosahedronGeometry args={[0.12, 0]} /><meshStandardMaterial color="#607563" /></mesh>
-    </group>
   </group>;
 }

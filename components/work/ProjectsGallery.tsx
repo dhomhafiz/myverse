@@ -5,10 +5,10 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProp
 import { gsap } from 'gsap';
 import { galleryProjects } from '@/lib/projects';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
+import PageHeader from '@/components/ui/PageHeader';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import ProjectMedia from './ProjectMedia';
 import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
-import ReturnToRoom from '@/components/ui/ReturnToRoom';
 
 export default function ProjectsGallery() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function ProjectsGallery() {
   const [hasMoreContent, setHasMoreContent] = useState(false);
   const [edgeFades, setEdgeFades] = useState({ top: false, bottom: false });
   const reducedMotion = useReducedMotion();
-  const root = useRef<HTMLElement>(null), content = useRef<HTMLDivElement>(null), visual = useRef<HTMLAnchorElement>(null);
+  const root = useRef<HTMLElement>(null), content = useRef<HTMLDivElement>(null), visual = useRef<HTMLAnchorElement>(null), pendingVisual = useRef<HTMLDivElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null), locked = useRef(false), hasRevealed = useRef(false);
   const project = galleryProjects[index];
@@ -111,8 +111,10 @@ export default function ProjectsGallery() {
     window.addEventListener('keydown', key); return () => { window.removeEventListener('keydown', key); };
   }, [router, returnToRoom, switchProject]);
   return <main ref={root} className="work-shell gallery" data-slide-status={project?.status} style={{ '--project-accent': project?.accent ?? '#aaa', '--project-image-aspect': project?.imageAspectRatio ?? 1.48 } as CSSProperties}>
-    {project && <LiquidSodaBackground className="gallery-liquid" project={project} area={root} media={visual} interactionReadyAttribute="data-gallery-interactive" />}
-    <header className="work-header"><Link href="/" className="work-brand" onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); returnToRoom(); } }}>MYVERSE<span> / SELECTED WORK</span></Link><nav aria-label="Return to workspace"><ReturnToRoom /></nav></header>
+    {project && <LiquidSodaBackground className="gallery-liquid" project={project} area={root} media={project.status === 'comingSoon' ? pendingVisual : visual} interactionReadyAttribute="data-gallery-interactive" />}
+    <PageHeader label="SELECTED WORK" brandHref="/"
+      onBrandClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); returnToRoom(); } }}
+      returnSize="default" />
     <div className="gallery-topline"><span>INDEPENDENT DEVELOPER / KUALA LUMPUR</span><span>AN EXPLORATION OF DIGITAL EXPERIENCES</span><span id="gallery-scroll-hint" className="gallery-scroll-hint" hidden={!hasMoreContent}>SCROLL FOR DETAILS ↓</span></div>
     <div className="gallery-scroll-shell" data-fade-top={edgeFades.top} data-fade-bottom={edgeFades.bottom}>
     <div className="gallery-content" ref={content} tabIndex={0} role="region" aria-label="Selected project details" aria-describedby={hasMoreContent ? 'gallery-scroll-hint' : undefined}>
@@ -120,9 +122,9 @@ export default function ProjectsGallery() {
         <h1 tabIndex={-1} ref={title}>{project.title}<span>{project.status === 'comingSoon' ? '_' : '.'}</span></h1><p className="project-category">{project.category}</p><p className="project-description">{project.description}</p>
         {project.technologies.length > 0 && <ul className="project-technologies">{project.technologies.filter(tech => tech.toLowerCase() !== project.category.toLowerCase()).map(tech => <li key={tech}>{tech}</li>)}</ul>}
         {project.status === 'published' && <div className="work-actions"><Link href={`/work/${project.slug}`}>{project.ctaLabel ?? 'View Project'}</Link>{project.demo && <a href={project.demo} target="_blank" rel="noreferrer">Live Demo</a>}</div>}
-        {project.status === 'comingSoon' && <p className="coming-soon-status">IN PROGRESS</p>}</section>
+        {project.status === 'comingSoon' && <p className="coming-soon-status">IN DEVELOPMENT</p>}</section>
         <figure className="project-stage">
-          {project.status === 'comingSoon' ? <div className="featured-project featured-project--pending"><ProjectMedia project={project} placeholderVariant="status" /></div>
+          {project.status === 'comingSoon' ? <div ref={pendingVisual} className="featured-project featured-project--pending"><ProjectMedia project={project} placeholderVariant="status" /></div>
             : <Link ref={visual} href={`/work/${project.slug}`} className="featured-project" aria-label={`View ${project.title} case study`}><ProjectMedia project={project} priority /><span className="project-frame" aria-hidden="true" /></Link>}
           {project.status === 'published' && <figcaption>
             {project.imageDisclosure && <p id={`${project.id}-image-disclosure`} className="project-image-disclosure">{project.imageDisclosure}</p>}

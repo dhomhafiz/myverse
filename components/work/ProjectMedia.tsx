@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import type { Project } from '@/lib/projects';
 export default function ProjectMedia({ project, priority = false, sizes = '(max-width: 760px) 92vw, 60vw', placeholderVariant = 'default' }: { project: Project; priority?: boolean; sizes?: string; placeholderVariant?: 'default' | 'status' }) {
+  if (project.status === 'comingSoon' && placeholderVariant === 'status' && project.image) return <Image src={project.image} alt={project.imageAlt ?? `${project.title} project preview`} fill sizes={sizes} preload={priority} className="project-image coming-soon-image" />;
   if (project.status === 'comingSoon' && placeholderVariant === 'status') return <div className="coming-soon-art coming-soon-art--status">
     <div className="coming-soon-grid" aria-hidden="true" />
     <span className="coming-soon-status-kicker">MYVERSE / UPCOMING</span>

@@ -5,7 +5,7 @@ import { gsap } from 'gsap';
 import { contactMethods, contactSocialLinks } from '@/lib/contact';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
 import useReducedMotion from '@/hooks/useReducedMotion';
-import ReturnToRoom from '@/components/ui/ReturnToRoom';
+import PageHeader from '@/components/ui/PageHeader';
 import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
 import ContactCard from './ContactCard';
 
@@ -52,15 +52,7 @@ export default function ContactPage() {
     <main ref={root} className="contact-page" data-contact-visible="">
       <LiquidSodaBackground className="contact-liquid" area={root} interactionReadyAttribute="data-contact-visible" viewport />
       <div className="contact-content">
-        <header className="contact-header">
-          <div className="contact-brand skills-brand contact-reveal">
-            <p className="contact-eyebrow">MYVERSE / CONTACT</p>
-            <span className="skills-online"><i aria-hidden="true" /> ONLINE</span>
-          </div>
-          <nav aria-label="Return to workspace" className="contact-return contact-reveal">
-            <ReturnToRoom size="prominent" />
-          </nav>
-        </header>
+        <PageHeader label="CONTACT" className="contact-reveal" />
 
         <section className="contact-main" aria-labelledby="contact-title">
           <div className="contact-hero">

@@ -69,6 +69,20 @@ export const hotspotDestinations = {
     focusFov: { desktop: 46, mobile: 72 },
     duration: 1.15,
   },
+  beyond: {
+    id: 'beyond-code',
+    route: '/beyond',
+    focusPose: 'camera_beyond_code',
+    transitionAnchor: 'pegboard',
+    beaconAnchor: 'pegboard',
+    beaconPosition: [0, 0, 0.08],
+    caption: 'BEYOND THE CODE',
+    returnTo: 'saved-camera',
+    loading: 'progressive',
+    accessibleLabel: 'Explore Beyond the Code at the pegboard',
+    focusFov: { desktop: 46, mobile: 66 },
+    duration: 1.15,
+  },
   contact: {
     id: 'iphone',
     route: '/contact',
@@ -84,7 +98,7 @@ export const hotspotDestinations = {
     focusFov: { desktop: 46, mobile: 72 },
     duration: 1.15,
   },
-} satisfies Record<'projects' | 'skills' | 'about' | 'contact', HotspotDestination>;
+} satisfies Record<'projects' | 'skills' | 'about' | 'beyond' | 'contact', HotspotDestination>;
 
 export const creditsDestination = {
   id: 'credits',
@@ -102,18 +116,25 @@ const roomDestinations: readonly RoomDestination[] = [
   creditsDestination,
 ];
 
+function normalizedRoute(pathname: string) {
+  return pathname.replace(/\/+$/, '') || '/';
+}
+
+function matchesDestinationRoute(pathname: string, route: string) {
+  const path = normalizedRoute(pathname);
+  const destinationRoute = normalizedRoute(route);
+  return path === destinationRoute || (destinationRoute === '/work' && path.startsWith(`${destinationRoute}/`));
+}
+
 export function getHotspotDestination(id: string | null | undefined): RoomDestination {
   return roomDestinations.find(destination => destination.id === id) ?? hotspotDestinations.projects;
 }
 
 export function getHotspotDestinationForRoute(pathname: string) {
-  return roomDestinations.find(destination =>
-    pathname === destination.route || (destination.route === '/work' && pathname.startsWith('/work/')),
-  ) ?? hotspotDestinations.projects;
+  return roomDestinations.find(destination => matchesDestinationRoute(pathname, destination.route))
+    ?? hotspotDestinations.projects;
 }
 
 export function isHotspotDestinationRoute(pathname: string) {
-  return roomDestinations.some(destination =>
-    pathname === destination.route || (destination.route === '/work' && pathname.startsWith('/work/')),
-  );
+  return roomDestinations.some(destination => matchesDestinationRoute(pathname, destination.route));
 }

@@ -6,7 +6,7 @@ import { credits } from '@/lib/credits';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
-import ReturnToRoom from '@/components/ui/ReturnToRoom';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function CreditsDashboard() {
   const { requestRoomReturn } = useExperienceNavigation();
@@ -64,14 +64,8 @@ export default function CreditsDashboard() {
         enabled={liquidActive}
       />
       <div className="credits-content">
+        <PageHeader label="CREDITS" className="credits-reveal" onReturn={stopLiquid} />
         <header className="credits-header">
-          <div className="credits-brand credits-reveal">
-            <p className="skills-eyebrow">MYVERSE / CREDITS</p>
-            <span className="skills-online"><i aria-hidden="true" /> ONLINE</span>
-          </div>
-          <nav aria-label="Return to workspace" className="credits-return credits-reveal">
-            <ReturnToRoom size="prominent" onActivate={stopLiquid} />
-          </nav>
           <h1 ref={heading} tabIndex={-1} className="skills-title credits-reveal">CREDITS<span>_</span></h1>
           <p className="skills-subtitle credits-reveal">ATTRIBUTIONS, LICENSES &amp; MODIFICATIONS</p>
           <p className="credits-intro credits-reveal">

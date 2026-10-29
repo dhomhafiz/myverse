@@ -34,6 +34,7 @@ export default function RoomPreview({
   returnRequested,
   onTransitionStart,
   onReturnComplete,
+  onRegisterReturnFromBoot,
 }: {
   view: ReviewView;
   roomActive: boolean;
@@ -41,6 +42,7 @@ export default function RoomPreview({
   returnRequested: boolean;
   onTransitionStart: () => boolean;
   onReturnComplete: () => void;
+  onRegisterReturnFromBoot: (handler: (() => void) | null) => void;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -60,6 +62,11 @@ export default function RoomPreview({
   const [hint, setHint] = useState(true);
   const surface = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLDivElement>(null);
+  const roomCopyright = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const element = roomCopyright.current;
+    if (element) element.textContent = `${new Date().getFullYear()} dhomhafiz.dev`;
+  }, [phase, roomActive]);
   const [initialMotion] = useState(() => {
     const value = createEntranceMotion();
     if (directEntry) Object.assign(value.lights, { monitors: 1, pc: 1, lamp: 1, room: 1 });
@@ -116,6 +123,16 @@ export default function RoomPreview({
   }, [onReturnComplete, router, attempt]);
 
   useEffect(() => {
+    if (phase !== 'ready') return;
+    const resumeFromBoot = () => {
+      Object.assign(motion.current.lights, { monitors: 1, pc: 1, lamp: 1, room: 1 });
+      setPhase('exploring');
+    };
+    onRegisterReturnFromBoot(resumeFromBoot);
+    return () => onRegisterReturnFromBoot(null);
+  }, [motion, onRegisterReturnFromBoot, phase]);
+
+  useEffect(() => {
     if (pathname !== '/' && navigationMode === 'opening' &&
       getHotspotDestinationForRoute(pathname).id === hotspotNavigation.destinationId) {
       hotspotNavigation.setMode('paused');
@@ -132,7 +149,8 @@ export default function RoomPreview({
   }, [pathname, phase, navigationMode, returnRequested]);
 
   useEffect(() => {
-    if (!returnRequested || readiness !== 'ready' || phase !== 'exploring' || navigationMode === 'returning') return;
+    if (!returnRequested || readiness !== 'ready' || navigationMode === 'returning') return;
+    if (phase !== 'exploring') return;
     opening.current = true;
     if (onTransitionStart()) hotspotNavigation.setMode('returning');
   }, [returnRequested, readiness, phase, navigationMode, onTransitionStart]);
@@ -206,7 +224,11 @@ export default function RoomPreview({
             }}>
             CREDITS
           </Link>
-          <span className="room-copyright"><span className="room-copyright-mark" aria-hidden="true">©</span> 2026 ALL RIGHTS RESERVED</span>
+          <span className="room-footer-separator" aria-hidden="true">|</span>
+          <span className="room-copyright">
+            <span className="room-copyright-mark" aria-hidden="true">©</span>
+            <span ref={roomCopyright}>2026 dhomhafiz.dev</span>
+          </span>
         </footer>
       )}
       <HeroBrand active={phase === 'entering' || phase === 'exploring'} settled={phase === 'exploring'} />

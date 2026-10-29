@@ -20,6 +20,8 @@ const fragmentShader = `
   uniform vec4 uMediaRect;
   uniform vec4 uRipples[12];
   uniform float uTime;
+  uniform float uSwayStart;
+  uniform float uSwayAmount;
   uniform vec3 uAccent;
   uniform float uFlatBackground;
   uniform sampler2D uImage;
@@ -57,6 +59,12 @@ const fragmentShader = `
         if (rectAspect > uImageAspect) cover.y = uImageAspect / rectAspect;
         else cover.x = rectAspect / uImageAspect;
         vec2 imageUv = clamp((local - .5) * cover + .5, .001, .999);
+        float swayAge = uTime - uSwayStart;
+        if (swayAge >= 0.0 && swayAge < 1.8) {
+          float sway = cos(swayAge * 7.0) * exp(-swayAge * 2.8) * uSwayAmount;
+          vec2 centeredUv = imageUv - .5;
+          imageUv = mat2(cos(sway), -sin(sway), sin(sway), cos(sway)) * centeredUv + .5;
+        }
         color = texture2D(uImage, imageUv).rgb;
       }
       float edge = min(min(local.x, 1.0 - local.x) * uMediaRect.z * uViewport.x,
@@ -113,7 +121,7 @@ type LiquidEngine = { setProject: (project: Project | null) => void };
 
 export default function LiquidSodaBackground({ area, media, project = null, interactionReadyAttribute, className, viewport = false, enabled = true }: {
   area: RefObject<HTMLElement | null>;
-  media?: RefObject<HTMLAnchorElement | null>;
+  media?: RefObject<HTMLElement | null>;
   project?: Project | null;
   interactionReadyAttribute?: string;
   className?: string;
@@ -149,16 +157,17 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
       const emptyTexture = new Texture();
       const uniforms = {
         uViewport: { value: new Vector2(1, 1) }, uMediaRect: { value: new Vector4(2, 2, .001, .001) },
-        uRipples: { value: ripples }, uTime: { value: 0 }, uAccent: { value: new Color() }, uFlatBackground: { value: 0 },
+        uRipples: { value: ripples }, uTime: { value: 0 }, uSwayStart: { value: -100 }, uSwayAmount: { value: 0 },
+        uAccent: { value: new Color() }, uFlatBackground: { value: 0 },
         uImage: { value: emptyTexture }, uHasImage: { value: 0 }, uImageAspect: { value: 1 },
       };
       const geometry = new PlaneGeometry(2, 2);
       const material = new ShaderMaterial({ vertexShader, fragmentShader, uniforms, depthTest: false, depthWrite: false });
       const scene = new Scene(); scene.add(new Mesh(geometry, material));
       const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
-      let frame = 0, disposed = false, texture: Texture | null = null, revision = 0;
+      let frame = 0, disposed = false, texture: Texture | null = null, revision = 0, swayUntil = 0;
       let mediaReady = false, shaderFailed = false;
-      let observedImageLink: HTMLAnchorElement | null = null;
+      let observedMedia: HTMLElement | null = null;
       let mediaLayoutNodes: HTMLElement[] = [];
       renderer.debug.onShaderError = () => { shaderFailed = true; target.removeAttribute('data-liquid-ready'); console.error('Gallery liquid shader failed; static media retained.'); };
       const render = () => {
@@ -169,19 +178,19 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
         uniforms.uTime.value = time;
         renderer.render(scene, camera);
         if (mediaReady && !shaderFailed) target.setAttribute('data-liquid-ready', 'true');
-        if (time < field.activeUntil) frame = requestAnimationFrame(render);
+        if (time < Math.max(field.activeUntil, swayUntil)) frame = requestAnimationFrame(render);
       };
       const requestRender = () => { if (!frame && !disposed && !document.hidden) frame = requestAnimationFrame(render); };
       const measure = () => {
-        // Gallery slides can replace the anchor without replacing this engine.
+        // Gallery slides can replace the media node without replacing this engine.
         // Measure and observe the current node, never a detached mount-time node.
-        const imageLink = media?.current ?? null;
-        if (imageLink !== observedImageLink) {
+        const mediaElement = media?.current ?? null;
+        if (mediaElement !== observedMedia) {
           for (const node of mediaLayoutNodes) observer.unobserve(node);
-          observedImageLink = imageLink;
+          observedMedia = mediaElement;
           mediaLayoutNodes = [];
           // A scroll-hint/header resize can move the image without resizing it.
-          for (let node: HTMLElement | null = imageLink; node && node !== target && target.contains(node); node = node.parentElement) {
+          for (let node: HTMLElement | null = mediaElement; node && node !== target && target.contains(node); node = node.parentElement) {
             mediaLayoutNodes.push(node);
             observer.observe(node);
           }
@@ -192,7 +201,7 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
         const width = Math.max(bounds.width, 1), height = Math.max(bounds.height, 1);
         if (uniforms.uViewport.value.x !== width || uniforms.uViewport.value.y !== height) renderer.setSize(width, height, false);
         uniforms.uViewport.value.set(width, height);
-        const rect = imageLink?.getBoundingClientRect();
+        const rect = mediaElement?.getBoundingClientRect();
         if (rect && rect.width > 0 && rect.height > 0) {
           uniforms.uMediaRect.value.set((rect.left - bounds.left) / width, 1 - (rect.bottom - bounds.top) / height, rect.width / width, rect.height / height);
         } else {
@@ -206,6 +215,9 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
         texture?.dispose(); texture = null; uniforms.uImage.value = emptyTexture;
         uniforms.uHasImage.value = 0; uniforms.uAccent.value.set(next?.accent ?? '#aaa').convertLinearToSRGB();
         uniforms.uFlatBackground.value = next ? 0 : 1;
+        uniforms.uSwayStart.value = -100;
+        uniforms.uSwayAmount.value = next?.status === 'comingSoon' && next.image ? .024 : 0;
+        swayUntil = 0;
         mediaReady = !next?.image;
         // Reveal the static DOM media while a replacement texture is loading.
         target.removeAttribute('data-liquid-ready');
@@ -215,6 +227,10 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
             texture = loaded; mediaReady = true; loaded.minFilter = LinearFilter; loaded.generateMipmaps = false;
             uniforms.uImage.value = loaded; uniforms.uHasImage.value = 1;
             uniforms.uImageAspect.value = loaded.image.width / loaded.image.height;
+            if (next.status === 'comingSoon') {
+              uniforms.uSwayStart.value = performance.now() / 1000;
+              swayUntil = uniforms.uSwayStart.value + 1.8;
+            }
             measure();
           }, undefined, () => {
             if (!disposed && version === revision) {
@@ -256,6 +272,10 @@ export default function LiquidSodaBackground({ area, media, project = null, inte
     return () => { finePointer.removeEventListener('change', configure); dispose?.(); };
   }, [area, media, reducedMotion, interactionReadyAttribute, viewport, enabled]);
 
-  useEffect(() => { initialProject.current = project; engine.current?.setProject(project); }, [project]);
+  useEffect(() => {
+    const changed = initialProject.current !== project;
+    initialProject.current = project;
+    if (changed) engine.current?.setProject(project);
+  }, [project]);
   return <div ref={host} className={`liquid-soda-background ${className ?? ''}`.trim()} aria-hidden="true" />;
 }

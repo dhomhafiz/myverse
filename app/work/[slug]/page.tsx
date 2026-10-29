@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { findProject, galleryProjects, projects } from '@/lib/projects';
 import ProjectMedia from '@/components/work/ProjectMedia';
-import ReturnToRoom from '@/components/ui/ReturnToRoom';
+import PageHeader from '@/components/ui/PageHeader';
 import ComingSoonCaseStudy from '@/components/work/ComingSoonCaseStudy';
 import type { CSSProperties } from 'react';
 import { createPageMetadata } from '@/lib/site';
@@ -40,7 +40,8 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   const previousProject = galleryProjects[(projectIndex + galleryProjects.length - 1) % galleryProjects.length];
   if (project.status === 'comingSoon') return <ComingSoonCaseStudy project={project} previousProject={previousProject} />;
   return <main className={`work-shell case-study${project.id === 'netflix' ? ' netflix-case-study' : ''}`} style={{ '--project-accent': project.accent } as CSSProperties}>
-    <header className="work-header"><Link href="/work" className="work-link">Selected work</Link><span className="work-brand">MYVERSE<span> / CASE STUDY</span></span><nav aria-label="Return to workspace"><ReturnToRoom /></nav></header>
+    <PageHeader label="CASE STUDY" backLink={{ href: '/work', label: 'Selected work' }} returnSize="default" />
+    <div className="case-study-content">
     <section className="case-heading" aria-labelledby="case-study-title">
       <div className="case-hero-copy"><p className="work-eyebrow">SELECTED WORK / CASE STUDY</p><h1 id="case-study-title" tabIndex={-1}>{project.heroTitle ?? project.title}<span>.</span></h1>{project.heroSubtitle && <p className="case-subtitle">{project.heroSubtitle}</p>}<p className="case-hero-introduction">{project.heroDescription ?? project.description}</p></div>
       <dl className="case-hero-meta"><div><dt>Project Type</dt><dd>{project.category}</dd></div>{project.location && <div><dt>Location</dt><dd>{project.location}</dd></div>}{project.role && <div><dt>Role</dt><dd>{project.role}</dd></div>}</dl>
@@ -62,5 +63,6 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
     {project.gallery && project.gallery.length > 0 && <section className="case-project-gallery" aria-label={`${project.title} project gallery`}>{project.gallery.map(item => <figure key={item.src}><div><Image src={item.src} alt={item.alt} fill sizes="(max-width: 760px) 92vw, 44vw" /></div>{item.caption && <figcaption>{item.caption}</figcaption>}</figure>)}</section>}
     {project.references && project.references.length > 0 && <section className="case-references" aria-labelledby="case-evidence-title"><h2 id="case-evidence-title">Event Coverage</h2><div className="case-evidence-links"><p>Background reporting on the Squid Game 2 activation at MRT Ampang Park.</p>{project.references.map(reference => <div key={reference.url}><span>{reference.context}</span><a href={reference.url} target="_blank" rel="noopener noreferrer">{reference.label}<span className="sr-only"> (opens in a new tab)</span></a></div>)}</div></section>}
     <footer className="case-footer"><Link href="/work" className="work-link">BACK TO PROJECTS</Link><span>MOHD HAFIZ / MYVERSE</span></footer>
+    </div>
   </main>;
 }

@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useProgress } from '@react-three/drei';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
@@ -27,6 +28,7 @@ export default function BootScreen({ phase, readiness, reducedMotion, onEnter }:
   const typed = useRef<HTMLSpanElement>(null);
   const initialization = useRef<HTMLParagraphElement>(null);
   const [terminalSequenceDone, setTerminalSequenceDone] = useState(false);
+  const [promptVisible, setPromptVisible] = useState(false);
   const animatedProgress = useRef({ value: 0 });
   const progressFills = useRef<Array<HTMLSpanElement | null>>([]);
   const progressLabel = useRef<HTMLSpanElement>(null);
@@ -46,6 +48,7 @@ export default function BootScreen({ phase, readiness, reducedMotion, onEnter }:
         return;
       }
       setTerminalSequenceDone(false);
+      setPromptVisible(false);
       if (typed.current) typed.current.textContent = '';
       gsap.timeline({ onComplete: () => setTerminalSequenceDone(true) }).to(letters, {
         count: command.length,
@@ -65,7 +68,6 @@ export default function BootScreen({ phase, readiness, reducedMotion, onEnter }:
         });
       }
       gsap.fromTo('.signal-area', { opacity: 0 }, { opacity: 1, duration: 1.25, ease: 'power1.in' });
-      gsap.to('.terminal-cursor', { opacity: 0, duration: 0.45, repeat: -1, yoyo: true, ease: 'steps(1)' });
     }, scope);
     return () => context.revert();
   }, [reducedMotion]);
@@ -98,6 +100,7 @@ export default function BootScreen({ phase, readiness, reducedMotion, onEnter }:
     gsap.to(rows, {
       autoAlpha: 1, y: 0, duration: reducedMotion ? 0 : 0.22,
       stagger: reducedMotion ? 0 : 0.09, overwrite: 'auto',
+      onComplete: () => { if (step === 3) setPromptVisible(true); },
     });
     return () => gsap.killTweensOf(rows);
   }, [step, reducedMotion, terminalSequenceDone]);
@@ -108,26 +111,30 @@ export default function BootScreen({ phase, readiness, reducedMotion, onEnter }:
       <div className="boot-content">
         <div className="boot-columns">
           <div className="terminal-session">
-            <p className="terminal-command" aria-hidden="true"><span className="command-prompt">$</span> <span ref={typed} /><span className="terminal-cursor">▌</span></p>
+            <p className="terminal-command" aria-hidden="true"><span className="command-prompt">$</span> <span ref={typed} />{!terminalSequenceDone && <span className="terminal-cursor">▌</span>}</p>
             <p ref={initialization} className="terminal-initialization" aria-hidden="true">&gt; Initializing immersive workspace...</p>
             <div className="boot-log" aria-hidden="true">
               {checks.map((message, index) => <p key={message} className="boot-log-row" data-reached={terminalSequenceDone && step > index}>
                 <span className="log-prefix">[OK]</span><span className="log-message">{message}</span>
               </p>)}
             </div>
+            {promptVisible && <p className="terminal-command terminal-prompt" aria-hidden="true"><span className="command-prompt">$</span> <span className="terminal-prompt-cursor">█</span></p>}
           </div>
           <BootGraph />
         </div>
         <div className="boot-footer">
-          <div className="readiness-panel">
-            <div className="boot-progress" role="progressbar" aria-label="Workspace initialization" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round((step / 3) * 100)} aria-valuetext={`${Math.round((step / 3) * 100)}% complete`}>
-              {progressSegments.map(index => <span key={index} className="boot-progress-segment">
-                <span ref={element => { progressFills.current[index] = element; }} className="boot-progress-fill" />
-              </span>)}
-            </div>
-            <p className="asset-status"><span ref={progressLabel}>0</span>%{total > 0 ? ` · ${loaded} / ${total} assets ${active ? 'loaded' : 'ready'}` : ''}</p>
+          <div className="boot-progress" role="progressbar" aria-label="Workspace initialization" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round((step / 3) * 100)} aria-valuetext={`${Math.round((step / 3) * 100)}% complete`}>
+            {progressSegments.map(index => <span key={index} className="boot-progress-segment">
+              <span ref={element => { progressFills.current[index] = element; }} className="boot-progress-fill" />
+            </span>)}
           </div>
-          <button className="enter-button" disabled={phase !== 'ready'} tabIndex={entering ? -1 : 0} onClick={onEnter}>ENTER MY ROOM</button>
+          <p className="asset-status"><span ref={progressLabel}>0</span>%{total > 0 ? ` · ${loaded} / ${total} assets ${active ? 'loaded' : 'ready'}` : ''}</p>
+          <button className="enter-button boot-footer-enter" disabled={phase !== 'ready'} tabIndex={entering ? -1 : 0} onClick={onEnter}>ENTER MY ROOM</button>
+          <p className="boot-controls" aria-label="Room controls">
+            <span className="boot-controls-desktop">DRAG TO LOOK · CLICK OBJECTS · ESC TO CLOSE</span>
+            <span className="boot-controls-mobile">DRAG TO LOOK · TAP OBJECTS TO EXPLORE</span>
+          </p>
+          <Link className="boot-2d-link" href="/work" tabIndex={entering ? -1 : 0}>CONTINUE IN 2D</Link>
         </div>
       </div>
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">{status}. {step} of 3 scene readiness checks complete. {status === 'READY' ? 'Enter my room is available.' : 'Preparing interactive workspace.'}</p>

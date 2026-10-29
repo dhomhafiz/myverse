@@ -21,6 +21,7 @@ export const room = {
   guitarV: { position: [-2.12, 1.3, 0] as Vec3, rotation: [0, 0, 0] as Vec3, scale: [0.9, 0.9, 0.9] as Vec3 },
   guitarSecond: { position: [-1.62, 1.3, 0] as Vec3, rotation: [0, 0, 0] as Vec3, scale: [0.9, 0.9, 0.9] as Vec3 },
   guitarHanger: { position: [0, 0.74, -0.055] as Vec3 },
+  barstool: { ...place([-1.87, 0, -1.52], 0.18), scale: [0.9, 0.9, 0.9] as Vec3 },
   leftWallFeature: {
     position: [-2.585, 1.05, -1.15] as Vec3,
     rotation: [0, Math.PI / 2, 0] as Vec3,

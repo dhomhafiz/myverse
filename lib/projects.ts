@@ -46,10 +46,12 @@ export const projects: Project[] = [
   },
   { status: 'comingSoon', id: 'coming-soon', order: 1, slug: 'coming-soon',
     title: 'COMING SOON', category: 'NEXT SELECTED WORK', heroSubtitle: 'NEXT SELECTED WORK',
-    description: 'A new case study is currently in progress and will be revealed soon.',
-    heroDescription: 'This case study is currently being prepared and will be published soon.',
-    ctaLabel: 'Explore next chapter', aliases: ['project-preview'],
-    technologies: [], accent: '#9ab7ba' },
+    description: 'The next selected project is in development. Its case study will be published when it is ready.',
+    heroDescription: 'The next selected project is in development. Its case study will be published when it is ready.',
+    aliases: ['project-preview'], technologies: [], accent: '#f0f0f0',
+    image: '/images/work-in-progress-noir.webp',
+    imageAlt: 'A weathered black-and-white industrial sign reading WORK IN PROGRESS, with hazard stripes.',
+    imageAspectRatio: 1672 / 941 },
 ];
 export const galleryProjects = [...projects].sort((a, b) => a.order - b.order);
 export const findProject = (slug: string) => projects.find(project => project.slug === slug || project.aliases?.includes(slug));

@@ -1,6 +1,6 @@
 import { Box, Rod } from './Primitives';
 import Workstation from './Workstation';
-import { Bike, GuitarTrackLight, Guitars, Pegboard } from './PersonalProps';
+import { Barstool, Bike, GuitarTrackLight, Guitars, Pegboard } from './PersonalProps';
 import CyclingTriptych from './CyclingTriptych';
 import LeftWallFeature from './LeftWallFeature';
 import InteractiveChair from './InteractiveChair';
@@ -40,7 +40,7 @@ export default function PlaceholderRoom({ chairActive, pcActive, reducedMotion, 
     {Array.from({ length: 8 }, (_, i) => <Box key={`z${i}`} position={[0, 0.002, -d / 2 + i * 0.65]} size={[w, 0.003, 0.006]} color="#8e918c" />)}
     <Box name="carpet" position={[0, 0.014, -0.7]} size={[3.3, 0.025, 2.55]} color="#4b5050" />
     <Box position={[0, 0.09, -d / 2 + 0.012]} size={[w, 0.18, 0.035]} color="#525b5b" />
-    <Window /><Workstation active={pcActive} reducedMotion={reducedMotion} motion={motion} /><InteractiveChair active={chairActive} reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} /><Guitars /><GuitarTrackLight /><LeftWallFeature /><Pegboard /><CyclingTriptych /><Bike />
+    <Window /><Workstation active={pcActive} reducedMotion={reducedMotion} motion={motion} /><InteractiveChair active={chairActive} reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} /><Guitars /><Barstool /><GuitarTrackLight /><LeftWallFeature /><Pegboard /><CyclingTriptych /><Bike />
     <group {...room.lamp} name="floor_lamp">
       <mesh position={[0, 0.03, 0]}><cylinderGeometry args={[0.18, 0.2, 0.06, 16]} /><meshStandardMaterial color="#282d30" /></mesh>
       <Rod from={[0, 0.03, 0]} to={[0, 2.1, 0]} radius={0.018} />

@@ -5,7 +5,7 @@ import { useEffect, useRef, useSyncExternalStore, type CSSProperties } from 'rea
 import type { Project } from '@/lib/projects';
 import { roomPreparation, initialRoomPreparationSnapshot } from '@/lib/room-preparation';
 import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
-import ReturnToRoom from '@/components/ui/ReturnToRoom';
+import PageHeader from '@/components/ui/PageHeader';
 import ProjectMedia from './ProjectMedia';
 
 export default function ComingSoonCaseStudy({ project, previousProject }: { project: Project; previousProject?: Project }) {
@@ -16,12 +16,8 @@ export default function ComingSoonCaseStudy({ project, previousProject }: { proj
 
   return <main ref={root} className="work-shell case-study coming-soon-page" style={{ '--project-accent': project.accent } as CSSProperties}>
     <LiquidSodaBackground className="coming-soon-liquid" area={root} viewport enabled={!preparation.returnRequested} />
+    <PageHeader label="CASE STUDY" backLink={{ href: '/work', label: 'Selected work' }} returnSize="default" />
     <div className="coming-soon-content">
-      <header className="work-header">
-        <Link href="/work" className="work-link">Selected work</Link>
-        <span className="work-brand">MYVERSE<span> / CASE STUDY</span></span>
-        <nav aria-label="Return to workspace"><ReturnToRoom /></nav>
-      </header>
       <div className="coming-soon-layout">
         <section className="case-heading" aria-labelledby="coming-soon-title">
           <p className="work-eyebrow">NEXT CHAPTER / {String(project.order + 1).padStart(2, '0')}</p>

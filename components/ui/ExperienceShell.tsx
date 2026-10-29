@@ -31,6 +31,7 @@ export default function ExperienceShell({ children }: { children: ReactNode }) {
   const [view, setView] = useState<ReviewView>('home');
   const originalFocus = useRef<HTMLElement | null>(null);
   const originalRoute = useRef<string | null>(null);
+  const resumeRoomFromBoot = useRef<(() => void) | null>(null);
   const previousPathname = useRef(pathname);
   const cancelButton = useRef<HTMLButtonElement>(null);
   const wasLoaderVisible = useRef(false);
@@ -100,6 +101,7 @@ export default function ExperienceShell({ children }: { children: ReactNode }) {
   const startReturn = useCallback(() => {
     const current = roomPreparation.getSnapshot();
     if ((current.returnRequested && current.status !== 'failed') || current.status === 'transitioning') return;
+    resumeRoomFromBoot.current?.();
     originalFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
     originalRoute.current = window.location.pathname;
@@ -107,6 +109,10 @@ export default function ExperienceShell({ children }: { children: ReactNode }) {
     setRoomMounted(true);
     hotspotNavigation.setMode('paused');
     roomPreparation.beginReturn();
+  }, []);
+
+  const registerRoomReturn = useCallback((handler: (() => void) | null) => {
+    resumeRoomFromBoot.current = handler;
   }, []);
 
   const retryInProgress = useRef(false);
@@ -225,6 +231,7 @@ export default function ExperienceShell({ children }: { children: ReactNode }) {
               returnRequested={preparation.returnRequested}
               onTransitionStart={beginRoomTransition}
               onReturnComplete={completeRoomReturn}
+              onRegisterReturnFromBoot={registerRoomReturn}
             />
           </div>
         )}

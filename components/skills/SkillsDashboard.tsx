@@ -7,7 +7,7 @@ import { skillGroups } from '@/lib/skills';
 import { useExperienceNavigation } from '@/components/ui/ExperienceNavigation';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import LiquidSodaBackground from '@/components/ui/LiquidSodaBackground';
-import ReturnToRoom from '@/components/ui/ReturnToRoom';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function SkillsDashboard() {
   const { requestRoomReturn, navigateToDestination } = useExperienceNavigation();
@@ -76,14 +76,8 @@ export default function SkillsDashboard() {
         enabled={liquidActive}
       />
       <div className="skills-content">
+        <PageHeader label="CAPABILITIES" className="skills-reveal" onReturn={stopLiquid} />
         <header className="skills-header">
-          <div className="skills-brand skills-reveal">
-            <p className="skills-eyebrow">MYVERSE / CAPABILITIES</p>
-            <span className="skills-online"><i aria-hidden="true" /> ONLINE</span>
-          </div>
-          <nav aria-label="Return to workspace" className="skills-return skills-reveal">
-            <ReturnToRoom size="prominent" onActivate={stopLiquid} />
-          </nav>
           <h1 ref={heading} id="skills-title" tabIndex={-1} className="skills-title skills-reveal">SKILLS<span>_</span></h1>
           <p className="skills-subtitle skills-reveal">Tools I use to build interactive, performant web experiences — from application logic to immersive 3D interfaces.</p>
         </header>

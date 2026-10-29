@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Space_Mono, Work_Sans } from 'next/font/google';
 import './globals.css';
 import ExperienceShell from '@/components/ui/ExperienceShell';
@@ -38,6 +38,12 @@ const structuredData = {
       publisher: { '@id': `${SITE_URL}#person` },
     },
   ],
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export const metadata: Metadata = {
