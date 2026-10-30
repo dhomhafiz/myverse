@@ -1,10 +1,13 @@
 name: Deploy static site to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      publish:
+        description: Deploy the built site to GitHub Pages after explicit release approval.
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -38,6 +41,7 @@ jobs:
           path: ./out
 
   deploy:
+    if: ${{ inputs.publish }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
