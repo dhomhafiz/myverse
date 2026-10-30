@@ -35,6 +35,7 @@ const productionAssets = [
   'images/cycling-panel-center.webp',
   'images/cycling-panel-right.webp',
   'images/selectedwork1.webp',
+  'images/social-preview.jpg',
   'images/work-in-progress-noir.webp',
 ];
 const excludedAssets = [
@@ -60,6 +61,23 @@ async function requireFile(relativePath) {
 
 for (const route of requiredRoutes) {
   await requireFile(path.join(route, 'index.html'));
+}
+
+const homepageHtml = await readFile(path.join(outputDirectory, 'index.html'), 'utf8');
+const homepageHead = homepageHtml.match(/<head>[\s\S]*?<\/head>/)?.[0];
+if (!homepageHead) {
+  throw new Error('Homepage export is missing its document head.');
+}
+
+const socialImageUrl = 'https://www.dhomhafiz.dev/images/social-preview.jpg';
+if (
+  !homepageHead.includes(`property="og:image" content="${socialImageUrl}"`) ||
+  !homepageHead.includes(`name="twitter:image" content="${socialImageUrl}"`)
+) {
+  throw new Error('Homepage Open Graph and Twitter images do not reference the production social preview URL.');
+}
+if (homepageHead.includes('selectedwork1.webp')) {
+  throw new Error('Homepage export still references the previous social preview image.');
 }
 
 for (const file of ['robots.txt', 'sitemap.xml', 'third-party-notices.txt']) {

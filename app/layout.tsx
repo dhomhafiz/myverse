@@ -9,8 +9,8 @@ const workSans = Work_Sans({ subsets: ['latin'], display: 'swap', variable: '--f
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap', variable: '--font-space-mono' });
 const description = 'Mohd Hafiz Abd Rahim is a Kuala Lumpur-based creative developer and web designer creating interactive web experiences.';
 const socialImage = {
-  url: new URL('/images/selectedwork1.webp', SITE_URL).toString(),
-  alt: 'AI-generated concept visual of a Squid Game 2 interactive voting installation.',
+  url: new URL('/images/social-preview.jpg', SITE_URL).toString(),
+  alt: 'Portrait of Mohd Hafiz Abd Rahim against a charcoal background.',
 };
 const structuredData = {
   '@context': 'https://schema.org',
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     title: 'Mohd Hafiz Abd Rahim | Creative Developer & Web Designer',
     description,
     url: SITE_URL.toString(),
-    images: [{ ...socialImage, width: 1672, height: 941 }],
+    images: [{ ...socialImage, width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
