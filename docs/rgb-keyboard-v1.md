@@ -2,8 +2,10 @@
 
 ## Source and attribution
 
-- Source file: user-provided `mechanical-rgb-keyboard.zip`, containing the keyboard FBX and its textures.
-- The archive did not include an identifiable author, source URL, or license. Confirm those details before adding a formal third-party attribution; no author or license is inferred here.
+- Original model: [Mechanical RGB Keyboard](https://sketchfab.com/3d-models/mechanical-rgb-keyboard-4650f5bafe934a90b9f09396b843a966) by **BigBrotherHCH**.
+- License: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+- The project owner identified this Sketchfab model as the source of the supplied `mechanical-rgb-keyboard.zip`, which contains the keyboard FBX and textures. The archive itself did not include identifiable author, source, or license metadata.
+- Provenance chain: owner-identified Sketchfab source → supplied ZIP and FBX → optimized GLB listed below. The project record documents conversion of the supplied FBX; the original ZIP is not in the repository for an independent geometry comparison.
 
 ## Model and optimization
 
@@ -14,6 +16,7 @@
 - Hierarchy: scene `AuxScene`, with `Board` and `keys` nodes. There are two mesh/material groups (`board` and `keys`); neither has animated transforms.
 - Authored PBR maps are retained: base color and emissive maps for both materials, normal maps for both, and a metallic-roughness map for the board. Seven WebP textures are limited to 256 × 256.
 - Optimization used Draco geometry compression, mesh simplification, and WebP texture recompression. The original FBX and 4K source textures were not modified.
+- No recoloring or redesign was performed. The source materials and emissive RGB textures were retained; mesh simplification and texture recompression were optimization changes.
 
 ## Room integration and lighting
 

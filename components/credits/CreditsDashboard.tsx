@@ -138,7 +138,8 @@ export default function CreditsDashboard() {
 
         <footer className="credits-footer credits-reveal">
           <span>MYVERSE / THIRD-PARTY ASSET ATTRIBUTIONS</span>
-          <span>FOUR CONFIRMED ASSETS</span>
+          <a href="/third-party-notices.txt">THIRD-PARTY LICENSE NOTICES</a>
+          <span>FIVE VERIFIED MODELS</span>
         </footer>
       </div>
     </main>

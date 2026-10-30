@@ -7,7 +7,8 @@
     "build": "next build && node scripts/normalize-static-export-segments.mjs",
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint . --max-warnings=0"
+    "lint": "eslint . --max-warnings=0",
+    "check:export": "node scripts/verify-static-export.mjs"
   },
   "dependencies": {
     "@react-three/drei": "10.7.9",

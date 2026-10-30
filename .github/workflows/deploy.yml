@@ -1,6 +1,9 @@
 name: Deploy static site to GitHub Pages
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       publish:
@@ -35,13 +38,15 @@ jobs:
         run: npm run lint
       - name: Build static site
         run: npm run build
+      - name: Verify static export
+        run: npm run check:export
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
   deploy:
-    if: ${{ inputs.publish }}
+    if: ${{ github.event_name == 'push' || inputs.publish }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
