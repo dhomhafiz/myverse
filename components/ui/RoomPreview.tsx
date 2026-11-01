@@ -17,7 +17,7 @@ import HeroBrand from './HeroBrand';
 import useEntranceTimeline from '@/hooks/useEntranceTimeline';
 import { createEntranceMotion } from '@/lib/entrance';
 import GlobalNavigation from './GlobalNavigation';
-import MobileRoomNavigation from './MobileRoomNavigation';
+import FloatingRoomNavigation from './FloatingRoomNavigation';
 
 const RoomCanvas = dynamic(() => import('@/components/canvas/RoomCanvas'), { ssr: false });
 
@@ -218,7 +218,7 @@ export default function RoomPreview({
       {navigationMode === 'opening' && <div className={`hotspot-transition-cover${hotspotNavigation.destinationId === 'iphone' ? ' is-contact' : hotspotNavigation.destinationId === 'credits' ? ' is-credits' : ''}`} aria-hidden="true" />}
       {phase === 'exploring' && roomActive && navigationMode === 'explore' && (
         <>
-          <MobileRoomNavigation />
+          <FloatingRoomNavigation />
           <footer className="room-footer">
             <Link className="room-credits-link" href="/credits" aria-label="Open credits and asset attributions"
               onClick={event => {

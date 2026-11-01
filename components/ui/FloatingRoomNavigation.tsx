@@ -12,12 +12,12 @@ const destinations = [
   { label: 'CONTACT', destination: hotspotDestinations.contact, icon: 'M21 11a9 8 0 0 1-9 8 10 10 0 0 1-4-.8L3 21l1.5-5A8 8 0 0 1 3 11a9 8 0 0 1 18 0' },
 ] as const;
 
-export default function MobileRoomNavigation() {
+export default function FloatingRoomNavigation() {
   const { navigateToDestination } = useExperienceNavigation();
 
   return (
-    <div className="mobile-room-navigation">
-      <nav className="mobile-room-navigation-panel" aria-label="Mobile room navigation"
+    <div className="floating-room-navigation">
+      <nav className="floating-room-navigation-panel" aria-label="Room navigation"
         onPointerDown={event => event.stopPropagation()}
         onPointerUp={event => event.stopPropagation()}
         onClick={event => event.stopPropagation()}>
