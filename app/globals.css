@@ -339,13 +339,47 @@ body { margin: 0; }
 .global-navigation-list--secondary [aria-current="page"] { color: #9de0e9; }
 @media (max-width: 760px) { .room-navigation-controls { gap: 8px; margin-right: max(0px, env(safe-area-inset-right, 0px) - 20px); } .global-navigation .global-navigation-trigger { min-width: 60px; padding-inline: 8px; } }
 
+.mobile-room-navigation { display: none; }
+.mobile-room-navigation-panel {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #b9c4ec30;
+  border-radius: 16px;
+  background: #14191a;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 28px #05060f66, inset 0 1px 0 #dbddff08;
+  pointer-events: auto;
+}
+.mobile-room-navigation-panel a {
+  display: flex;
+  min-width: 44px;
+  min-height: 52px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 10px;
+  color: #d9e2ee;
+  font: 400 10px/14px var(--font-space-mono), monospace;
+  letter-spacing: .025em;
+  white-space: nowrap;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: color .16s ease, background-color .16s ease;
+}
+.mobile-room-navigation-panel svg { width: 20px; height: 20px; flex: none; }
+.mobile-room-navigation-panel a:is(:hover, :active) { color: #b6eef5; background: #8e9de61c; }
+.mobile-room-navigation-panel a:focus-visible { outline: 2px solid #a4e7f0; outline-offset: -2px; color: #b6eef5; background: #8e9de61c; }
+@media (prefers-reduced-motion: reduce) { .mobile-room-navigation-panel a { transition: none; } }
+
 /* Room HUD only. Short, coarse-pointer viewports retain it in phone landscape. */
 @media (max-width: 640px), (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
   .room-experience {
     --room-hud-top: calc(env(safe-area-inset-top, 0px) + var(--room-header-top-gap));
     --room-hud-left: max(20px, env(safe-area-inset-left, 0px));
     --room-hud-brand-width: min(220px, calc(50vw - var(--room-hud-left) - 52px));
-    --room-hud-menu-offset: 0px;
   }
   .room-experience .preview-header, .room-experience .room-footer { display: none; }
   .room-experience .hero-brand-layer { --brand-left: var(--room-hud-left); }
@@ -367,20 +401,26 @@ body { margin: 0; }
     text-shadow: 0 1px 4px #000a;
   }
   .room-experience .hero-name.is-settled .hero-smear { display: none; }
-  .room-experience .global-navigation--room {
-    top: calc(var(--room-hud-top) + var(--room-hud-menu-offset));
+  .room-experience .global-navigation--room { display: none; }
+  .mobile-room-navigation {
+    position: fixed;
+    z-index: 50;
     left: 50%;
-    right: auto;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    display: block;
+    width: min(400px, calc(100% - 2 * max(16px, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px))));
     transform: translateX(-50%);
     pointer-events: none;
   }
-  .room-experience .global-navigation-trigger { pointer-events: auto; }
 }
-/* Below the lockup's one-row capacity, reserve its two subtitle lines plus a gap. */
+@media (min-width: 641px) and (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
+  /* Leave the low football play area reachable in phone landscape. */
+  .mobile-room-navigation { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+}
+/* Preserve the approved compact branding width on narrow phones. */
 @media (max-width: 560px) {
   .room-experience {
     --room-hud-brand-width: min(220px, calc(100vw - var(--room-hud-left) - max(20px, env(safe-area-inset-right, 0px))));
-    --room-hud-menu-offset: 66px;
   }
 }
 @media (prefers-reduced-motion: reduce) { .global-navigation .global-navigation-trigger, .global-navigation-icon i, .global-navigation-panel, .global-navigation-list :is(a,button) { transition: none; } }

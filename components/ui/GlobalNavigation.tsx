@@ -51,6 +51,8 @@ export default function GlobalNavigation({
     const position = () => {
       const anchor = trigger.current?.getBoundingClientRect();
       if (!anchor) return;
+      // A room MENU can disappear at the mobile breakpoint while its portal is open.
+      if (!anchor.width || !anchor.height) { closeMenu(false); return; }
       const safe = getComputedStyle(overlayRoot);
       const width = document.documentElement.clientWidth, height = window.innerHeight;
       const leftInset = parseFloat(safe.paddingLeft), rightInset = parseFloat(safe.paddingRight);
@@ -65,7 +67,7 @@ export default function GlobalNavigation({
     position();
     menu.querySelector<HTMLAnchorElement>('a')?.focus({ preventScroll: true });
     return () => cancelAnimationFrame(frame);
-  }, [open, overlayRoot]);
+  }, [closeMenu, open, overlayRoot]);
 
   useEffect(() => {
     if (!open) return;
