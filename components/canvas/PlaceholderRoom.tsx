@@ -1,4 +1,5 @@
 import { Box, Rod } from './Primitives';
+import FloorLamp from './FloorLamp';
 import Workstation from './Workstation';
 import { Barstool, Bike, GuitarTrackLight, Guitars, Pegboard } from './PersonalProps';
 import CyclingTriptych from './CyclingTriptych';
@@ -41,11 +42,7 @@ export default function PlaceholderRoom({ chairActive, pcActive, reducedMotion, 
     <Box name="carpet" position={[0, 0.014, -0.7]} size={[3.3, 0.025, 2.55]} color="#4b5050" />
     <Box position={[0, 0.09, -d / 2 + 0.012]} size={[w, 0.18, 0.035]} color="#525b5b" />
     <Window /><Workstation active={pcActive} reducedMotion={reducedMotion} motion={motion} /><InteractiveChair active={chairActive} reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} /><Guitars /><Barstool /><GuitarTrackLight /><LeftWallFeature /><Pegboard /><CyclingTriptych /><Bike />
-    <group {...room.lamp} name="floor_lamp">
-      <mesh position={[0, 0.03, 0]}><cylinderGeometry args={[0.18, 0.2, 0.06, 16]} /><meshStandardMaterial color="#282d30" /></mesh>
-      <Rod from={[0, 0.03, 0]} to={[0, 2.1, 0]} radius={0.018} />
-      <mesh position={[0, 2.12, 0]}><cylinderGeometry args={[0.24, 0.08, 0.13, 16]} /><meshStandardMaterial color="#e7c198" emissive="#f2ad5e" emissiveIntensity={0.7} /></mesh>
-    </group>
+    <FloorLamp />
     {Object.entries(cameraAnchors).map(([name, pose]) => <object3D key={name} name={name} position={pose.position} userData={{ lookAtTarget: pose.target }} />)}
   </group>;
 }

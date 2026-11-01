@@ -18,18 +18,22 @@ export default function SceneLighting({ motion }: { motion: RefObject<EntranceMo
     trackSpots.current = [];
     const materials = new Set<MeshStandardMaterial>();
     scene.traverse(object => {
-      if (!(object instanceof Mesh) || !(object.material instanceof MeshStandardMaterial) || object.material.emissive.getHex() === 0 || materials.has(object.material)) return;
-      materials.add(object.material);
-      let ancestor = object.parent, channel: Channel = 'room';
-      while (ancestor) {
-        if (ancestor.name.startsWith('monitor_') || ancestor.name === 'rgb_keyboard' || ancestor.name === 'gaming_mouse') { channel = 'monitors'; break; }
-        if (ancestor.name === 'gaming_pc') { channel = 'pc'; break; }
-        if (ancestor.name === 'floor_lamp' || ancestor.name === 'guitar_wall_track_light') { channel = 'lamp'; break; }
-        ancestor = ancestor.parent;
+      if (!(object instanceof Mesh)) return;
+      const objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
+      for (const material of objectMaterials) {
+        if (!(material instanceof MeshStandardMaterial) || material.emissive.getHex() === 0 || materials.has(material)) continue;
+        materials.add(material);
+        let ancestor = object.parent, channel: Channel = 'room';
+        while (ancestor) {
+          if (ancestor.name.startsWith('monitor_') || ancestor.name === 'rgb_keyboard' || ancestor.name === 'gaming_mouse') { channel = 'monitors'; break; }
+          if (ancestor.name === 'gaming_pc') { channel = 'pc'; break; }
+          if (ancestor.name === 'floor_lamp' || ancestor.name === 'guitar_wall_track_light') { channel = 'lamp'; break; }
+          ancestor = ancestor.parent;
+        }
+        const entry = { material, intensity: material.emissiveIntensity, channel };
+        emissive.current.push(entry);
+        setEmissive(entry.material, entry.intensity * motion.current.lights[entry.channel]);
       }
-      const entry = { material: object.material, intensity: object.material.emissiveIntensity, channel };
-      emissive.current.push(entry);
-      setEmissive(entry.material, entry.intensity * motion.current.lights[entry.channel]);
     });
     for (const name of ['room_ambient_light', 'room_hemisphere_light', 'room_directional_light']) {
       const light = scene.getObjectByName(name);

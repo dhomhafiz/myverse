@@ -18,6 +18,7 @@ const productionAssets = [
   'models/barstool-black-unbranded-compact.glb',
   'models/football-compact.glb',
   'models/football-stars-compact.glb',
+  'models/floor-uplighter-optimized.glb',
   'models/gaming-chair-all-black-swivel-compact.glb',
   'models/gravel-white-black-unbranded-compact.glb',
   'models/guitar-wall-two-spot-track-light.glb',
