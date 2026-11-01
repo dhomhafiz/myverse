@@ -54,14 +54,14 @@ export default function SceneLighting({ motion }: { motion: RefObject<EntranceMo
     const values = motion.current.lights;
     if (values.monitors === previous.current.monitors && values.pc === previous.current.pc && values.lamp === previous.current.lamp && values.room === previous.current.room) return;
     Object.assign(previous.current, values);
-    if (lamp.current) lamp.current.intensity = values.lamp * 12;
+    if (lamp.current) lamp.current.intensity = values.lamp * 8.5;
     if (monitors.current) monitors.current.intensity = values.monitors * 0.7;
     for (const entry of fill.current) setLight(entry.light, entry.intensity * (0.14 + values.room * 0.86));
     for (const entry of trackSpots.current) setLight(entry.light, entry.intensity * values.lamp);
     for (const entry of emissive.current) setEmissive(entry.material, entry.intensity * values[entry.channel]);
   });
   return <>
-    <pointLight ref={lamp} name="floor_lamp_glow" position={[1.6, 2.1, -1.9]} color="#ffb96b" intensity={0} distance={5} decay={2} />
+    <pointLight ref={lamp} name="floor_lamp_glow" position={[1.62, 2.1, -2.05]} color="#ffb96b" intensity={0} distance={4.2} decay={2} />
     <pointLight ref={monitors} name="monitor_glow" position={[-0.2, 1.4, -1.5]} color="#78b9ff" intensity={0} distance={2} />
   </>;
 }

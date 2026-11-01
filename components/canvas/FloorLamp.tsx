@@ -7,6 +7,23 @@ const MODEL_PATH = '/models/floor-uplighter-optimized.glb';
 const SHADE_PROFILE_BANDS = 13;
 const INNER_SHADE_START_BAND = 7;
 
+function addShadeGlowGradient(material: MeshStandardMaterial) {
+  material.onBeforeCompile = shader => {
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying float vShadeGlow;')
+      .replace(
+        '#include <begin_vertex>',
+        '#include <begin_vertex>\nvShadeGlow = 0.28 + 0.72 * (1.0 - smoothstep(2.05, 2.18, position.y));',
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nvarying float vShadeGlow;')
+      .replace(
+        '#include <emissivemap_fragment>',
+        '#include <emissivemap_fragment>\ntotalEmissiveRadiance *= vShadeGlow;',
+      );
+  };
+}
+
 export default function FloorLamp() {
   const { scene } = useGLTF(MODEL_PATH);
   const { model, disposableResources } = useMemo(() => {
@@ -39,17 +56,18 @@ export default function FloorLamp() {
         geometry.addGroup(0, innerIndexStart, 0);
         geometry.addGroup(innerIndexStart, indexCount - innerIndexStart, 1);
         outerMaterial.name = 'Warm matte fabric exterior';
-        outerMaterial.color.set('#e5dccb');
+        outerMaterial.color.set('#e9e1d4');
         outerMaterial.metalness = 0;
         outerMaterial.roughness = 0.82;
-        outerMaterial.emissive.set('#000000');
-        outerMaterial.emissiveIntensity = 0;
+        outerMaterial.emissive.set('#ffbf78');
+        outerMaterial.emissiveIntensity = 0.35;
+        addShadeGlowGradient(outerMaterial);
         innerMaterial.name = 'Warm illuminated fabric interior';
-        innerMaterial.color.set('#fff0d8');
+        innerMaterial.color.set('#f5e5ca');
         innerMaterial.metalness = 0;
         innerMaterial.roughness = 0.82;
         innerMaterial.emissive.set('#ffbf78');
-        innerMaterial.emissiveIntensity = 0.26;
+        innerMaterial.emissiveIntensity = 0.5;
         object.geometry = geometry;
         object.material = [outerMaterial, innerMaterial];
         disposableResources.push(geometry, outerMaterial, innerMaterial);
