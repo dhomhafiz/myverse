@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { CanvasTexture, SRGBColorSpace } from 'three';
 import { room } from '@/lib/room-config';
 
+const NEON_TEXT = '("Hello, World!")';
+
 function createNeonTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
@@ -17,14 +19,14 @@ function createNeonTexture() {
   context.shadowBlur = 24;
   context.strokeStyle = 'rgba(150, 222, 255, 0.86)';
   context.lineWidth = 12;
-  context.strokeText('Hello, World!', canvas.width / 2, canvas.height / 2);
+  context.strokeText(NEON_TEXT, canvas.width / 2, canvas.height / 2);
   context.shadowBlur = 9;
   context.strokeStyle = 'rgba(220, 247, 255, 0.95)';
   context.lineWidth = 5;
-  context.strokeText('Hello, World!', canvas.width / 2, canvas.height / 2);
+  context.strokeText(NEON_TEXT, canvas.width / 2, canvas.height / 2);
   context.shadowBlur = 4;
   context.fillStyle = '#f5fcff';
-  context.fillText('Hello, World!', canvas.width / 2, canvas.height / 2);
+  context.fillText(NEON_TEXT, canvas.width / 2, canvas.height / 2);
 
   const texture = new CanvasTexture(canvas);
   texture.colorSpace = SRGBColorSpace;
