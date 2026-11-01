@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
-import { useProgress } from '@react-three/drei';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import type { EntrancePhase, Readiness } from '@/lib/room-state';
 import BootGraph from './BootGraph';
+import useAssetTelemetry from './assetTelemetry';
 
 const stages: Readiness[] = ['initializing', 'renderer', 'compiling', 'ready'];
 const checks = ['Create browser rendering context', 'Mount room geometry and lights', 'Compile shaders · present first frame'];
@@ -23,7 +23,8 @@ function setProgressSegments(fills: Array<HTMLSpanElement | null>, progress: num
 export default function BootScreen({ phase, readiness, reducedMotion, onEnter }: {
   phase: EntrancePhase; readiness: Readiness; reducedMotion: boolean; onEnter: () => void;
 }) {
-  const { active, loaded, total } = useProgress();
+  const assetTelemetry = useAssetTelemetry();
+  const { active, loaded, total } = assetTelemetry;
   const scope = useRef<HTMLDivElement>(null);
   const typed = useRef<HTMLSpanElement>(null);
   const initialization = useRef<HTMLParagraphElement>(null);
@@ -43,8 +44,6 @@ export default function BootScreen({ phase, readiness, reducedMotion, onEnter }:
         if (typed.current) typed.current.textContent = command;
         if (initialization.current) gsap.set(initialization.current, { autoAlpha: 1, y: 0 });
         setTerminalSequenceDone(true);
-        gsap.set('.signal-line', { strokeDasharray: 'none', strokeDashoffset: 0 });
-        gsap.set('.signal-area', { opacity: 1 });
         return;
       }
       setTerminalSequenceDone(false);
@@ -60,14 +59,6 @@ export default function BootScreen({ phase, readiness, reducedMotion, onEnter }:
       }).fromTo(initialization.current, { autoAlpha: 0, y: 4 }, {
         autoAlpha: 1, y: 0, duration: 0.24, ease: 'power1.out',
       });
-      const trace = scope.current?.querySelector<SVGPathElement>('.signal-line');
-      if (trace) {
-        const length = trace.getTotalLength();
-        gsap.fromTo(trace, { strokeDasharray: length, strokeDashoffset: length }, {
-          strokeDashoffset: 0, duration: 1.25, ease: 'none', autoRound: false,
-        });
-      }
-      gsap.fromTo('.signal-area', { opacity: 0 }, { opacity: 1, duration: 1.25, ease: 'power1.in' });
     }, scope);
     return () => context.revert();
   }, [reducedMotion]);
@@ -120,7 +111,7 @@ export default function BootScreen({ phase, readiness, reducedMotion, onEnter }:
             </div>
             {promptVisible && <p className="terminal-command terminal-prompt" aria-hidden="true"><span className="command-prompt">$</span> <span className="terminal-prompt-cursor">█</span></p>}
           </div>
-          <BootGraph />
+          <BootGraph samples={assetTelemetry.samples} />
         </div>
         <div className="boot-footer">
           <div className="boot-progress" role="progressbar" aria-label="Workspace initialization" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round((step / 3) * 100)} aria-valuetext={`${Math.round((step / 3) * 100)}% complete`}>

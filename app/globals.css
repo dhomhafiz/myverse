@@ -44,7 +44,8 @@ body { margin: 0; }
 @keyframes terminal-prompt-blink { to { opacity: 0; } }
 .boot-graph { min-width: 0; margin: 0; padding-left: 12px; border-left: 1px solid #ffffff12; align-self: end; }
 .boot-graph figcaption { color: #b8c6c0; font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; }
-.boot-graph svg { display: block; width: 100%; height: auto; aspect-ratio: 8 / 3; margin-top: 6px; }
+.boot-graph svg { display: block; width: 100%; height: auto; aspect-ratio: 40 / 17; margin-top: 6px; }
+.boot-graph svg text { fill: #a7b9ba; font: 9px ui-monospace, SFMono-Regular, Consolas, monospace; }
 .boot-footer { display: grid; grid-template-columns: minmax(0, 1fr) 330px; grid-template-areas: "progress enter" "status controls" ". continue"; column-gap: 32px; row-gap: 0; align-items: center; border-top: 1px solid #ffffff10; padding-top: 22px; margin-top: 22px; }
 .boot-progress { grid-area: progress; display: flex; gap: 3px; height: 18px; padding: 2px; overflow: hidden; border: 1px solid #8ab99a80; border-radius: 999px; background: #121618; }
 .boot-progress-segment { display: block; flex: 1; min-width: 0; overflow: hidden; border-radius: 3px; background: #2d3531; }
