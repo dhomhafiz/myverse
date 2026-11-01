@@ -43,9 +43,18 @@ body { margin: 0; }
 .terminal-prompt-cursor { color: #b7ecee; animation: terminal-prompt-blink 1s steps(2, start) infinite; }
 @keyframes terminal-prompt-blink { to { opacity: 0; } }
 .boot-graph { min-width: 0; margin: 0; padding-left: 12px; border-left: 1px solid #ffffff12; align-self: end; }
-.boot-graph figcaption { color: #b8c6c0; font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; }
+.boot-graph figcaption { color: #b8c6c0; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .12em; }
 .boot-graph svg { display: block; width: 100%; height: auto; aspect-ratio: 40 / 17; margin-top: 6px; }
-.boot-graph svg text { fill: #a7b9ba; font: 9px ui-monospace, SFMono-Regular, Consolas, monospace; }
+.boot-graph svg text { fill: #91a8aa; font: 10px ui-monospace, SFMono-Regular, Consolas, monospace; }
+.boot-graph .telemetry-grid path { fill: none; stroke: #8ba7aa; stroke-opacity: .17; stroke-width: .7; }
+.boot-graph .telemetry-grid .telemetry-baseline { stroke-opacity: .34; stroke-width: .9; }
+.boot-graph .telemetry-grid text, .boot-graph .telemetry-time { fill: #8da3a6; font-size: 9px; }
+.boot-graph .telemetry-line { fill: none; stroke: #71cbd0; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.boot-graph .telemetry-glow { fill: none; stroke: #71cbd0; stroke-width: 5; stroke-opacity: .12; stroke-linecap: round; stroke-linejoin: round; }
+.boot-graph .telemetry-endpoint-ring { fill: #71cbd022; stroke: #8ddde0; stroke-opacity: .7; stroke-width: 1; }
+.boot-graph .telemetry-endpoint-core { fill: #b9f1ef; }
+.boot-graph .telemetry-empty { fill: #91a8aa; font-size: 10px; }
+.boot-graph .telemetry-axis-title { fill: #a7b9ba; font-size: 9px; letter-spacing: .08em; }
 .boot-footer { display: grid; grid-template-columns: minmax(0, 1fr) 330px; grid-template-areas: "progress enter" "status controls" ". continue"; column-gap: 32px; row-gap: 0; align-items: center; border-top: 1px solid #ffffff10; padding-top: 22px; margin-top: 22px; }
 .boot-progress { grid-area: progress; display: flex; gap: 3px; height: 18px; padding: 2px; overflow: hidden; border: 1px solid #8ab99a80; border-radius: 999px; background: #121618; }
 .boot-progress-segment { display: block; flex: 1; min-width: 0; overflow: hidden; border-radius: 3px; background: #2d3531; }
