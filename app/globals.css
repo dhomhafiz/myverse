@@ -401,7 +401,6 @@ body { margin: 0; }
   .room-experience {
     --room-hud-top: calc(env(safe-area-inset-top, 0px) + var(--room-header-top-gap));
     --room-hud-left: max(20px, env(safe-area-inset-left, 0px));
-    --room-hud-brand-width: min(220px, calc(50vw - var(--room-hud-left) - 52px));
   }
   .room-experience .preview-header, .room-experience .room-footer { display: none; }
   .room-experience .hero-brand-layer { --brand-left: var(--room-hud-left); }
@@ -416,10 +415,12 @@ body { margin: 0; }
   .room-experience .brand-subtitle {
     top: calc(var(--room-hud-top) + 24px);
     bottom: auto;
-    width: var(--room-hud-brand-width);
+    right: max(20px, env(safe-area-inset-right, 0px));
+    width: auto;
+    white-space: nowrap;
     color: #b7cdd1;
-    font: 400 10px/15px var(--font-work-sans), Arial, sans-serif;
-    letter-spacing: .025em;
+    font: 400 clamp(10px, 2.56vw, 11px)/1.5 var(--font-work-sans), Arial, sans-serif;
+    letter-spacing: .02em;
     text-shadow: 0 1px 4px #000a;
   }
   .room-experience .hero-name.is-settled .hero-smear { display: none; }
@@ -431,12 +432,6 @@ body { margin: 0; }
 @media (min-width: 641px) and (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
   /* Leave the low football play area reachable in phone landscape. */
   .floating-room-navigation { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
-}
-/* Preserve the approved compact branding width on narrow phones. */
-@media (max-width: 560px) {
-  .room-experience {
-    --room-hud-brand-width: min(220px, calc(100vw - var(--room-hud-left) - max(20px, env(safe-area-inset-right, 0px))));
-  }
 }
 @media (prefers-reduced-motion: reduce) { .global-navigation .global-navigation-trigger, .global-navigation-icon i, .global-navigation-panel, .global-navigation-list :is(a,button) { transition: none; } }
 .room-return-progress, .room-loader-progress { position: relative; height: 2px; overflow: hidden; background: #eeeae533; }
