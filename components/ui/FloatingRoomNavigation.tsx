@@ -1,8 +1,6 @@
 'use client';
 
-import Link from 'next/link';
 import { hotspotDestinations } from '@/lib/hotspot-destinations';
-import { useExperienceNavigation } from './ExperienceNavigation';
 
 const destinations = [
   { label: 'WORK', destination: hotspotDestinations.projects, icon: 'M3 4h18v12H3z M8 21h8 M12 16v5' },
@@ -12,9 +10,7 @@ const destinations = [
   { label: 'CONTACT', destination: hotspotDestinations.contact, icon: 'M21 11a9 8 0 0 1-9 8 10 10 0 0 1-4-.8L3 21l1.5-5A8 8 0 0 1 3 11a9 8 0 0 1 18 0' },
 ] as const;
 
-export default function FloatingRoomNavigation() {
-  const { navigateToDestination } = useExperienceNavigation();
-
+export default function FloatingRoomNavigation({ onActivate }: { onActivate: (destinationId: string) => void }) {
   return (
     <div className="floating-room-navigation">
       <nav className="floating-room-navigation-panel" aria-label="Room navigation"
@@ -22,18 +18,13 @@ export default function FloatingRoomNavigation() {
         onPointerUp={event => event.stopPropagation()}
         onClick={event => event.stopPropagation()}>
         {destinations.map(({ label, destination, icon }) => (
-          <Link key={destination.route} href={destination.route} prefetch={false}
-            onClick={event => {
-              if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-              event.preventDefault();
-              navigateToDestination(destination.route);
-            }}>
+          <button key={destination.id} type="button" onClick={() => onActivate(destination.id)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
               strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
               <path d={icon} />
             </svg>
             <span>{label}</span>
-          </Link>
+          </button>
         ))}
       </nav>
     </div>

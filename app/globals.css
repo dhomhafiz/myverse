@@ -344,8 +344,8 @@ body { margin: 0; }
   position: fixed;
   z-index: 50;
   left: 50%;
-  /* Clear the low football play area as viewport height changes. */
-  bottom: calc(clamp(80px, 14dvh, 152px) + env(safe-area-inset-bottom, 0px));
+  /* Align the desktop panel with the lower identity row. */
+  bottom: max(28px, env(safe-area-inset-bottom, 0px));
   /* Reserve 336px at each edge for the existing identity and Credits groups. */
   width: min(600px, calc(100% - 672px));
   transform: translateX(-50%);
@@ -362,7 +362,11 @@ body { margin: 0; }
   box-shadow: 0 6px 20px #0003;
   pointer-events: auto;
 }
-.floating-room-navigation-panel a {
+.floating-room-navigation-panel button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
   display: flex;
   min-width: 44px;
   min-height: 56px;
@@ -380,16 +384,16 @@ body { margin: 0; }
   transition: color .16s ease, background-color .16s ease;
 }
 .floating-room-navigation-panel svg { width: 20px; height: 20px; flex: none; }
-.floating-room-navigation-panel a:is(:hover, :active) { color: #a4e7f0; background: #75c9d812; }
-.floating-room-navigation-panel a:focus-visible { outline: 2px solid #82d2df; outline-offset: -2px; color: #a4e7f0; background: #75c9d812; }
-@media (prefers-reduced-motion: reduce) { .floating-room-navigation-panel a { transition: none; } }
+.floating-room-navigation-panel button:is(:hover, :active) { color: #a4e7f0; background: #75c9d812; }
+.floating-room-navigation-panel button:focus-visible { outline: 2px solid #82d2df; outline-offset: -2px; color: #a4e7f0; background: #75c9d812; }
+@media (prefers-reduced-motion: reduce) { .floating-room-navigation-panel button { transition: none; } }
 @media (max-width: 959px) {
   /* A separate row clears the unchanged desktop footer on narrow tablets. */
   .floating-room-navigation { width: min(480px, calc(100% - 40px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (max-width: 1200px) {
   .floating-room-navigation-panel { padding: 6px; }
-  .floating-room-navigation-panel a { min-height: 52px; font-size: 10px; line-height: 14px; }
+  .floating-room-navigation-panel button { min-height: 52px; font-size: 10px; line-height: 14px; }
 }
 
 /* Room HUD only. Short, coarse-pointer viewports retain it in phone landscape. */

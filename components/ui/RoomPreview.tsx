@@ -218,7 +218,7 @@ export default function RoomPreview({
       {navigationMode === 'opening' && <div className={`hotspot-transition-cover${hotspotNavigation.destinationId === 'iphone' ? ' is-contact' : hotspotNavigation.destinationId === 'credits' ? ' is-credits' : ''}`} aria-hidden="true" />}
       {phase === 'exploring' && roomActive && navigationMode === 'explore' && (
         <>
-          <FloatingRoomNavigation />
+          <FloatingRoomNavigation onActivate={onOpenDestination} />
           <footer className="room-footer">
             <Link className="room-credits-link" href="/credits" aria-label="Open credits and asset attributions"
               onClick={event => {
