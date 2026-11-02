@@ -32,7 +32,7 @@ export const hotspotDestinations = {
     transitionAnchor: 'monitor_left',
     beaconAnchor: 'screen_left_anchor',
     beaconPosition: [0, 0.48, 0.04],
-    caption: 'View My Works',
+    caption: 'VIEW MY WORK',
     returnTo: 'saved-camera',
     loading: 'progressive',
     accessibleLabel: 'Open selected projects',

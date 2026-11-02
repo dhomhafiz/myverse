@@ -22,7 +22,7 @@ function createTerminalDisplay(fontFamily: string): ScreenDisplay {
   context.textBaseline = 'alphabetic';
   context.textAlign = 'left';
   context.font = `700 168px ${fontFamily}, "SFMono-Regular", Consolas, monospace`;
-  const title = 'PROJECTS';
+  const title = 'WORK';
   const titleWidth = context.measureText(title).width;
   const titleX = 56;
   const titleBaseline = 344;
