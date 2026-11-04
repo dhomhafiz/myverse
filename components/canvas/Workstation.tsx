@@ -1,5 +1,6 @@
 import { Box, Rod } from './Primitives';
 import GamingPc from './GamingPc';
+import MyVerseAICompanion from './MyVerseAICompanion';
 import RgbKeyboard from './RgbKeyboard';
 import GamingMouse from './GamingMouse';
 import LeftMonitorDisplay from './LeftMonitorDisplay';
@@ -42,6 +43,7 @@ export default function Workstation({ active, reducedMotion, motion }: {
     <RgbKeyboard position={[-0.42, 0.809, 0.2]} scale={1.3} />
     <GamingMouse position={[0.2, 0.797, 0.23]} />
     <GamingPc active={active} reducedMotion={reducedMotion} motion={motion} />
+    <MyVerseAICompanion />
     <group name={phone.name} position={phone.position} rotation={phone.rotation} scale={phone.scale} userData={{ destination: 'contact' }}>
       <group name={phone.flipPivotName}>
         <Box size={[0.08, 0.16, 0.013]} color="#787e82" />

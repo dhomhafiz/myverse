@@ -24,6 +24,7 @@ const productionAssets = [
   'models/guitar-wall-two-spot-track-light.glb',
   'models/mechanical-rgb-keyboard-optimized.glb',
   'models/pc-balanced.glb',
+  'models/myverse_ai_companion_v1.glb',
   'models/v-guitar-black-lime-longer.glb',
   'models/v-guitar-black-white-longer.glb',
   'models/wooden-bike-stand.glb',

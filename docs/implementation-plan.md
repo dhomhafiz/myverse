@@ -943,3 +943,55 @@ If GitHub Pages returns 404, assets fail, nested routes break, TLS fails, the ro
 - **Status/limits:** Visual approval pending. At normal Home framing the lamp is small, so the bowl gradient is subtle; the app has no lamp-specific zoom pose, limiting close-up Free Look validation to a changed viewing angle. Browser emulation only; no physical-device coverage or GPU benchmark. Local working tree only; no commit, push, tag, deployment or GitHub Actions trigger.
 
 *** End of File
+# MyVerse AI Companion — Phase 1: 3D Model Integration
+
+Implemented locally on 2026-11-04. Technical checks passed; visual acceptance remains pending because browser automation was unavailable. No commit, push, deployment, tag, or GitHub Actions trigger was performed.
+
+## Asset inspection
+
+- Exact supplied asset: `public/models/myverse_ai_companion_v1.glb`; not modified or re-exported.
+- File size: **218,688 bytes (213.5625 KiB)**.
+- Three.js GLTFLoader geometry bounds, measured with `Box3.setFromObject(scene, true)`:
+  - Minimum: `[-0.1299999952, 0.0005000000, -0.0890000015]`.
+  - Maximum: `[0.1299999952, 0.3729999990, 0.0992999971]`.
+  - Width × height × depth: **0.2599999905 × 0.3724999990 × 0.1882999986 m**.
+- **21 meshes / geometry definitions / primitives, 13,840 triangles, 7,090 position vertices, 7 materials, 0 textures, 0 images, 0 animation clips**.
+- Preserved `world`, `head_pivot`, `left_arm_pivot`, `right_arm_pivot`, and their mesh children. Eye geometry lies on local +Z, which establishes forward orientation.
+- SHA-256: `29519f9017c7e46e2a6d99898a4c34e1dac95e54f2d34ed72dce5136a832e6d2`.
+
+## Component and placement
+
+- Component: `components/canvas/MyVerseAICompanion.tsx`, rendered within `Workstation` immediately after `GamingPc`.
+- Desk-local base position: **`[1.25, 0.795, 0.64]`**; world base position: **`[1.25, 0.795, -1.01]`**.
+- Desk top derives from its existing centre Y=0.76 plus half its 0.07 thickness. The right extension spans desk-local X `[0.975, 1.525]`, Z `[0.42, 1.54]`. Placement is in the near portion beyond the PC toward the bicycle, rather than at the far tip.
+- Uniform scale is computed at load from actual bounds: **`0.3 / 0.3724999990 = 0.8053691296`**. Final height is **0.30 m**, about 53% of the existing scaled PC tower height (~0.5625 m).
+- Non-destructive inner wrapper offset: **`[0, -0.0005000000, -0.0051499978]`**, centring the footprint and seating its lowest geometry on the desk. Original node transforms remain intact.
+- Static rotation: **`[0, -0.72, 0]` radians**, yaw approximately **−41.25°**, facing approximately toward the approved Home camera from local +Z.
+- Measured final world geometry bounds: min **`[1.1529571890, 0.795, -1.1003641084]`**, max **`[1.3424555938, 1.095, -0.9172497281]`**.
+- These bounds fit inside the extension with at least 0.12 m before its near edge, 0.18 m before its right edge, and no tabletop penetration or hover. The robot is beyond the PC footprint and forward of the monitor geometry. These are geometry checks, not rendered visual approval.
+- Existing furniture, bicycle/stand, lamp, cameras, hotspots and navigation code are unchanged.
+
+## Materials, power and performance
+
+- Authored shell, body, visor, cyan colours, roughness, metalness and emissive strengths are retained without visual parameter overrides.
+- Two authored emissive materials are cloned once per component instance so the cached asset stays intact. Non-emissive materials and all geometry are shared. The scene hierarchy is cloned without flattening or merging pivots.
+- Existing `SceneLighting` discovers these emissives as part of its `room` channel: intensity starts at zero and follows the established room power fade. No changes to that controller or cinematic timing.
+- Cached Drei `useGLTF` loading/preload is used inside the existing scene boundary. The asset is added to the existing prefetch/retry list; readiness gates and calculations remain unchanged.
+- Standard cast/receive shadow flags use the existing shadow map. No dependencies, lights, shader effects, postprocessing, per-frame robot work, renderer, animation loop, or geometry copies were added. Emissive clones are cleaned up on unmount using the existing deferred-disposal pattern.
+- The model adds 21 mesh primitives to the scene (shadow rendering may add further draws). No FPS or GPU timing measurement was possible.
+
+## Validation and outstanding visual review
+
+- `npm.cmd run typecheck`: passed.
+- Focused ESLint for the companion, workstation, prefetch list and export verifier: passed with zero warnings.
+- `npm.cmd run build`: passed, including static generation of all 14 pages. The first sandboxed attempt could not fetch existing Google Fonts; a network-enabled build passed without changing font configuration.
+- `npm.cmd run check:export`: passed; robot added to required production asset checks.
+- `git diff --check`: passed.
+- Local preview of the generated static output: homepage and `/models/myverse_ai_companion_v1.glb` returned HTTP 200. The response body and exported file match the supplied GLB byte-for-byte, including SHA-256.
+- Deployment compatibility: the same root-relative `/models/...` convention used by existing GLBs is preserved, matching the current no-basePath static export uploaded from `out/` by the GitHub Pages workflow. No routing, metadata, sitemap, deployment configuration or workflow changes. Live deployment was not performed or probed for this unpublished asset.
+- **1440×900, 1920×1080, 390×844, 360×800: not visually verified.** Browser inventory reported the access host unavailable; the native Chrome fallback then stopped because it could not determine the current browser URL with enough confidence to enforce policy. No screenshots were captured and no further UI actions were attempted.
+- Remaining review: powered-off and powered-on appearance, cyan eye readability, desktop composition, rendered contact/shadows/clipping, mobile visibility, hotspot occlusion, full cinematic playback, and navigation/return behaviour. Mobile camera behaviour was left untouched; whether the robot is too small on mobile remains unknown.
+
+## Future-phase boundaries
+
+Phase 1 stops at static model integration. No idle animation, blinking, head/cursor tracking, gestures, pointer handlers, hotspot, focus camera, chat UI, AI integration, or new interaction state was implemented.
