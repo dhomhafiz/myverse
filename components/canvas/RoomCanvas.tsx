@@ -50,6 +50,8 @@ export default function RoomCanvas({ fallback, view, phase, reducedMotion, onRea
         shadow-camera-top={4} shadow-camera-bottom={-4} shadow-bias={-0.001} />
       <CameraRig directStart={directStart} directDestinationId={directDestinationId} view={view} phase={phase} reducedMotion={reducedMotion} motion={motion} onGesture={onGesture} navigationMode={navigationMode} onNavigationSettled={onNavigationSettled} />
       <PlaceholderRoom chairActive={roomActive && phase === 'exploring' && navigationMode === 'explore'} pcActive={roomActive && (phase === 'entering' || (phase === 'exploring' && navigationMode === 'explore'))}
+        clockActive={(roomActive && (phase === 'entering' || (phase === 'exploring' && navigationMode === 'explore'))) ||
+          (phase === 'exploring' && navigationMode === 'returning')}
         reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} />
       <DestinationHotspots reducedMotion={reducedMotion} active={roomActive && phase === 'exploring' && navigationMode === 'explore'} onOpen={onOpenDestination} />
       <Football active={roomActive && phase === 'exploring' && navigationMode === 'explore'} reducedMotion={reducedMotion} />
