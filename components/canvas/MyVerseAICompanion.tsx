@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useEffectEvent, useLayoutEffect, useMemo, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { Box3, Group, MathUtils, Mesh, MeshStandardMaterial, Object3D, Plane, Quaternion, Raycaster, Vector2, Vector3 } from 'three';
@@ -19,6 +19,7 @@ const MAX_TRACKING_PITCH = 0.22;
 const BLINK_CLOSE = 0.08;
 const BLINK_HOLD = 0.03;
 const BLINK_OPEN = 0.13;
+const HIT_TARGET_SIZE: [number, number, number] = [0.32, 0.34, 0.28];
 
 type AnimationState = {
   elapsed: number;
@@ -33,6 +34,9 @@ type AnimationState = {
   eyeY: number;
   nextBlinkAt: number;
   blinkStart: number;
+  greetingStart: number;
+  nextGreetingAt: number;
+  attentionUntil: number;
 };
 
 function resetAnimation(): AnimationState {
@@ -49,7 +53,27 @@ function resetAnimation(): AnimationState {
     eyeY: 0,
     nextBlinkAt: 3 + Math.random() * 4,
     blinkStart: -1,
+    greetingStart: -1,
+    nextGreetingAt: 0,
+    attentionUntil: 0,
   };
+}
+
+function startGreeting(state: AnimationState, reducedMotion: boolean) {
+  if (reducedMotion || state.greetingStart >= 0 || state.elapsed < state.nextGreetingAt) return;
+  state.greetingStart = state.elapsed;
+  state.nextGreetingAt = state.elapsed + 2.4;
+}
+
+function greetingAmount(state: AnimationState) {
+  if (state.greetingStart < 0) return 0;
+  const elapsed = state.elapsed - state.greetingStart;
+  const ease = (value: number) => value * value * (3 - 2 * value);
+  if (elapsed < 0.22) return 0.78 * ease(elapsed / 0.22);
+  if (elapsed < 0.78) return 0.78 + Math.sin((elapsed - 0.22) * Math.PI * 2 * 2.5) * 0.045;
+  if (elapsed < 1.02) return 0.78 * (1 - ease((elapsed - 0.78) / 0.24));
+  state.greetingStart = -1;
+  return 0;
 }
 
 function blinkAmount(state: AnimationState) {
@@ -72,20 +96,31 @@ function blinkAmount(state: AnimationState) {
 
 export default function MyVerseAICompanion({
   active,
+  interactive,
   reducedMotion,
   motion,
+  interactionSignal,
+  hovered,
+  onHoverChange,
+  onCompanionActivate,
 }: {
   active: boolean;
+  interactive: boolean;
   reducedMotion: boolean;
   motion: RefObject<EntranceMotion>;
+  interactionSignal: number;
+  hovered: boolean;
+  onHoverChange: (source: 'robot', hovered: boolean) => void;
+  onCompanionActivate: () => void;
 }) {
   const { scene } = useGLTF(MODEL_PATH);
-  const { model, scale, offset, headPivot, baseHeadRotation, eyeMotion, baseEyePosition, emissiveMaterials } = useMemo(() => {
+  const { model, scale, offset, headPivot, armPivot, baseHeadRotation, baseArmRotation, eyeMotion, baseEyePosition, emissiveMaterials } = useMemo(() => {
     const model = scene.clone(true);
     const headPivot = model.getObjectByName('head_pivot');
+    const armPivot = model.getObjectByName('right_arm_pivot');
     const eyes = model.getObjectByName('head_pivot_eyes_cyan');
-    if (!headPivot || !(eyes instanceof Mesh)) {
-      throw new Error('The MyVerse AI Companion model is missing its head pivot or cyan eye mesh.');
+    if (!headPivot || !armPivot || !(eyes instanceof Mesh)) {
+      throw new Error('The MyVerse AI Companion model is missing a required head, arm, or cyan eye pivot.');
     }
 
     const eyeParent = eyes.parent;
@@ -130,15 +165,18 @@ export default function MyVerseAICompanion({
       scale: TARGET_HEIGHT / size.y,
       offset: [-center.x, -bounds.min.y, -center.z] as [number, number, number],
       headPivot,
+      armPivot,
       baseHeadRotation: headPivot.rotation.clone(),
+      baseArmRotation: armPivot.rotation.clone(),
       eyeMotion,
       baseEyePosition,
       emissiveMaterials: [...emissiveMap.values()],
     };
   }, [scene]);
   const root = useRef<Group>(null);
-  const animatedObjects = useRef<{ headPivot: Object3D | null; eyeMotion: Group | null }>({
+  const animatedObjects = useRef<{ headPivot: Object3D | null; armPivot: Object3D | null; eyeMotion: Group | null }>({
     headPivot: null,
+    armPivot: null,
     eyeMotion: null,
   });
   const animation = useRef<AnimationState>({
@@ -154,7 +192,13 @@ export default function MyVerseAICompanion({
     eyeY: 0,
     nextBlinkAt: 0,
     blinkStart: -1,
+    greetingStart: -1,
+    nextGreetingAt: 0,
+    attentionUntil: 0,
   });
+  const wasHovered = useRef(false);
+  const wasActive = useRef(active);
+  const previousInteractionSignal = useRef(interactionSignal);
   const pageVisible = useRef(true);
   const scratch = useMemo(() => ({
     raycaster: new Raycaster(),
@@ -169,6 +213,14 @@ export default function MyVerseAICompanion({
     rootRotation: new Quaternion(),
   }), []);
   const mounted = useRef(false);
+  const acknowledge = useEffectEvent(() => {
+    if (!active) return;
+    const state = animation.current;
+    state.attentionUntil = state.elapsed + 1.35;
+    if (state.blinkStart < 0) state.blinkStart = state.elapsed;
+    startGreeting(state, reducedMotion);
+    motion.current.invalidate?.();
+  });
 
   useEffect(() => {
     mounted.current = true;
@@ -192,23 +244,60 @@ export default function MyVerseAICompanion({
 
   useLayoutEffect(() => {
     animatedObjects.current.headPivot = headPivot;
+    animatedObjects.current.armPivot = armPivot;
     animatedObjects.current.eyeMotion = eyeMotion;
     animation.current = resetAnimation();
+    wasHovered.current = false;
     headPivot.rotation.copy(baseHeadRotation);
+    armPivot.rotation.copy(baseArmRotation);
     eyeMotion.position.copy(baseEyePosition);
     eyeMotion.scale.set(1, 1, 1);
     motion.current.invalidate?.();
-  }, [active, reducedMotion, model, headPivot, baseHeadRotation, eyeMotion, baseEyePosition, motion]);
+    return () => {
+      headPivot.rotation.copy(baseHeadRotation);
+      armPivot.rotation.copy(baseArmRotation);
+      eyeMotion.position.copy(baseEyePosition);
+      eyeMotion.scale.set(1, 1, 1);
+    };
+  }, [active, reducedMotion, model, headPivot, armPivot, baseHeadRotation, baseArmRotation, eyeMotion, baseEyePosition, motion]);
+
+  useEffect(() => {
+    if (interactionSignal === previousInteractionSignal.current) return;
+    previousInteractionSignal.current = interactionSignal;
+    acknowledge();
+  }, [interactionSignal]);
+
+  useEffect(() => {
+    const state = animation.current;
+    if (!active) {
+      wasHovered.current = false;
+      wasActive.current = false;
+      return;
+    }
+    if (!wasActive.current) {
+      wasActive.current = true;
+      wasHovered.current = hovered;
+      return;
+    }
+    if (hovered && !wasHovered.current) {
+      state.attentionUntil = state.elapsed + 1.1;
+      startGreeting(state, reducedMotion);
+      motion.current.invalidate?.();
+    }
+    wasHovered.current = hovered;
+  }, [active, hovered, motion, reducedMotion]);
 
   useFrame(({ camera }, unboundedDelta) => {
     if (!active || reducedMotion || !pageVisible.current) return;
     const animated = animatedObjects.current;
     const head = animated.headPivot;
+    const arm = animated.armPivot;
     const eyes = animated.eyeMotion;
-    if (!head || !eyes) return;
+    if (!head || !arm || !eyes) return;
     const delta = Math.min(unboundedDelta, 0.05);
     if (motion.current.lights.room < 0.95) {
       head.rotation.copy(baseHeadRotation);
+      arm.rotation.copy(baseArmRotation);
       eyes.position.copy(baseEyePosition);
       eyes.scale.set(1, 1, 1);
       return;
@@ -227,9 +316,10 @@ export default function MyVerseAICompanion({
     let targetPitch = state.idlePitch;
     let targetEyeX = 0;
     let targetEyeY = 0;
+    const cursorTracking = roomCursor.active && !roomCursor.dragging;
     const cursor = roomCursor;
     const modelRoot = root.current;
-    if (cursor.active && !cursor.dragging && modelRoot) {
+    if (cursorTracking && modelRoot) {
       scratch.cursor.set(cursor.x, cursor.y);
       camera.getWorldDirection(scratch.cameraDirection);
       head.getWorldPosition(scratch.headPosition);
@@ -251,10 +341,17 @@ export default function MyVerseAICompanion({
         targetEyeY = MathUtils.clamp((scratch.direction.y / depth) * 0.012, -0.003, 0.003);
       }
     }
+    const attentive = hovered || state.elapsed < state.attentionUntil;
+    if (attentive) {
+      targetYaw = cursorTracking ? MathUtils.clamp(targetYaw + 0.06, -MAX_TRACKING_YAW, MAX_TRACKING_YAW) : 0.12;
+      targetPitch = cursorTracking ? targetPitch : 0.035;
+      targetEyeX = cursorTracking ? targetEyeX : 0.002;
+      targetEyeY = Math.max(targetEyeY, 0.0015);
+    }
 
     state.yaw = MathUtils.damp(state.yaw, targetYaw, 4.5, delta);
     state.pitch = MathUtils.damp(state.pitch, targetPitch, 4.5, delta);
-    state.roll = MathUtils.damp(state.roll, state.idleRoll, 3.2, delta);
+    state.roll = MathUtils.damp(state.roll, state.idleRoll + (attentive ? 0.045 : 0), 3.2, delta);
     state.eyeX = MathUtils.damp(state.eyeX, targetEyeX, 8, delta);
     state.eyeY = MathUtils.damp(state.eyeY, targetEyeY, 8, delta);
     head.rotation.set(
@@ -263,6 +360,7 @@ export default function MyVerseAICompanion({
       baseHeadRotation.z + state.roll,
       baseHeadRotation.order,
     );
+    arm.rotation.z = baseArmRotation.z + greetingAmount(state);
     eyes.position.set(baseEyePosition.x + state.eyeX, baseEyePosition.y + state.eyeY, baseEyePosition.z);
     eyes.scale.y = 1 - 0.97 * blinkAmount(state);
     motion.current.invalidate?.();
@@ -270,6 +368,29 @@ export default function MyVerseAICompanion({
 
   return (
     <group ref={root} name="myverse_ai_companion" position={POSITION} rotation={[0, YAW, 0]} dispose={null}>
+      <mesh
+        name="myverse_ai_companion_hit_target"
+        position={[0, TARGET_HEIGHT / 2, 0]}
+        onPointerOver={event => {
+          if (!interactive) return;
+          event.stopPropagation();
+          if (event.nativeEvent.pointerType !== 'touch') onHoverChange('robot', true);
+        }}
+        onPointerOut={event => {
+          if (interactive) event.stopPropagation();
+          if (event.nativeEvent.pointerType !== 'touch') onHoverChange('robot', false);
+        }}
+        onPointerCancel={() => onHoverChange('robot', false)}
+        onClick={event => {
+          if (!interactive) return;
+          event.stopPropagation();
+          if (!roomCursor.dragging) onCompanionActivate();
+        }}
+      >
+        <boxGeometry args={HIT_TARGET_SIZE} />
+        <meshBasicMaterial colorWrite={false} depthWrite={false} />
+      </mesh>
+      <object3D name="myverse_ai_companion_hotspot_anchor" position={[0.15, TARGET_HEIGHT + 0.04, 0.04]} />
       <group scale={scale}>
         <group position={offset}><primitive object={model} /></group>
       </group>

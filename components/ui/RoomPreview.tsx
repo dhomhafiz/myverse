@@ -4,7 +4,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Component, useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import type { ReviewView } from '@/lib/room-config';
-import type { EntrancePhase, Readiness } from '@/lib/room-state';
+import type { CompanionFocusState, EntrancePhase, Readiness } from '@/lib/room-state';
 import type { HotspotNavigationMode } from '@/lib/hotspot-navigation';
 import { hotspotNavigation } from '@/lib/hotspot-navigation';
 import { roomPreparation, type ReadinessGate } from '@/lib/room-preparation';
@@ -18,6 +18,7 @@ import useEntranceTimeline from '@/hooks/useEntranceTimeline';
 import { createEntranceMotion } from '@/lib/entrance';
 import GlobalNavigation from './GlobalNavigation';
 import FloatingRoomNavigation from './FloatingRoomNavigation';
+import CompanionChat from './CompanionChat';
 
 const RoomCanvas = dynamic(() => import('@/components/canvas/RoomCanvas'), { ssr: false });
 
@@ -53,6 +54,13 @@ export default function RoomPreview({
     hotspotNavigation.getMode,
     () => 'explore' as HotspotNavigationMode,
   );
+  const [companionInteractionSignal, setCompanionInteractionSignal] = useState(0);
+  const [companionHoverSources, setCompanionHoverSources] = useState({ robot: false, hotspot: false });
+  const [companionNotice, setCompanionNotice] = useState('');
+  const [companionFocus, setCompanionFocus] = useState<CompanionFocusState>('closed');
+  const companionFocusRef = useRef<CompanionFocusState>('closed');
+  const companionTrigger = useRef<HTMLElement | null>(null);
+  const companionTriggerKind = useRef<'mobile' | 'hotspot' | 'canvas'>('canvas');
   const [attempt] = useState(() => roomPreparation.getSnapshot().attempt);
   const opening = useRef(false);
   useEffect(() => { roomPreparation.initialize(attempt); }, [attempt]);
@@ -104,10 +112,92 @@ export default function RoomPreview({
 
   const onEntered = useCallback(() => setPhase('exploring'), []);
   const onGesture = useCallback(() => setHint(false), []);
+  const companionActive = roomActive && view === 'home' && phase === 'exploring' &&
+    (navigationMode === 'explore' || companionFocus !== 'closed');
+  const companionInteractive = roomActive && view === 'home' && phase === 'exploring' &&
+    navigationMode === 'explore' && companionFocus === 'closed';
+  const companionHovered = companionActive && (companionHoverSources.robot || companionHoverSources.hotspot);
+  const onCompanionHoverChange = useCallback((source: 'robot' | 'hotspot', hovered: boolean) => {
+    setCompanionHoverSources(current => current[source] === hovered ? current : { ...current, [source]: hovered });
+  }, []);
+  const onCompanionActivate = useCallback((trigger?: HTMLElement) => {
+    if (!companionInteractive || companionFocusRef.current !== 'closed') return;
+    const activeElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    companionTrigger.current = trigger ?? activeElement;
+    companionTriggerKind.current = trigger ? 'mobile' : activeElement?.classList.contains('hotspot-indicator') ? 'hotspot' : 'canvas';
+    onGesture();
+    setCompanionHoverSources({ robot: false, hotspot: false });
+    setCompanionInteractionSignal(signal => signal + 1);
+    companionFocusRef.current = 'opening';
+    setCompanionFocus('opening');
+    setCompanionNotice('');
+  }, [companionInteractive, onGesture]);
+  const onMobileCompanionActivate = useCallback((trigger: HTMLElement) => {
+    onCompanionActivate(trigger);
+  }, [onCompanionActivate]);
+  const onCompanionFocusSettled = useCallback((direction: 'opening' | 'closing') => {
+    if (direction === 'opening' && companionFocusRef.current === 'opening') {
+      companionFocusRef.current = 'open';
+      setCompanionFocus('open');
+      return;
+    }
+    if (direction !== 'closing' || companionFocusRef.current !== 'closing') return;
+    companionFocusRef.current = 'closed';
+    setCompanionFocus('closed');
+    if (pathname !== '/' && hotspotNavigation.getMode() === 'explore') hotspotNavigation.setMode('paused');
+    if (pathname === '/' && roomActive) {
+      window.requestAnimationFrame(() => {
+        const trigger = companionTrigger.current?.isConnected
+          ? companionTrigger.current
+          : companionTriggerKind.current === 'mobile'
+            ? root.current?.querySelector<HTMLElement>('.mobile-ai-entry > button')
+            : companionTriggerKind.current === 'hotspot'
+              ? root.current?.querySelector<HTMLElement>('.hotspot-indicator[data-target="myverse_ai_companion"]')
+              : null;
+        if (trigger?.isConnected && !trigger.closest('[inert]') && trigger.getClientRects().length) {
+          trigger.focus({ preventScroll: true });
+        } else {
+          surface.current?.querySelector('canvas')?.focus({ preventScroll: true });
+        }
+      });
+    }
+  }, [pathname, roomActive]);
+  const onCompanionFocusFailed = useCallback((error: Error) => {
+    companionFocusRef.current = 'closed';
+    setCompanionFocus('closed');
+    setCompanionNotice(`AI Companion could not open: ${error.message}`);
+  }, []);
+  const onCompanionClose = useCallback(() => {
+    if (companionFocusRef.current !== 'open') return;
+    companionFocusRef.current = 'closing';
+    setCompanionFocus('closing');
+  }, []);
+  const onCompanionAcknowledge = useCallback(() => {
+    setCompanionInteractionSignal(signal => signal + 1);
+  }, []);
+  useEffect(() => {
+    if (companionFocus !== 'opening') return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || companionFocusRef.current !== 'opening') return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      companionFocusRef.current = 'closing';
+      setCompanionFocus('closing');
+    };
+    window.addEventListener('keydown', closeOnEscape, true);
+    return () => window.removeEventListener('keydown', closeOnEscape, true);
+  }, [companionFocus]);
+
+  useEffect(() => {
+    if (!companionNotice) return;
+    const timer = window.setTimeout(() => setCompanionNotice(''), 5000);
+    return () => window.clearTimeout(timer);
+  }, [companionNotice]);
 
   const onOpenDestination = useCallback((destinationId: string) => {
-    if (opening.current || phase !== 'exploring' || navigationMode !== 'explore') return;
+    if (opening.current || companionFocusRef.current !== 'closed' || phase !== 'exploring' || navigationMode !== 'explore') return;
     opening.current = true;
+    setCompanionNotice('');
     onGesture();
     hotspotNavigation.open(destinationId);
     router.prefetch(getHotspotDestination(destinationId).route);
@@ -134,6 +224,14 @@ export default function RoomPreview({
   }, [motion, onRegisterReturnFromBoot, phase]);
 
   useEffect(() => {
+    if (pathname !== '/' && companionFocus !== 'closed') {
+      if (companionFocusRef.current !== 'closing') {
+        companionFocusRef.current = 'closing';
+        setCompanionFocus('closing');
+      }
+      if (navigationMode === 'explore') hotspotNavigation.setMode('paused');
+      return;
+    }
     if (pathname !== '/' && navigationMode === 'opening' &&
       getHotspotDestinationForRoute(pathname).id === hotspotNavigation.destinationId) {
       hotspotNavigation.setMode('paused');
@@ -147,7 +245,7 @@ export default function RoomPreview({
       opening.current = false;
       hotspotNavigation.setMode('explore');
     }
-  }, [pathname, phase, navigationMode, returnRequested]);
+  }, [pathname, phase, navigationMode, returnRequested, companionFocus]);
 
   useEffect(() => {
     if (!returnRequested || readiness !== 'ready' || navigationMode === 'returning') return;
@@ -175,6 +273,7 @@ export default function RoomPreview({
       className="room-experience"
       data-phase={phase}
       data-navigation-mode={navigationMode}
+      data-companion-focus={companionFocus}
       data-readiness={readiness}
       data-reduced-motion={reducedMotion}
       aria-hidden={!roomActive}
@@ -195,6 +294,13 @@ export default function RoomPreview({
             navigationMode={navigationMode}
             onNavigationSettled={onNavigationSettled}
             onOpenDestination={onOpenDestination}
+            companionFocus={companionFocus}
+            onCompanionFocusSettled={onCompanionFocusSettled}
+            onCompanionFocusFailed={onCompanionFocusFailed}
+            companionInteractionSignal={companionInteractionSignal}
+            companionHovered={companionHovered}
+            onCompanionActivate={onCompanionActivate}
+            onCompanionHoverChange={onCompanionHoverChange}
             directDestinationId={pathname === '/' && hotspotNavigation.destinationId
               ? hotspotNavigation.destinationId
               : getHotspotDestinationForRoute(pathname).id}
@@ -210,14 +316,27 @@ export default function RoomPreview({
           <header className="preview-header pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-6">
             <div><p className="brand">dhomhafiz<span>.dev</span></p></div>
           </header>
-          {roomActive && <GlobalNavigation placement="room" />}
+          {roomActive && companionFocus === 'closed' && <GlobalNavigation placement="room" />}
           {phase === 'entering' && <button className="intro-skip" aria-label="Skip introduction" type="button">Skip intro</button>}
           {hint && phase === 'exploring' && <p className="explore-hint" aria-live="polite">Drag to explore</p>}
         </>
       )}
       {navigationMode === 'opening' && <div className={`hotspot-transition-cover${hotspotNavigation.destinationId === 'iphone' ? ' is-contact' : hotspotNavigation.destinationId === 'credits' ? ' is-credits' : ''}`} aria-hidden="true" />}
-      {phase === 'exploring' && roomActive && navigationMode === 'explore' && (
+      {phase === 'exploring' && roomActive && navigationMode === 'explore' && companionFocus === 'closed' && (
         <>
+          {view === 'home' && (
+            <div className="mobile-ai-entry">
+              <button type="button" aria-label="Open AI Companion chat" onClick={event => onMobileCompanionActivate(event.currentTarget)}
+                onPointerDown={event => event.stopPropagation()} onPointerUp={event => event.stopPropagation()}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+                  <rect x="5" y="7" width="14" height="13" rx="3" />
+                  <path d="M12 3v4M3 11v5M21 11v5M9 12h.01M15 12h.01M9 16h6" />
+                </svg>
+                <span>AI</span>
+              </button>
+              <p role="status" aria-live="polite" aria-atomic="true">{companionNotice}</p>
+            </div>
+          )}
           <FloatingRoomNavigation onActivate={onOpenDestination} />
           <footer className="room-footer">
             <Link className="room-credits-link" href="/credits" aria-label="Open credits and asset attributions"
@@ -236,6 +355,8 @@ export default function RoomPreview({
         </>
       )}
       <HeroBrand active={phase === 'entering' || phase === 'exploring'} settled={phase === 'exploring'} />
+      {companionFocus === 'open' && <CompanionChat onClose={onCompanionClose}
+        onAcknowledge={onCompanionAcknowledge} reducedMotion={reducedMotion} />}
       <noscript><style>{'.boot-screen { display: none; }'}</style><section className="scene-message no-script"><h1>Mohd Hafiz’s workspace</h1><p>A personal developer room with guitars and a gravel bike. Enable JavaScript for the interactive room. Portfolio content arrives in a later phase.</p></section></noscript>
     </div>
   );

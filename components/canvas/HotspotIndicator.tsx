@@ -10,19 +10,27 @@ import { ROOM_SNAPSHOT_EXCLUDE } from '@/lib/room-snapshot';
 type IndicatorProps = {
   target: string; anchor: string; position: Vec3; caption: string; ariaLabel?: string;
   outlineTargets?: readonly string[];
-  active: boolean; reducedMotion: boolean; highlighted?: boolean; onActivate: () => void;
+  active: boolean; reducedMotion: boolean; highlighted?: boolean; repeatActivations?: boolean;
+  onActivate: () => void; onHoverChange?: (hovered: boolean) => void; onVisibilityChange?: (visible: boolean) => void;
 };
 
 // Same native-DOM ownership as RoomLabel: no Html, portals or nested React roots.
-export default function HotspotIndicator({ target, anchor, position, caption, ariaLabel = caption, outlineTargets, active, reducedMotion, highlighted = false, onActivate }: IndicatorProps) {
+export default function HotspotIndicator({ target, anchor, position, caption, ariaLabel = caption, outlineTargets, active, reducedMotion, highlighted = false, repeatActivations = false, onActivate, onHoverChange, onVisibilityChange }: IndicatorProps) {
   const { gl, scene, invalidate } = useThree();
   const node = useRef<HTMLButtonElement | null>(null);
   const outlines = useRef<LineSegments<EdgesGeometry, LineBasicMaterial>[]>([]);
   const point = useMemo(() => new Vector3(), []);
-  const visual = useRef({ pointer: false, focus: false, monitor: false });
+  const visibility = useRef(false);
+  const visual = useRef({ pointer: false, focus: false, monitor: false, hover: false });
   const activate = useEffectEvent(() => onActivate());
+  const reportHover = useEffectEvent((hovered: boolean) => onHoverChange?.(hovered));
+  const reportVisibility = useEffectEvent((visible: boolean) => onVisibilityChange?.(visible));
   const updateHighlight = useEffectEvent(() => {
     const hover = visual.current.pointer || visual.current.focus || visual.current.monitor;
+    if (visual.current.hover !== hover) {
+      visual.current.hover = hover;
+      reportHover(hover);
+    }
     node.current?.classList.toggle('is-highlighted', hover);
     outlines.current.forEach(outline => { outline.visible = hover; });
     invalidate();
@@ -86,20 +94,40 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
     };
     const move = (event: PointerEvent) => { if (gesture && event.pointerId === gesture.id && Math.hypot(event.clientX - gesture.x, event.clientY - gesture.y) >= freeLook.dragThreshold) gesture.dragged = true; };
     const up = () => { suppressClick = gesture?.dragged ?? false; gesture = null; };
-    const cancel = () => { gesture = null; suppressClick = true; };
+    const cancel = () => {
+      gesture = null;
+      suppressClick = true;
+      state.pointer = false;
+      updateHighlight();
+    };
+    const blurWindow = () => {
+      cancel();
+      state.focus = false;
+      updateHighlight();
+    };
     const click = (event: MouseEvent) => {
       if (event.detail === 0) suppressClick = false;
-      if (pending || suppressClick) { suppressClick = false; return; }
-      pending = true;
+      if (suppressClick) { suppressClick = false; return; }
+      if (pending) return;
+      if (!repeatActivations) pending = true;
       activate();
     };
     button.addEventListener('pointerenter', enter); button.addEventListener('pointerleave', leave);
     button.addEventListener('focus', focus); button.addEventListener('blur', blur);
     button.addEventListener('pointerdown', down); button.addEventListener('pointermove', move);
     button.addEventListener('pointerup', up); button.addEventListener('pointercancel', cancel); button.addEventListener('click', click);
+    window.addEventListener('blur', blurWindow);
     updateHighlight(); invalidate();
     return () => {
       button.remove(); node.current = null;
+      if (state.hover) {
+        state.hover = false;
+        reportHover(false);
+      }
+      if (visibility.current) {
+        visibility.current = false;
+        reportVisibility(false);
+      }
       state.pointer = false; state.focus = false;
       outlines.current.forEach(edge => {
         edge.removeFromParent();
@@ -107,20 +135,31 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
         edge.material.dispose();
       });
       outlines.current = [];
+      window.removeEventListener('blur', blurWindow);
       // Detached button owns its listeners; no global subscriptions or roots remain.
     };
-  }, [active, anchor, ariaLabel, caption, gl, invalidate, outlineTargets, scene, target]);
+  }, [active, anchor, ariaLabel, caption, gl, invalidate, outlineTargets, repeatActivations, scene, target]);
 
   useEffect(() => { visual.current.monitor = highlighted; updateHighlight(); }, [highlighted, active]);
   useEffect(() => { if (node.current) node.current.dataset.reducedMotion = String(reducedMotion); }, [reducedMotion, active]);
   useFrame(({ camera, size }) => {
     const button = node.current, object = scene.getObjectByName(anchor);
-    if (!button || !object) return;
+    if (!button || !object) {
+      if (visibility.current) {
+        visibility.current = false;
+        onVisibilityChange?.(false);
+      }
+      return;
+    }
     // CameraRig updates transforms earlier in this frame; project with its current inverse.
     camera.updateMatrixWorld();
     point.set(...position); object.localToWorld(point); point.project(camera);
     const x = (point.x + 1) * size.width / 2, y = (1 - point.y) * size.height / 2;
     const visible = point.z > -1 && point.z < 1 && x >= 22 && x <= size.width - 22 && y >= 22 && y <= size.height - 22;
+    if (visibility.current !== visible) {
+      visibility.current = visible;
+      onVisibilityChange?.(visible);
+    }
     button.style.visibility = visible ? 'visible' : 'hidden';
     button.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
     button.dataset.side = x > size.width - 165 ? 'left' : 'right';

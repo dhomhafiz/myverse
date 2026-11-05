@@ -11,7 +11,7 @@ import CameraRig from './CameraRig';
 import PlaceholderRoom from './PlaceholderRoom';
 import type { ReadinessGate } from '@/lib/room-preparation';
 import { room, type ReviewView } from '@/lib/room-config';
-import type { EntrancePhase, Readiness } from '@/lib/room-state';
+import type { CompanionFocusState, EntrancePhase, Readiness } from '@/lib/room-state';
 import SceneReadiness from './SceneReadiness';
 import SceneLighting from './SceneLighting';
 import type { EntranceMotion } from '@/lib/entrance';
@@ -24,14 +24,22 @@ export function clearFailedRoomAssets() {
     .forEach(path => useGLTF.clear(path));
 }
 
-export default function RoomCanvas({ fallback, view, phase, reducedMotion, onReadiness, onProgress, onGate, motion, onGesture, onFailure, navigationMode, onNavigationSettled, onOpenDestination, directStart, directDestinationId, roomActive }: {
+export default function RoomCanvas({ fallback, view, phase, reducedMotion, onReadiness, onProgress, onGate, motion, onGesture, onFailure, navigationMode, onNavigationSettled, onOpenDestination, directStart, directDestinationId, roomActive, companionFocus, onCompanionFocusSettled, onCompanionFocusFailed, companionInteractionSignal, companionHovered, onCompanionActivate, onCompanionHoverChange }: {
   directStart: boolean; directDestinationId: string; roomActive: boolean; navigationMode: HotspotNavigationMode;
   onNavigationSettled: () => void; onOpenDestination: (destinationId: string) => void;
+  companionFocus: CompanionFocusState; onCompanionFocusSettled: (direction: 'opening' | 'closing') => void;
+  onCompanionFocusFailed: (error: Error) => void;
+  companionInteractionSignal: number; companionHovered: boolean; onCompanionActivate: () => void;
+  onCompanionHoverChange: (source: 'robot' | 'hotspot', hovered: boolean) => void;
   fallback: ReactNode; view: ReviewView; phase: EntrancePhase; reducedMotion: boolean;
   onReadiness: (stage: Readiness) => void; onProgress: (loaded: number, total: number, active: boolean) => void;
   onGate: (gate: ReadinessGate) => void;
   motion: RefObject<EntranceMotion>; onGesture: () => void; onFailure: (error?: Error) => void;
 }) {
+  const companionActive = roomActive && view === 'home' && phase === 'exploring' &&
+    (navigationMode === 'explore' || companionFocus !== 'closed');
+  const companionInteractive = companionActive && navigationMode === 'explore' && companionFocus === 'closed';
+  const hotspotsActive = roomActive && phase === 'exploring' && navigationMode === 'explore' && companionFocus === 'closed';
   return (
     <Canvas shadows={{ type: PCFShadowMap }} dpr={[1, 1.5]} frameloop="demand" fallback={fallback} onCreated={state => {
       Object.assign(motion.current, {
@@ -48,13 +56,20 @@ export default function RoomCanvas({ fallback, view, phase, reducedMotion, onRea
       <directionalLight name="room_directional_light" position={[-2, 4, 1]} intensity={2.1} color="#e0e8ec" castShadow
         shadow-mapSize={[1024, 1024]} shadow-camera-left={-4} shadow-camera-right={4}
         shadow-camera-top={4} shadow-camera-bottom={-4} shadow-bias={-0.001} />
-      <CameraRig directStart={directStart} directDestinationId={directDestinationId} view={view} phase={phase} reducedMotion={reducedMotion} motion={motion} onGesture={onGesture} navigationMode={navigationMode} onNavigationSettled={onNavigationSettled} roomActive={roomActive} />
+      <CameraRig directStart={directStart} directDestinationId={directDestinationId} view={view} phase={phase} reducedMotion={reducedMotion} motion={motion} onGesture={onGesture} navigationMode={navigationMode} onNavigationSettled={onNavigationSettled} roomActive={roomActive}
+        companionFocus={companionFocus} onCompanionFocusSettled={onCompanionFocusSettled} onCompanionFocusFailed={onCompanionFocusFailed} />
       <PlaceholderRoom chairActive={roomActive && phase === 'exploring' && navigationMode === 'explore'} pcActive={roomActive && (phase === 'entering' || (phase === 'exploring' && navigationMode === 'explore'))}
         clockActive={(roomActive && (phase === 'entering' || (phase === 'exploring' && navigationMode === 'explore'))) ||
           (phase === 'exploring' && navigationMode === 'returning')}
-        companionActive={roomActive && view === 'home' && phase === 'exploring' && navigationMode === 'explore'}
-        reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} />
-      <DestinationHotspots reducedMotion={reducedMotion} active={roomActive && phase === 'exploring' && navigationMode === 'explore'} onOpen={onOpenDestination} />
+        companionActive={companionActive}
+        companionInteractive={companionInteractive}
+        reducedMotion={reducedMotion} onGesture={onGesture} motion={motion}
+        companionInteractionSignal={companionInteractionSignal} companionHovered={companionHovered} onCompanionHoverChange={onCompanionHoverChange}
+        onCompanionActivate={onCompanionActivate} />
+      <DestinationHotspots reducedMotion={reducedMotion} active={hotspotsActive} onOpen={onOpenDestination}
+        companionInteractive={companionInteractive}
+        companionHovered={companionHovered} onCompanionActivate={onCompanionActivate}
+        onCompanionHoverChange={onCompanionHoverChange} />
       <Football active={roomActive && phase === 'exploring' && navigationMode === 'explore'} reducedMotion={reducedMotion} />
       <SceneLighting motion={motion} />
       <SceneReadiness onGate={onGate} onReadiness={onReadiness} onProgress={onProgress} onFailure={onFailure} />

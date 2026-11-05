@@ -1,21 +1,99 @@
 'use client';
 import { useEffect, useMemo, useRef } from 'react';
 import { addAfterEffect, useFrame, useThree } from '@react-three/fiber';
-import { MathUtils, PerspectiveCamera, Vector3, Euler, Quaternion } from 'three';
+import { Box3, MathUtils, PerspectiveCamera, Vector3, Euler, Quaternion } from 'three';
+import type { Object3D } from 'three';
 import { gsap } from 'gsap';
 import { hotspotNavigation, type HotspotNavigationMode } from '@/lib/hotspot-navigation';
 import { cameraAnchors } from '@/lib/room-config';
 import type { MutableRefObject } from 'react';
 import { bikeReview, phone, room, type ReviewView } from '@/lib/room-config';
-import { freeLook, roomCursor, type CameraMode, type EntrancePhase } from '@/lib/room-state';
+import { freeLook, roomCursor, type CameraMode, type CompanionFocusState, type EntrancePhase } from '@/lib/room-state';
 import { entrance, poseValues, type EntranceMotion } from '@/lib/entrance';
 import { getHotspotDestination } from '@/lib/hotspot-destinations';
 
-export default function CameraRig({ view, phase, reducedMotion, motion, onGesture, navigationMode, onNavigationSettled, directStart, directDestinationId, roomActive }: {
+type CompanionCameraSnapshot = {
+  position: Vector3;
+  quaternion: Quaternion;
+  fov: number;
+  current: { yaw: number; pitch: number; lens: number };
+  target: { yaw: number; pitch: number; lens: number };
+};
+
+type CompanionCameraMotion = {
+  position: Vector3;
+  destination: Vector3;
+  from: Quaternion;
+  to: Quaternion;
+  fov: number;
+  progress: number;
+};
+
+function getMobileCompanionFraming(camera: PerspectiveCamera, width: number, height: number, robot: Object3D, head: Object3D, eyes: Object3D) {
+  const headBounds = new Box3().setFromObject(head, true);
+  const eyesBounds = new Box3().setFromObject(eyes, true);
+  if (headBounds.isEmpty() || eyesBounds.isEmpty()) return null;
+
+  const eyeCenter = eyesBounds.getCenter(new Vector3());
+  const orientation = robot.getWorldQuaternion(new Quaternion());
+  const forward = new Vector3(0, 0, 1).applyQuaternion(orientation).normalize();
+  const corners = [
+    new Vector3(headBounds.min.x, headBounds.min.y, headBounds.min.z),
+    new Vector3(headBounds.min.x, headBounds.min.y, headBounds.max.z),
+    new Vector3(headBounds.min.x, headBounds.max.y, headBounds.min.z),
+    new Vector3(headBounds.min.x, headBounds.max.y, headBounds.max.z),
+    new Vector3(headBounds.max.x, headBounds.min.y, headBounds.min.z),
+    new Vector3(headBounds.max.x, headBounds.min.y, headBounds.max.z),
+    new Vector3(headBounds.max.x, headBounds.max.y, headBounds.min.z),
+    new Vector3(headBounds.max.x, headBounds.max.y, headBounds.max.z),
+  ];
+  const sheetHeight = Math.min(Math.max(height * 0.44, 300), 430);
+  const sheetTop = 1 - sheetHeight / height;
+  const frameTop = 0.06;
+  const frameBottom = sheetTop - 0.07;
+  const eyeScreenY = Math.min(0.32, frameBottom - 0.15);
+  const verticalTangent = Math.tan(MathUtils.degToRad(camera.fov) / 2);
+  const framingCamera = camera.clone();
+  framingCamera.aspect = width / height;
+  framingCamera.updateProjectionMatrix();
+
+  for (let distance = 0.22; distance <= 4; distance *= 1.08) {
+    const position = eyeCenter.clone().addScaledVector(forward, distance);
+    const aimDrop = (1 - 2 * eyeScreenY) * distance * verticalTangent;
+    const aimPoint = eyeCenter.clone().add(new Vector3(0, -aimDrop, 0));
+    framingCamera.position.copy(position);
+    framingCamera.lookAt(aimPoint);
+    framingCamera.updateMatrixWorld(true);
+
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const corner of corners) {
+      const projected = corner.clone().project(framingCamera);
+      const screenX = (projected.x + 1) / 2;
+      const screenY = (1 - projected.y) / 2;
+      minX = Math.min(minX, screenX);
+      maxX = Math.max(maxX, screenX);
+      minY = Math.min(minY, screenY);
+      maxY = Math.max(maxY, screenY);
+    }
+
+    if (minX >= 0.06 && maxX <= 0.94 && minY >= frameTop && maxY <= frameBottom) {
+      return { position, rotation: framingCamera.quaternion.clone() };
+    }
+  }
+  return null;
+}
+
+export default function CameraRig({ view, phase, reducedMotion, motion, onGesture, navigationMode, onNavigationSettled, directStart, directDestinationId, roomActive, companionFocus, onCompanionFocusSettled, onCompanionFocusFailed }: {
   view: ReviewView; phase: EntrancePhase; reducedMotion: boolean; motion: MutableRefObject<EntranceMotion>;
   roomActive: boolean;
   directStart: boolean; directDestinationId: string; onGesture: () => void;
   navigationMode: HotspotNavigationMode; onNavigationSettled: () => void;
+  companionFocus: CompanionFocusState;
+  onCompanionFocusSettled: (direction: 'opening' | 'closing') => void;
+  onCompanionFocusFailed: (error: Error) => void;
 }) {
   const { gl, size, invalidate, camera, scene } = useThree();
   const pose = view === 'bike' ? bikeReview : room.home;
@@ -32,6 +110,9 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
   }), [gl]);
   const projectFrame = useRef<(() => void) | null>(null);
   const navigationMotion = useRef<{ position: Vector3; from: Quaternion; to: Quaternion; fov: number; progress: number } | null>(null);
+  const companionCameraMotion = useRef<CompanionCameraMotion | null>(null);
+  const companionSnapshot = useRef<CompanionCameraSnapshot | null>(null);
+  const companionLayout = useRef<{ width: number; height: number } | null>(null);
   const restoredPosition = useRef<Vector3 | null>(null);
   const restoredFov = useRef<number | null>(null);
   const mode = useRef<CameraMode>('transition');
@@ -55,6 +136,133 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       if (hotspotNavigation.captureCurrentPose === captureCurrentPose) hotspotNavigation.captureCurrentPose = null;
     };
   }, [camera]);
+  useEffect(() => {
+    if (companionFocus === 'closed') {
+      if (phase === 'exploring' && navigationMode === 'explore') mode.current = 'explore';
+      return;
+    }
+
+    mode.current = 'focus';
+    roomCursor.active = false;
+    roomCursor.dragging = false;
+    dragging.current = false;
+    if (!(camera instanceof PerspectiveCamera) || phase !== 'exploring') return;
+    if (companionFocus === 'open' && companionLayout.current?.width === size.width) return;
+
+    const snapshot = companionSnapshot.current;
+    if (companionFocus === 'opening' && !snapshot) {
+      companionSnapshot.current = {
+        position: camera.position.clone(),
+        quaternion: camera.quaternion.clone(),
+        fov: camera.fov,
+        current: { ...current.current },
+        target: { ...target.current },
+      };
+    }
+    const saved = companionSnapshot.current;
+    if (!saved) {
+      const error = new Error('The previous camera view for the AI Companion could not be restored.');
+      console.error('AI Companion camera focus failed:', error);
+      onCompanionFocusFailed(error);
+      return;
+    }
+
+    let destination: Vector3;
+    let destinationRotation: Quaternion;
+    if (companionFocus !== 'closing') {
+      scene.updateMatrixWorld(true);
+      const robot = scene.getObjectByName('myverse_ai_companion');
+      const head = robot?.getObjectByName('head_pivot');
+      if (!robot || !head) {
+        const error = new Error('The MyVerse AI Companion or its head focus point is missing from the room scene.');
+        console.error('AI Companion camera focus failed:', error);
+        current.current = { ...saved.current };
+        target.current = { ...saved.target };
+        restoredPosition.current = saved.position.clone();
+        restoredFov.current = saved.fov - saved.current.lens;
+        companionSnapshot.current = null;
+        companionLayout.current = null;
+        onCompanionFocusFailed(error);
+        return;
+      }
+
+      const mobile = size.width <= 820 ||
+        (size.width <= 960 && gl.domElement.ownerDocument.defaultView?.matchMedia('(pointer: coarse)').matches === true);
+      if (mobile) {
+        const eyes = robot.getObjectByName('head_pivot_eyes_cyan');
+        const framing = eyes && getMobileCompanionFraming(camera, size.width, size.height, robot, head, eyes);
+        if (!framing) {
+          const error = new Error('The MyVerse AI Companion head and eyes could not be framed above the mobile chat sheet.');
+          console.error('AI Companion camera focus failed:', error);
+          current.current = { ...saved.current };
+          target.current = { ...saved.target };
+          restoredPosition.current = saved.position.clone();
+          restoredFov.current = saved.fov - saved.current.lens;
+          companionSnapshot.current = null;
+          companionLayout.current = null;
+          onCompanionFocusFailed(error);
+          return;
+        }
+        destination = framing.position;
+        destinationRotation = framing.rotation;
+      } else {
+        const focusTarget = head.getWorldPosition(new Vector3());
+        const orientation = robot.getWorldQuaternion(new Quaternion());
+        const forward = new Vector3(0, 0, 1).applyQuaternion(orientation).normalize();
+        const right = new Vector3(1, 0, 0).applyQuaternion(orientation).normalize();
+        focusTarget.addScaledVector(right, 0.19);
+        destination = focusTarget.clone().addScaledVector(forward, 0.72);
+        destination.y += 0.025;
+        const lookCamera = camera.clone();
+        lookCamera.position.copy(destination);
+        lookCamera.lookAt(focusTarget);
+        destinationRotation = lookCamera.quaternion.clone();
+      }
+    } else {
+      destination = saved.position.clone();
+      destinationRotation = saved.quaternion.clone();
+    }
+
+    const values: CompanionCameraMotion = {
+      position: camera.position.clone(),
+      destination,
+      from: camera.quaternion.clone(),
+      to: destinationRotation,
+      fov: camera.fov,
+      progress: 0,
+    };
+    companionCameraMotion.current = values;
+    const finish = () => {
+      companionCameraMotion.current = null;
+      if (companionFocus !== 'closing') {
+        companionLayout.current = { width: size.width, height: size.height };
+        if (companionFocus === 'opening') onCompanionFocusSettled('opening');
+        return;
+      }
+      current.current = { ...saved.current };
+      target.current = { ...saved.target };
+      restoredPosition.current = saved.position.clone();
+      restoredFov.current = saved.fov - saved.current.lens;
+      companionSnapshot.current = null;
+      companionLayout.current = null;
+      onCompanionFocusSettled('closing');
+      invalidate();
+    };
+    const timeline = gsap.timeline({
+      onUpdate: invalidate,
+      onComplete: finish,
+    });
+    timeline.to(values, { progress: 1, duration: reducedMotion ? 0.01 : 0.95, ease: 'power3.inOut' }, 0);
+    const settleWhenHidden = () => {
+      if (document.hidden) timeline.progress(1);
+    };
+    document.addEventListener('visibilitychange', settleWhenHidden);
+    return () => {
+      document.removeEventListener('visibilitychange', settleWhenHidden);
+      timeline.kill();
+      if (companionCameraMotion.current === values) companionCameraMotion.current = null;
+    };
+  }, [camera, companionFocus, gl, invalidate, navigationMode, onCompanionFocusFailed, onCompanionFocusSettled, phase, reducedMotion, scene, size.height, size.width]);
   useEffect(() => {
     mode.current = phase === 'exploring' ? 'explore' : 'transition';
     Object.assign(target.current, { yaw: 0, pitch: 0, lens: 0 });
@@ -155,7 +363,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     canvas.setAttribute('aria-hidden', phase === 'exploring' ? 'false' : 'true');
     canvas.setAttribute('role', 'region');
     canvas.setAttribute('aria-label', 'Interactive room. Drag or swipe to look around. Arrow keys to look; Home to reset.');
-    if (!roomActive || phase !== 'exploring' || navigationMode !== 'explore') return;
+    if (!roomActive || phase !== 'exploring' || navigationMode !== 'explore' || companionFocus !== 'closed') return;
     let pointer: { id: number; x: number; y: number; startX: number; startY: number; type: string } | null = null;
     const updateCursor = (event: PointerEvent, dragging: boolean) => {
       if (event.pointerType !== 'mouse') return;
@@ -230,9 +438,18 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       canvas.removeEventListener('pointerenter', enter); canvas.removeEventListener('pointerleave', leave);
       canvas.removeEventListener('lostpointercapture', up); canvas.removeEventListener('click', click, true); canvas.removeEventListener('keydown', key);
     };
-  }, [roomActive, phase, navigationMode, gl, invalidate, onGesture, motion]);
+  }, [roomActive, phase, navigationMode, companionFocus, gl, invalidate, onGesture, motion]);
   useFrame(({ camera }, delta) => {
     if (!(camera instanceof PerspectiveCamera)) return;
+    if (companionFocus !== 'closed') {
+      const values = companionCameraMotion.current;
+      if (values) {
+        camera.position.lerpVectors(values.position, values.destination, values.progress);
+        camera.quaternion.slerpQuaternions(values.from, values.to, values.progress);
+        if (camera.fov !== values.fov) { camera.fov = values.fov; camera.updateProjectionMatrix(); }
+      }
+      return;
+    }
     if (mode.current === 'focus') {
       if (projectFrame.current) {
         projectFrame.current();

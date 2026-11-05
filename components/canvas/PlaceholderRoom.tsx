@@ -25,9 +25,12 @@ function Window() {
   </group>;
 }
 
-export default function PlaceholderRoom({ chairActive, pcActive, clockActive, companionActive, reducedMotion, onGesture, motion }: {
-  chairActive: boolean; pcActive: boolean; clockActive: boolean; companionActive: boolean; reducedMotion: boolean; onGesture: () => void;
+export default function PlaceholderRoom({ chairActive, pcActive, clockActive, companionActive, companionInteractive, reducedMotion, onGesture, motion, companionInteractionSignal, companionHovered, onCompanionHoverChange, onCompanionActivate }: {
+  chairActive: boolean; pcActive: boolean; clockActive: boolean; companionActive: boolean; companionInteractive: boolean; reducedMotion: boolean; onGesture: () => void;
   motion: RefObject<EntranceMotion>;
+  companionInteractionSignal: number; companionHovered: boolean;
+  onCompanionHoverChange: (source: 'robot' | 'hotspot', hovered: boolean) => void;
+  onCompanionActivate: () => void;
 }) {
   const { width: w, depth: d, height: h } = room;
   return <group name="room_root">
@@ -41,7 +44,10 @@ export default function PlaceholderRoom({ chairActive, pcActive, clockActive, co
     {Array.from({ length: 8 }, (_, i) => <Box key={`z${i}`} position={[0, 0.002, -d / 2 + i * 0.65]} size={[w, 0.003, 0.006]} color="#8e918c" />)}
     <Box name="carpet" position={[0, 0.014, -0.7]} size={[3.3, 0.025, 2.55]} color="#4b5050" />
     <Box position={[0, 0.09, -d / 2 + 0.012]} size={[w, 0.18, 0.035]} color="#525b5b" />
-    <Window /><Workstation active={pcActive} companionActive={companionActive} reducedMotion={reducedMotion} motion={motion} /><InteractiveChair active={chairActive} reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} /><Guitars /><Barstool /><GuitarTrackLight /><LeftWallFeature active={clockActive} /><Pegboard /><CyclingTriptych /><Bike />
+    <Window /><Workstation active={pcActive} companionActive={companionActive} companionInteractive={companionInteractive} reducedMotion={reducedMotion} motion={motion}
+      companionInteractionSignal={companionInteractionSignal} companionHovered={companionHovered} onCompanionHoverChange={onCompanionHoverChange}
+      onCompanionActivate={onCompanionActivate} />
+    <InteractiveChair active={chairActive} reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} /><Guitars /><Barstool /><GuitarTrackLight /><LeftWallFeature active={clockActive} /><Pegboard /><CyclingTriptych /><Bike />
     <FloorLamp />
     {Object.entries(cameraAnchors).map(([name, pose]) => <object3D key={name} name={name} position={pose.position} userData={{ lookAtTarget: pose.target }} />)}
   </group>;

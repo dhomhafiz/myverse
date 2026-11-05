@@ -9,9 +9,12 @@ import { hotspotDestinations } from '@/lib/hotspot-destinations';
 import type { HotspotDestination } from '@/lib/hotspot-destinations';
 
 const destinations: HotspotDestination[] = Object.values(hotspotDestinations);
+const noCompanionOutline: readonly string[] = [];
 
-export default function DestinationHotspots({ active, reducedMotion, onOpen }: {
+export default function DestinationHotspots({ active, reducedMotion, onOpen, companionInteractive, companionHovered, onCompanionActivate, onCompanionHoverChange }: {
   active: boolean; reducedMotion: boolean; onOpen: (destinationId: string) => void;
+  companionInteractive: boolean; companionHovered: boolean; onCompanionActivate: () => void;
+  onCompanionHoverChange: (source: 'hotspot', hovered: boolean) => void;
 }) {
   const { gl, camera, scene } = useThree();
   const [hovered, setHovered] = useState<string | null>(null);
@@ -78,19 +81,35 @@ export default function DestinationHotspots({ active, reducedMotion, onOpen }: {
     };
   }, [active, onOpen, gl, camera, scene]);
 
-  return destinations.map(destination => (
+  return <>
+    {destinations.map(destination => (
+      <HotspotIndicator
+        key={destination.id}
+        target={destination.transitionAnchor}
+        outlineTargets={destination.outlineTargets}
+        anchor={destination.beaconAnchor}
+        position={destination.beaconPosition}
+        caption={destination.caption}
+        ariaLabel={destination.accessibleLabel}
+        active={active}
+        reducedMotion={reducedMotion}
+        highlighted={hovered === destination.id}
+        onActivate={activate.get(destination.id) ?? (() => onOpen(destination.id))}
+      />
+    ))}
     <HotspotIndicator
-      key={destination.id}
-      target={destination.transitionAnchor}
-      outlineTargets={destination.outlineTargets}
-      anchor={destination.beaconAnchor}
-      position={destination.beaconPosition}
-      caption={destination.caption}
-      ariaLabel={destination.accessibleLabel}
-      active={active}
+      target="myverse_ai_companion"
+      anchor="myverse_ai_companion_hotspot_anchor"
+      position={[0, 0, 0]}
+      outlineTargets={noCompanionOutline}
+      caption="AI COMPANION"
+      ariaLabel="Interact with MyVerse AI Companion"
+      active={companionInteractive}
       reducedMotion={reducedMotion}
-      highlighted={hovered === destination.id}
-      onActivate={activate.get(destination.id) ?? (() => onOpen(destination.id))}
+      highlighted={companionHovered}
+      repeatActivations
+      onActivate={onCompanionActivate}
+      onHoverChange={hovered => onCompanionHoverChange('hotspot', hovered)}
     />
-  ));
+  </>;
 }
