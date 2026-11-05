@@ -7,12 +7,13 @@ import { hotspotNavigation, type HotspotNavigationMode } from '@/lib/hotspot-nav
 import { cameraAnchors } from '@/lib/room-config';
 import type { MutableRefObject } from 'react';
 import { bikeReview, phone, room, type ReviewView } from '@/lib/room-config';
-import { freeLook, type CameraMode, type EntrancePhase } from '@/lib/room-state';
+import { freeLook, roomCursor, type CameraMode, type EntrancePhase } from '@/lib/room-state';
 import { entrance, poseValues, type EntranceMotion } from '@/lib/entrance';
 import { getHotspotDestination } from '@/lib/hotspot-destinations';
 
-export default function CameraRig({ view, phase, reducedMotion, motion, onGesture, navigationMode, onNavigationSettled, directStart, directDestinationId }: {
+export default function CameraRig({ view, phase, reducedMotion, motion, onGesture, navigationMode, onNavigationSettled, directStart, directDestinationId, roomActive }: {
   view: ReviewView; phase: EntrancePhase; reducedMotion: boolean; motion: MutableRefObject<EntranceMotion>;
+  roomActive: boolean;
   directStart: boolean; directDestinationId: string; onGesture: () => void;
   navigationMode: HotspotNavigationMode; onNavigationSettled: () => void;
 }) {
@@ -148,12 +149,23 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
   }, [navigationMode, phase, camera, invalidate, reducedMotion, onNavigationSettled, base, pose, size.width, size.height, scene]);
   useEffect(() => {
     const canvas = gl.domElement;
+    roomCursor.active = false;
+    roomCursor.dragging = false;
     canvas.setAttribute('tabindex', phase === 'exploring' ? '0' : '-1');
     canvas.setAttribute('aria-hidden', phase === 'exploring' ? 'false' : 'true');
     canvas.setAttribute('role', 'region');
     canvas.setAttribute('aria-label', 'Interactive room. Drag or swipe to look around. Arrow keys to look; Home to reset.');
-    if (phase !== 'exploring' || navigationMode !== 'explore') return;
-    let pointer: { id: number; x: number; y: number; startX: number; startY: number } | null = null;
+    if (!roomActive || phase !== 'exploring' || navigationMode !== 'explore') return;
+    let pointer: { id: number; x: number; y: number; startX: number; startY: number; type: string } | null = null;
+    const updateCursor = (event: PointerEvent, dragging: boolean) => {
+      if (event.pointerType !== 'mouse') return;
+      const bounds = canvas.getBoundingClientRect();
+      roomCursor.x = MathUtils.clamp(((event.clientX - bounds.left) / bounds.width) * 2 - 1, -1, 1);
+      roomCursor.y = MathUtils.clamp(1 - ((event.clientY - bounds.top) / bounds.height) * 2, -1, 1);
+      roomCursor.active = event.clientX >= bounds.left && event.clientX <= bounds.right &&
+        event.clientY >= bounds.top && event.clientY <= bounds.bottom;
+      roomCursor.dragging = dragging;
+    };
     const rotate = (dx: number, dy: number) => {
       target.current.yaw = MathUtils.clamp(target.current.yaw + dx * 0.003, freeLook.minYaw, freeLook.maxYaw);
       target.current.pitch = MathUtils.clamp(target.current.pitch + dy * 0.003, freeLook.minPitch, freeLook.maxPitch);
@@ -161,23 +173,33 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     };
     const down = (event: PointerEvent) => {
       if (mode.current !== 'explore' || !event.isPrimary || event.button !== 0) return;
-      pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, startX: event.clientX, startY: event.clientY };
+      pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, startX: event.clientX, startY: event.clientY, type: event.pointerType };
+      if (event.pointerType !== 'mouse') roomCursor.active = false;
       dragging.current = false; canvas.setPointerCapture(event.pointerId);
     };
     const move = (event: PointerEvent) => {
+      updateCursor(event, dragging.current);
       if (!pointer || event.pointerId !== pointer.id || mode.current !== 'explore') return;
       const dx = event.clientX - pointer.x, dy = event.clientY - pointer.y;
       if (!dragging.current && Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY) >= freeLook.dragThreshold) {
         dragging.current = true; canvas.classList.add('is-dragging'); onGesture();
+        roomCursor.dragging = true;
       }
       if (dragging.current) rotate(dx, dy);
       pointer.x = event.clientX; pointer.y = event.clientY;
     };
     const up = (event: PointerEvent) => {
       if (!pointer || event.pointerId !== pointer.id) return;
+      const wasCancelled = event.type === 'pointercancel';
+      const pointerType = pointer.type;
       if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
       pointer = null; canvas.classList.remove('is-dragging');
+      roomCursor.dragging = false;
+      if (wasCancelled || pointerType !== 'mouse') roomCursor.active = false;
+      else updateCursor(event, false);
     };
+    const enter = (event: PointerEvent) => updateCursor(event, dragging.current);
+    const leave = (event: PointerEvent) => { if (event.pointerType === 'mouse') roomCursor.active = false; };
     const click = (event: MouseEvent) => {
       // Retained until the click event so future hotspot handlers cannot mistake a drag for a click.
       if (dragging.current) { event.preventDefault(); event.stopImmediatePropagation(); }
@@ -193,17 +215,22 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     };
     canvas.addEventListener('pointerdown', down); canvas.addEventListener('pointermove', move);
     canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+    canvas.addEventListener('pointerenter', enter); canvas.addEventListener('pointerleave', leave);
     canvas.addEventListener('lostpointercapture', up); canvas.addEventListener('click', click, true); canvas.addEventListener('keydown', key);
-    const blur = () => { pointer = null; dragging.current = false; canvas.classList.remove('is-dragging'); };
+    const blur = () => {
+      pointer = null; dragging.current = false; roomCursor.active = false; roomCursor.dragging = false;
+      canvas.classList.remove('is-dragging');
+    };
     window.addEventListener('blur', blur);
     return () => {
       if (pointer && canvas.hasPointerCapture(pointer.id)) canvas.releasePointerCapture(pointer.id);
       blur(); window.removeEventListener('blur', blur);
       canvas.removeEventListener('pointerdown', down); canvas.removeEventListener('pointermove', move);
       canvas.removeEventListener('pointerup', up); canvas.removeEventListener('pointercancel', up);
+      canvas.removeEventListener('pointerenter', enter); canvas.removeEventListener('pointerleave', leave);
       canvas.removeEventListener('lostpointercapture', up); canvas.removeEventListener('click', click, true); canvas.removeEventListener('keydown', key);
     };
-  }, [phase, navigationMode, gl, invalidate, onGesture]);
+  }, [roomActive, phase, navigationMode, gl, invalidate, onGesture, motion]);
   useFrame(({ camera }, delta) => {
     if (!(camera instanceof PerspectiveCamera)) return;
     if (mode.current === 'focus') {

@@ -1019,3 +1019,33 @@ Phase 1 stops at static model integration. No idle animation, blinking, head/cur
 - **Browser validation:** after a fresh load of the updated development build, three desktop `/work` → ReturnToRoom cycles each waited 10–12 seconds; a screenshot after return showed the clock at current local time with seconds advancing normally. ReturnToRoom from `/about`, `/skills` and `/contact` returned to the room in the exploring phase. At 390 × 844 and 360 × 800, the room Canvas filled the viewport and keyboard Free Look remained responsive. These were browser viewport checks, not physical-device tests; the default mobile camera framing does not show the left-wall clock.
 - **Tab visibility:** not confirmed end-to-end. The integrated browser kept the original room page at `document.visibilityState === 'hidden'` after opening another page, and its foreground-switch operation did not make it visible again. The visibility listener still refreshes from `new Date()` when the document reports visible.
 - **Console and limitations:** no new runtime errors were observed. Existing `THREE.Clock` deprecation, WebGL `GL_INVALID_VALUE`, and font-preload warnings appeared during browser runs. No physical mobile device, minute-rollover control, or reduced-motion-specific clock test was available.
+
+# MyVerse AI Companion — Phase 2A: Character Personality
+
+Implemented locally on 2026-11-05. The GLB asset, workstation placement, orientation, and existing room power sequence remain unchanged.
+
+## GLB hierarchy and animation limits
+
+- The original `public/models/myverse_ai_companion_v1.glb` is preserved byte-for-byte; SHA-256 remains `29519f9017c7e46e2a6d99898a4c34e1dac95e54f2d34ed72dce5136a832e6d2`.
+- The loaded hierarchy contains `world`, `head_pivot` at model-local `[0, 0.197, 0]`, `left_arm_pivot` at `[-0.068, 0.132, 0]`, and `right_arm_pivot` at `[0.068, 0.132, 0]`. All pivots have neutral local axes; the face points along local +Z.
+- The head subtree bounds are approximately `[-0.13, 0.173, -0.089]` to `[0.13, 0.373, 0.0993]` in model space. The visor and eye meshes are children of the actual head pivot, so head rotation does not orbit around the desk base.
+- The cyan eyes are one 1,076-vertex mesh pair within the black visor. Its measured bounds are approximately `0.1114 × 0.0139 × 0.0066` model units. The asset contains no animation clips, so facial motion is applied non-destructively at runtime.
+
+## Phase 2A behavior
+
+- **Idle:** only the existing head pivot moves. Random idle targets are held for roughly 2.5–6.5 seconds and smoothly damped; yaw stays within ±0.10 rad, pitch within ±0.06 rad, and roll within ±0.035 rad. The torso, base, and resting arms do not move.
+- **Blink:** a lightweight runtime group is placed at the eye mesh's measured center while preserving its original transform. Its Y scale closes to 3% over 80 ms, holds for 30 ms, and reopens over 130 ms. Blinks occur at irregular 3–7 second intervals with an occasional short double blink. The existing cyan material and visor remain in place.
+- **Desktop gaze:** the existing Free Look pointer handlers publish normalized mouse coordinates to the room cursor state. A camera ray intersects a plane through the head and perpendicular to the current camera; the resulting direction is transformed into the companion's local frame. Head tracking is bounded to ±0.40 rad yaw and ±0.22 rad pitch; subtle eye translation leads the head and is damped independently.
+- **Free Look priority:** cursor tracking is disabled after the existing drag threshold is crossed and resumes through the same smooth head damping after pointer up. Pointer cancel, leave, lost capture, blur, room deactivation, and listener cleanup clear or suspend the cursor state. No input is prevented and no touch tracking is added.
+- **Lifecycle and power:** animation runs only in the active Home room's exploring state. Eye movement/blinking also waits until the existing room-light channel reaches 0.95; the authored emissive still uses `SceneLighting`, so the power-on cinematic timing is unchanged. Hidden documents pause updates and request a frame when visible again.
+- **Mobile and reduced motion:** touch never updates gaze; mobile keeps idle and blink behavior. Reduced motion leaves the head and eyes in their stable resting pose while preserving the original power-controlled emissive.
+- **Performance:** one R3F `useFrame` callback uses mutable refs and preallocated Three.js scratch objects. There are no React updates per frame, dependencies, new textures, rebuilt geometry, extra renderer/lights, or body-motion transforms. Updates are gated to the active Home room and visible document.
+
+## Validation and phase boundary
+
+- **Technical validation:** `npm.cmd run typecheck`, focused ESLint for all six changed TypeScript files, `npm.cmd run build` (14 static pages), `npm.cmd run check:export` (10 routes, 24 production assets, 14 excluded assets absent), and `git diff --check` passed. The original GLB SHA-256 was rechecked after the build and is unchanged.
+- **Desktop browser:** at 1440×900, the powered-on room screenshot showed the companion on its existing workstation position. At 1920×1080, the Canvas filled the viewport; a simulated mouse drag set and cleared the existing `is-dragging` class. No browser errors were recorded during interaction.
+- **Mobile viewport:** the Canvas filled 390×844 and 360×800. The 390×844 screenshot confirms the existing mobile Home camera crops the companion out of view. Its idle/blink animation therefore could not be visually checked on that framing; the approved camera, position, and orientation were left unchanged. No physical touch-device test was available.
+- **Reduced motion and navigation:** browser media emulation set `data-reduced-motion="true"`. Two Work → Return to 3D Room cycles returned to the exploring state with exactly one Canvas each time. This was browser viewport emulation, not physical-device coverage.
+- **Console:** no new browser errors appeared during the exercised interactions. Existing page output includes the project's `THREE.Clock` deprecation and WebGL `GL_INVALID_VALUE` warnings; they were not introduced or modified by this phase.
+- **Deferred:** Phase 2B gestures, robot interaction/hotspot, chat UI, touch-to-chat, voice, AI services, and backend features were not implemented.

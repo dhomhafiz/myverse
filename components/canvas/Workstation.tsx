@@ -21,8 +21,8 @@ function Monitor({ name, x, yaw, active, reducedMotion }: { name: string; x: num
   </group>;
 }
 
-export default function Workstation({ active, reducedMotion, motion }: {
-  active: boolean; reducedMotion: boolean; motion: RefObject<EntranceMotion>;
+export default function Workstation({ active, companionActive, reducedMotion, motion }: {
+  active: boolean; companionActive: boolean; reducedMotion: boolean; motion: RefObject<EntranceMotion>;
 }) {
   return <group {...room.desk} name="workstation">
     <Box name="desk_main" position={[0, 0.76, 0]} size={[3.05, 0.07, 0.84]} color="#c1a27b" />
@@ -43,7 +43,7 @@ export default function Workstation({ active, reducedMotion, motion }: {
     <RgbKeyboard position={[-0.42, 0.809, 0.2]} scale={1.3} />
     <GamingMouse position={[0.2, 0.797, 0.23]} />
     <GamingPc active={active} reducedMotion={reducedMotion} motion={motion} />
-    <MyVerseAICompanion />
+    <MyVerseAICompanion active={companionActive} reducedMotion={reducedMotion} motion={motion} />
     <group name={phone.name} position={phone.position} rotation={phone.rotation} scale={phone.scale} userData={{ destination: 'contact' }}>
       <group name={phone.flipPivotName}>
         <Box size={[0.08, 0.16, 0.013]} color="#787e82" />

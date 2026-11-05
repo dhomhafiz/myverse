@@ -48,10 +48,11 @@ export default function RoomCanvas({ fallback, view, phase, reducedMotion, onRea
       <directionalLight name="room_directional_light" position={[-2, 4, 1]} intensity={2.1} color="#e0e8ec" castShadow
         shadow-mapSize={[1024, 1024]} shadow-camera-left={-4} shadow-camera-right={4}
         shadow-camera-top={4} shadow-camera-bottom={-4} shadow-bias={-0.001} />
-      <CameraRig directStart={directStart} directDestinationId={directDestinationId} view={view} phase={phase} reducedMotion={reducedMotion} motion={motion} onGesture={onGesture} navigationMode={navigationMode} onNavigationSettled={onNavigationSettled} />
+      <CameraRig directStart={directStart} directDestinationId={directDestinationId} view={view} phase={phase} reducedMotion={reducedMotion} motion={motion} onGesture={onGesture} navigationMode={navigationMode} onNavigationSettled={onNavigationSettled} roomActive={roomActive} />
       <PlaceholderRoom chairActive={roomActive && phase === 'exploring' && navigationMode === 'explore'} pcActive={roomActive && (phase === 'entering' || (phase === 'exploring' && navigationMode === 'explore'))}
         clockActive={(roomActive && (phase === 'entering' || (phase === 'exploring' && navigationMode === 'explore'))) ||
           (phase === 'exploring' && navigationMode === 'returning')}
+        companionActive={roomActive && view === 'home' && phase === 'exploring' && navigationMode === 'explore'}
         reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} />
       <DestinationHotspots reducedMotion={reducedMotion} active={roomActive && phase === 'exploring' && navigationMode === 'explore'} onOpen={onOpenDestination} />
       <Football active={roomActive && phase === 'exploring' && navigationMode === 'explore'} reducedMotion={reducedMotion} />
