@@ -47,11 +47,14 @@ function getMobileCompanionFraming(camera: PerspectiveCamera, width: number, hei
     new Vector3(headBounds.max.x, headBounds.max.y, headBounds.min.z),
     new Vector3(headBounds.max.x, headBounds.max.y, headBounds.max.z),
   ];
-  const sheetHeight = Math.min(Math.max(height * 0.44, 300), 430);
+  const shortLandscape = width > height && height <= 500;
+  const sheetHeight = shortLandscape
+    ? Math.min(height * 0.7, 300)
+    : Math.min(Math.max(height * 0.44, 300), 430);
   const sheetTop = 1 - sheetHeight / height;
   const frameTop = 0.06;
   const frameBottom = sheetTop - 0.07;
-  const eyeScreenY = Math.min(0.32, frameBottom - 0.15);
+  const eyeScreenY = shortLandscape ? frameBottom - 0.08 : Math.min(0.32, frameBottom - 0.15);
   const verticalTangent = Math.tan(MathUtils.degToRad(camera.fov) / 2);
   const framingCamera = camera.clone();
   framingCamera.aspect = width / height;
