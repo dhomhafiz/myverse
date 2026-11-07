@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type FormEvent, type KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
+import ReactMarkdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
 import { companionConversation, CompanionChatError, MAX_COMPANION_MESSAGE_LENGTH } from '@/lib/companion-api';
 import { createCompanionRequest } from '@/lib/companion-request';
 
@@ -9,13 +11,20 @@ type Message = { id: number; role: 'assistant' | 'user'; text: string };
 type ViewportMetrics = { height: number; offsetTop: number } | null;
 
 const MAX_MESSAGES = 40;
+const markdownElements = ['p', 'strong', 'em', 'ul', 'ol', 'li', 'br', 'a'];
 const subscribeToPortal = () => () => {};
 const getPortalSnapshot = () => document.body;
 const getServerPortalSnapshot = () => null;
+const isSafeMarkdownHref = (href: string) => {
+  const value = href.trim();
+  if (!value || value.startsWith('//')) return false;
+  const protocol = /^([a-z][a-z\d+.-]*):/i.exec(value)?.[1].toLowerCase();
+  return !protocol || ['http', 'https', 'mailto'].includes(protocol);
+};
 const initialMessages: Message[] = [{
   id: 0,
   role: 'assistant',
-  text: 'Hi, I’m MyVerse’s AI Companion preview. Ask me about Hafiz’s projects, skills, or contact details.',
+  text: 'Hi, I’m MyVerse’s AI Companion. Ask me about Hafiz’s projects, skills, or contact details.',
 }];
 
 export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }: {
@@ -33,6 +42,7 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
   const panel = useRef<HTMLElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const messageList = useRef<HTMLOListElement>(null);
+  const lastAutoScrolledMessage = useRef(0);
   const nextId = useRef(1);
 
   useEffect(() => () => request.cancel(), [request]);
@@ -70,8 +80,20 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
   }, [portalRoot]);
 
   useLayoutEffect(() => {
-    if (messageList.current) messageList.current.scrollTop = messageList.current.scrollHeight;
-  }, [messages, pending, error]);
+    const list = messageList.current;
+    const latest = messages[messages.length - 1];
+    if (!list || !latest || latest.id === lastAutoScrolledMessage.current) return;
+    lastAutoScrolledMessage.current = latest.id;
+    if (latest.id === 0) return;
+    if (latest.role === 'user') {
+      list.scrollTop = list.scrollHeight;
+      return;
+    }
+    const message = list.querySelector<HTMLElement>(`[data-message-id="${latest.id}"]`);
+    if (message) {
+      list.scrollTop += message.getBoundingClientRect().top - list.getBoundingClientRect().top - list.clientTop;
+    }
+  }, [messages]);
 
   const addMessage = useCallback((role: Message['role'], text: string) => {
     setMessages(current => [...current, { id: nextId.current++, role, text }].slice(-MAX_MESSAGES));
@@ -149,7 +171,8 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
   } as CSSProperties : {};
 
   return createPortal(
-    <div className="companion-chat-overlay" style={style} data-reduced-motion={reducedMotion}>
+    <div className="companion-chat-overlay" style={style} data-reduced-motion={reducedMotion}
+      data-conversation-active={messages.some(message => message.role === 'user')}>
       <div className="companion-chat-scrim" aria-hidden="true" />
       <section ref={panel} className="companion-chat-panel" role="dialog" aria-modal="true"
         aria-busy={pending}
@@ -157,7 +180,7 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
         <header className="companion-chat-header">
           <div className="companion-chat-heading">
             <p id="companion-chat-title">MYVERSE // AI COMPANION</p>
-            <p id="companion-chat-subtitle">ASK ABOUT THE CREATOR <span>· DEMO PREVIEW</span></p>
+            <p id="companion-chat-subtitle">ASK ABOUT THE CREATOR</p>
           </div>
           <button className="companion-chat-close" type="button" onClick={closeChat} aria-label="Back to Room">
             <span aria-hidden="true">×</span>
@@ -166,9 +189,20 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
         </header>
         <ol ref={messageList} className="companion-chat-messages" role="log" aria-live="polite" aria-relevant="additions">
           {messages.map(message => (
-            <li className={`companion-chat-message companion-chat-message--${message.role}`} key={message.id}>
+            <li className={`companion-chat-message companion-chat-message--${message.role}`} data-message-id={message.id} key={message.id}>
               <span className="companion-chat-sender">{message.role === 'assistant' ? 'COMPANION' : 'YOU'}</span>
-              <p>{message.text}</p>
+              {message.role === 'assistant' ? (
+                <div className="companion-chat-markdown">
+                  <ReactMarkdown remarkPlugins={[remarkBreaks]} allowedElements={markdownElements}
+                    components={{
+                      a: ({ href, children }) => isSafeMarkdownHref(href ?? '')
+                        ? <a href={href} rel="noopener noreferrer">{children}</a>
+                        : <>{children}</>,
+                    }}>
+                    {message.text}
+                  </ReactMarkdown>
+                </div>
+              ) : <p>{message.text}</p>}
             </li>
           ))}
           {pending && (
