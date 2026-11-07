@@ -124,7 +124,9 @@ export default function RoomPreview({
     if (!companionInteractive || companionFocusRef.current !== 'closed') return;
     const activeElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     companionTrigger.current = trigger ?? activeElement;
-    companionTriggerKind.current = trigger ? 'mobile' : activeElement?.classList.contains('hotspot-indicator') ? 'hotspot' : 'canvas';
+    companionTriggerKind.current = trigger?.matches('.mobile-ai-entry > button') ? 'mobile'
+      : trigger?.classList.contains('hotspot-indicator') || activeElement?.classList.contains('hotspot-indicator')
+        ? 'hotspot' : 'canvas';
     onGesture();
     setCompanionHoverSources({ robot: false, hotspot: false });
     setCompanionInteractionSignal(signal => signal + 1);
@@ -146,7 +148,8 @@ export default function RoomPreview({
     setCompanionFocus('closed');
     if (pathname !== '/' && hotspotNavigation.getMode() === 'explore') hotspotNavigation.setMode('paused');
     if (pathname === '/' && roomActive) {
-      window.requestAnimationFrame(() => {
+      const restoreFocus = (attempt = 0) => {
+        if (companionFocusRef.current !== 'closed') return;
         const trigger = companionTrigger.current?.isConnected
           ? companionTrigger.current
           : companionTriggerKind.current === 'mobile'
@@ -154,12 +157,16 @@ export default function RoomPreview({
             : companionTriggerKind.current === 'hotspot'
               ? root.current?.querySelector<HTMLElement>('.hotspot-indicator[data-target="myverse_ai_companion"]')
               : null;
-        if (trigger?.isConnected && !trigger.closest('[inert]') && trigger.getClientRects().length) {
+        if (trigger?.isConnected && !trigger.closest('[inert]') && trigger.getClientRects().length &&
+          getComputedStyle(trigger).visibility === 'visible') {
           trigger.focus({ preventScroll: true });
+        } else if (companionTriggerKind.current === 'hotspot' && attempt < 30) {
+          window.requestAnimationFrame(() => restoreFocus(attempt + 1));
         } else {
           surface.current?.querySelector('canvas')?.focus({ preventScroll: true });
         }
-      });
+      };
+      window.requestAnimationFrame(() => restoreFocus());
     }
   }, [pathname, roomActive]);
   const onCompanionFocusFailed = useCallback((error: Error) => {
