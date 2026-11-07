@@ -8,6 +8,7 @@
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
+    "test:companion": "node --experimental-strip-types --test tests/companion-chat.test.mjs",
     "check:export": "node scripts/verify-static-export.mjs"
   },
   "dependencies": {

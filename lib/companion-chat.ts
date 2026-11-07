@@ -7,12 +7,12 @@ const responseDelay = (signal: AbortSignal) => new Promise<void>((resolve, rejec
     reject(signal.reason ?? new DOMException('The demo response was cancelled.', 'AbortError'));
     return;
   }
-  const timer = window.setTimeout(() => {
+  const timer = globalThis.setTimeout(() => {
     signal.removeEventListener('abort', abort);
     resolve();
   }, 520);
   const abort = () => {
-    window.clearTimeout(timer);
+    globalThis.clearTimeout(timer);
     signal.removeEventListener('abort', abort);
     reject(signal.reason ?? new DOMException('The demo response was cancelled.', 'AbortError'));
   };

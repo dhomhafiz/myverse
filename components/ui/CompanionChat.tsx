@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type FormEvent, type KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { mockConversationProvider } from '@/lib/companion-chat';
+import { companionConversation, CompanionChatError, MAX_COMPANION_MESSAGE_LENGTH } from '@/lib/companion-api';
+import { createCompanionRequest } from '@/lib/companion-request';
 
 type Message = { id: number; role: 'assistant' | 'user'; text: string };
 type ViewportMetrics = { height: number; offsetTop: number } | null;
@@ -28,22 +29,18 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
   const [draft, setDraft] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
-  const [lastPrompt, setLastPrompt] = useState('');
+  const [request] = useState(() => createCompanionRequest(companionConversation.provider));
   const panel = useRef<HTMLElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const messageList = useRef<HTMLOListElement>(null);
-  const request = useRef<AbortController | null>(null);
-  const requestPending = useRef(false);
-  const mounted = useRef(false);
   const nextId = useRef(1);
 
-  useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-      request.current?.abort();
-    };
-  }, []);
+  useEffect(() => () => request.cancel(), [request]);
+
+  const closeChat = useCallback(() => {
+    request.cancel();
+    onClose();
+  }, [onClose, request]);
 
   useEffect(() => {
     const visualViewport = window.visualViewport;
@@ -80,43 +77,32 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
     setMessages(current => [...current, { id: nextId.current++, role, text }].slice(-MAX_MESSAGES));
   }, []);
 
-  const requestResponse = useCallback(async (prompt: string) => {
-    if (requestPending.current) return;
-    requestPending.current = true;
-    setPending(true);
-    setError('');
-    onAcknowledge();
-    const controller = new AbortController();
-    request.current = controller;
+  const requestResponse = useCallback((raw: string) => {
     try {
-      const response = await mockConversationProvider.respond(prompt, controller.signal);
-      if (mounted.current && !controller.signal.aborted) {
-        addMessage('assistant', response);
-        onAcknowledge();
-      }
+      request.submit(raw, {
+        onStart(prompt) {
+          addMessage('user', prompt);
+          setDraft('');
+          setPending(true);
+          setError('');
+          onAcknowledge();
+        },
+        onReply(response) { addMessage('assistant', response); onAcknowledge(); },
+        onError(reason, prompt) {
+          setError(reason instanceof CompanionChatError ? reason.message : 'The reply could not be loaded. Your message is still here.');
+          setDraft(current => current || prompt);
+        },
+        onSettled() { setPending(false); },
+      });
     } catch (reason) {
-      if (!controller.signal.aborted) {
-        console.error('AI Companion demo response failed:', reason);
-        if (mounted.current) setError('The demo reply could not be generated. Try again, or ask about projects, skills, or contact details.');
-      }
-    } finally {
-      if (request.current === controller) {
-        request.current = null;
-        requestPending.current = false;
-        if (mounted.current) setPending(false);
-      }
+      setError(reason instanceof CompanionChatError ? reason.message : 'That message could not be sent.');
     }
-  }, [addMessage, onAcknowledge]);
+  }, [addMessage, onAcknowledge, request]);
 
   const send = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const prompt = draft.trim();
-    if (!prompt || requestPending.current) return;
-    setLastPrompt(prompt);
-    addMessage('user', prompt);
-    setDraft('');
-    void requestResponse(prompt);
-  }, [addMessage, draft, requestResponse]);
+    requestResponse(draft);
+  }, [draft, requestResponse]);
 
   const onInputKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey && !event.altKey && !event.ctrlKey && !event.metaKey &&
@@ -131,7 +117,7 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
       if (event.key === 'Escape') {
         event.preventDefault();
         event.stopImmediatePropagation();
-        onClose();
+        closeChat();
         return;
       }
       if (event.key !== 'Tab' || !panel.current) return;
@@ -152,9 +138,11 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
     };
     window.addEventListener('keydown', handleKeyDown, true);
     return () => window.removeEventListener('keydown', handleKeyDown, true);
-  }, [onClose]);
+  }, [closeChat]);
 
   if (!portalRoot) return null;
+  const tooLong = draft.length > MAX_COMPANION_MESSAGE_LENGTH;
+  const visibleError = tooLong ? 'Please keep your message within 500 characters.' : error;
   const style: CSSProperties = viewport ? {
     '--companion-viewport-height': `${viewport.height}px`,
     '--companion-viewport-offset': `${viewport.offsetTop}px`,
@@ -164,13 +152,14 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
     <div className="companion-chat-overlay" style={style} data-reduced-motion={reducedMotion}>
       <div className="companion-chat-scrim" aria-hidden="true" />
       <section ref={panel} className="companion-chat-panel" role="dialog" aria-modal="true"
+        aria-busy={pending}
         aria-labelledby="companion-chat-title" aria-describedby="companion-chat-subtitle">
         <header className="companion-chat-header">
           <div className="companion-chat-heading">
             <p id="companion-chat-title">MYVERSE // AI COMPANION</p>
             <p id="companion-chat-subtitle">ASK ABOUT THE CREATOR <span>· DEMO PREVIEW</span></p>
           </div>
-          <button className="companion-chat-close" type="button" onClick={onClose} aria-label="Back to Room">
+          <button className="companion-chat-close" type="button" onClick={closeChat} aria-label="Back to Room">
             <span aria-hidden="true">×</span>
             <span>BACK TO ROOM</span>
           </button>
@@ -189,26 +178,28 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
             </li>
           )}
         </ol>
-        {error && (
+        {visibleError && (
           <div className="companion-chat-error" role="alert">
-            <p>{error}</p>
-            <button type="button" disabled={pending || !lastPrompt}
-              onClick={() => void requestResponse(lastPrompt)}>RETRY</button>
+            <p>{visibleError}</p>
           </div>
         )}
         <form className="companion-chat-composer" onSubmit={send}>
-          <label className="companion-visually-hidden" htmlFor="companion-chat-input">Message the AI Companion demo</label>
-          <textarea ref={input} id="companion-chat-input" value={draft} maxLength={1000} rows={2}
+          <label className="companion-visually-hidden" htmlFor="companion-chat-input">Message the AI Companion</label>
+          <textarea ref={input} id="companion-chat-input" value={draft} rows={2}
+            aria-invalid={tooLong} aria-describedby="companion-chat-limit"
             placeholder="Ask about Hafiz’s work..." onChange={event => setDraft(event.currentTarget.value)}
             onKeyDown={onInputKeyDown} />
-          <button type="submit" disabled={!draft.trim() || pending} aria-label="Send message">
+          <button type="submit" disabled={!draft.trim() || pending || tooLong} aria-label="Send message">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
               strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
               <path d="M4 12h15M13 5l7 7-7 7" />
             </svg>
           </button>
         </form>
-        <p className="companion-chat-disclaimer">PREDEFINED RESPONSES · NO LIVE AI SERVICE</p>
+        <p id="companion-chat-limit" className="companion-chat-disclaimer">{draft.length} / {MAX_COMPANION_MESSAGE_LENGTH}</p>
+        <p className="companion-chat-disclaimer">{companionConversation.mode === 'local-api'
+          ? 'PORTFOLIO FAQ · AI GENERATION DISABLED' : companionConversation.mode === 'worker-api'
+            ? 'MYVERSE COMPANION · CLOUDFLARE API' : 'PREDEFINED RESPONSES · NO LIVE AI SERVICE'}</p>
       </section>
     </div>,
     portalRoot,
