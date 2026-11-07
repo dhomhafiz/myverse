@@ -74,7 +74,7 @@ test('production Worker provider posts once and accepts FAQ or guarded AI replie
   assert.equal(await provider.respond('A question', signal()), 'A grounded reply.');
   assert.equal(calls.length, 1);
   assert.equal(calls[0][0], 'https://myverse-ai-api.example.workers.dev/api/chat');
-  assert.deepEqual(JSON.parse(calls[0][1].body), { message: 'A question' });
+  assert.deepEqual(JSON.parse(calls[0][1].body), { message: 'A question', history: [] });
   assert.equal(calls[0][1].method, 'POST');
   assert.equal(calls[0][1].credentials, 'omit');
 
@@ -97,12 +97,12 @@ test('production Worker failures are safe and never retried', async () => {
   assert.equal(calls, 1);
 });
 
-test('request serialization sends only the message, no history, model, secrets or UI state', async () => {
+test('request serialization sends empty history without a transcript, model, secrets or UI state', async () => {
   let called;
   const provider = createLocalApiProvider('http://127.0.0.1:8787', { fetchImpl: localFetch(async (...args) => { called = args; return faq('Known FAQ.'); }) });
   assert.equal(await provider.respond(' Who is Hafiz? ', signal()), 'Known FAQ.');
   assert.equal(called[0], 'http://127.0.0.1:8787/api/chat');
-  assert.deepEqual(JSON.parse(called[1].body), { message: 'Who is Hafiz?' });
+  assert.deepEqual(JSON.parse(called[1].body), { message: 'Who is Hafiz?', history: [] });
   assert.deepEqual(called[1].headers, { 'Content-Type': 'application/json' });
   assert.equal(called[1].credentials, 'omit');
   assert.equal(called[1].redirect, 'error');

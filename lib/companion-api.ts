@@ -2,7 +2,7 @@ import { mockConversationProvider, type ConversationProvider } from './companion
 
 export const MAX_COMPANION_MESSAGE_LENGTH = 500;
 export const COMPANION_CLIENT_TIMEOUT_MS = 10_000;
-export type CompanionRequest = { message: string };
+export type CompanionRequest = { message: string; history: [] };
 export type CompanionResponse = { success: true; reply: string; source: 'faq' | 'ai' };
 type Failure = 'empty' | 'length' | 'configuration' | 'timeout' | 'network' | 'malformed' | '400' | '429' | '503';
 const messages: Record<Failure, string> = {
@@ -63,7 +63,7 @@ function createApiProvider(origin: string, options: { fetchImpl?: typeof fetch; 
   if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 15_000) throw new CompanionChatError('configuration');
   return {
     async respond(raw, signal) {
-      const payload: CompanionRequest = { message: validateCompanionPrompt(raw) };
+      const payload: CompanionRequest = { message: validateCompanionPrompt(raw), history: [] };
       const controller = new AbortController();
       let timer: ReturnType<typeof setTimeout> | undefined;
       let cancel: () => void = () => {};
