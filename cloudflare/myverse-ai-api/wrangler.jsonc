@@ -1,0 +1,44 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "myverse-ai-api",
+  "workers_dev": true,
+  "preview_urls": false,
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-05",
+  "durable_objects": {
+    "bindings": [
+      { "name": "AI_BUDGET_CONTROLLER", "class_name": "AiBudgetController" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["AiBudgetController"] }
+  ],
+  "ai": { "binding": "AI" },
+  "ratelimits": [
+    {
+      "name": "CHAT_RATE_LIMITER",
+      // Locally selected namespace; verify it is unused in the account before deployment.
+      "namespace_id": "41001",
+      "simple": { "limit": 6, "period": 60 }
+    }
+  ],
+  "vars": {
+    "AI_MODEL": "@cf/google/gemma-4-26b-a4b-it",
+    "AI_ENABLED": "false",
+    "AI_DAILY_ESTIMATED_NEURON_BUDGET": "2000",
+    "AI_MAX_CONCURRENT_INFERENCES": "1",
+    "LOCAL_DEV_ORIGINS": ""
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.1,
+    "redact_query_string": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+      "persist": true
+    },
+    "traces": { "enabled": false },
+    "issues": { "enabled": false }
+  }
+}

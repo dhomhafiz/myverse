@@ -1,0 +1,11 @@
+node_modules/
+*.log
+.wrangler/
+.dev.vars*
+.env*
+bench/acceptance-results/
+bench/phase-4b*-results-*.json
+bench/*-acceptance-*.json
+bench/qwen-live-verification-*.json
+bench/reliability-*.json
+bench/results-*.json
