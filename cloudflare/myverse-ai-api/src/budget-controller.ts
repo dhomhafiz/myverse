@@ -10,6 +10,8 @@ const MAX_REQUEST_BYTES = 2_048;
 const MAX_BUDGET_NEURONS = 1_000_000;
 const MAX_CONCURRENCY = 100;
 const MAX_IN_FLIGHT_REQUESTS = 100;
+const MAX_DIAGNOSTIC_RESERVATIONS = 100;
+const UNRESOLVED_RESERVATION_STATUSES = ['RESERVED', 'INFERENCE_STARTED', 'UNKNOWN_USAGE'] as const;
 
 type ControllerEnvironment = {
   AI_DAILY_ESTIMATED_NEURON_BUDGET?: string;
@@ -134,10 +136,12 @@ export class AiBudgetController {
     this.inFlightRequests++;
     try {
       if (request.method !== 'POST') return jsonResponse({ error: 'METHOD_NOT_ALLOWED' }, 405);
+      const path = new URL(request.url).pathname;
+      if (path === '/internal/status') return this.status(request);
       const body = await this.readBody(request);
       if (!body) return jsonResponse({ error: 'INVALID_REQUEST' }, 400);
 
-      switch (new URL(request.url).pathname) {
+      switch (path) {
         case '/admit':
           return jsonResponse(this.admit(body));
         case '/start':
@@ -314,10 +318,7 @@ export class AiBudgetController {
   }
 
   private async reconcile(request: Request, body: Record<string, unknown>): Promise<Response> {
-    const configuredToken = this.env.AI_BUDGET_ADMIN_TOKEN;
-    const authorization = request.headers.get('Authorization') ?? '';
-    const suppliedToken = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
-    if (!configuredToken || !suppliedToken || !constantTimeEqual(configuredToken, suppliedToken)) {
+    if (!this.isAuthorized(request)) {
       return jsonResponse({ reconciled: false, reason: 'unauthorized' }, 403);
     }
 
@@ -385,6 +386,94 @@ export class AiBudgetController {
       return { reconciled: true, duplicate: false };
     });
     return jsonResponse(result, result.reason === 'conflicting_reconciliation' ? 409 : 200);
+  }
+
+  private async status(request: Request): Promise<Response> {
+    if (!this.isAuthorized(request)) return jsonResponse({ error: 'UNAUTHORIZED' }, 403);
+
+    const body = await this.readBody(request);
+    if (!body || Object.keys(body).length !== 0) {
+      return jsonResponse({ error: 'INVALID_REQUEST' }, 400);
+    }
+
+    const day = utcDay(Date.now());
+    if (!day) return jsonResponse({ error: 'STATUS_UNAVAILABLE' }, 503);
+
+    const daily = this.rows<{ settled_neurons: number; reserved_neurons: number }>(
+      'SELECT settled_neurons, reserved_neurons FROM daily_budgets WHERE utc_day = ?',
+      day,
+    )[0];
+    const activeSlots = this.rows<{ count: number }>(
+      'SELECT COUNT(*) AS count FROM reservations WHERE slot_active = 1',
+    )[0];
+    const reservationStates: Record<ReservationStatus, number> = {
+      RESERVED: 0,
+      INFERENCE_STARTED: 0,
+      COMPLETED: 0,
+      FAILED_WITH_KNOWN_USAGE: 0,
+      UNKNOWN_USAGE: 0,
+      RECONCILED: 0,
+    };
+    for (const row of this.rows<{ status: ReservationStatus; count: number }>(
+      'SELECT status, COUNT(*) AS count FROM reservations GROUP BY status',
+    )) {
+      reservationStates[row.status] = Number(row.count);
+    }
+    const unresolvedReservationCount = UNRESOLVED_RESERVATION_STATUSES
+      .reduce((count, status) => count + reservationStates[status], 0);
+    const reservationRows = this.rows<{
+      request_id: string;
+      grant_id: string;
+      utc_day: string;
+      reserved_neurons: number;
+      accounted_neurons: number;
+      reservation_at: number;
+      inference_started_at: number | null;
+      completion_at: number | null;
+      status: ReservationStatus;
+    }>(
+      `SELECT request_id, grant_id, utc_day, reserved_neurons, accounted_neurons,
+        reservation_at, inference_started_at, completion_at, status
+       FROM reservations
+       WHERE status IN (?, ?, ?)
+       ORDER BY reservation_at ASC, request_id ASC
+       LIMIT ?`,
+      ...UNRESOLVED_RESERVATION_STATUSES,
+      MAX_DIAGNOSTIC_RESERVATIONS + 1,
+    );
+    const unresolvedReservations = reservationRows
+      .slice(0, MAX_DIAGNOSTIC_RESERVATIONS)
+      .map(row => ({
+        requestId: row.request_id,
+        grantId: row.grant_id,
+        utcDay: row.utc_day,
+        state: row.status,
+        reservedNeurons: Number(row.reserved_neurons),
+        accountedNeurons: Number(row.accounted_neurons),
+        reservationAt: Number(row.reservation_at),
+        inferenceStartedAt: row.inference_started_at === null ? null : Number(row.inference_started_at),
+        completionAt: row.completion_at === null ? null : Number(row.completion_at),
+      }));
+
+    return jsonResponse({
+      status: 'ok',
+      budgetDay: day,
+      activeInferenceSlots: Number(activeSlots?.count ?? 0),
+      configuredConcurrencyLimit: parsePositiveInteger(this.env.AI_MAX_CONCURRENT_INFERENCES, MAX_CONCURRENCY),
+      unresolvedReservationCount,
+      reservationStates,
+      unresolvedReservations,
+      unresolvedReservationDetailsTruncated: unresolvedReservationCount > unresolvedReservations.length,
+      estimatedSettledNeurons: Number(daily?.settled_neurons ?? 0),
+      estimatedReservedNeurons: Number(daily?.reserved_neurons ?? 0),
+    });
+  }
+
+  private isAuthorized(request: Request): boolean {
+    const configuredToken = this.env.AI_BUDGET_ADMIN_TOKEN;
+    const authorization = request.headers.get('Authorization') ?? '';
+    const suppliedToken = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+    return Boolean(configuredToken && suppliedToken && constantTimeEqual(configuredToken, suppliedToken));
   }
 
   private matchesDuplicateSettlement(
