@@ -20,7 +20,7 @@ export const preloadAssets = [
   '/models/football-stars-compact.glb', '/models/v-guitar-black-white-longer.glb',
   '/models/v-guitar-black-lime-longer.glb', '/models/guitar-wall-two-spot-track-light.glb',
   '/models/floor-uplighter-optimized.glb',
-  '/models/myverse_ai_companion_v1.glb',
+  '/models/myverse_companion_robot_v2.glb',
   '/models/barstool-black-unbranded-compact.glb',
   '/models/gravel-white-black-unbranded-compact.glb', '/models/wooden-bike-stand.glb',
   '/models/mechanical-rgb-keyboard-optimized.glb', '/images/cycling-panel-left.webp',

@@ -8,18 +8,17 @@ import type { RefObject } from 'react';
 import type { Material } from 'three';
 import type { EntranceMotion } from '@/lib/entrance';
 import { roomCursor } from '@/lib/room-state';
+import { companionRobot } from '@/lib/companion-robot-config';
 
-const MODEL_PATH = '/models/myverse_ai_companion_v1.glb';
-const TARGET_HEIGHT = 0.3;
-const TABLETOP_Y = 0.76 + 0.07 / 2;
-const POSITION: [number, number, number] = [1.25, TABLETOP_Y, 0.64];
-const YAW = -0.72;
+const MODEL_PATH = companionRobot.modelPath;
+const TARGET_HEIGHT = companionRobot.targetHeight;
+const POSITION = companionRobot.position;
+const YAW = companionRobot.yaw;
 const MAX_TRACKING_YAW = 0.4;
 const MAX_TRACKING_PITCH = 0.22;
 const BLINK_CLOSE = 0.08;
 const BLINK_HOLD = 0.03;
 const BLINK_OPEN = 0.13;
-const HIT_TARGET_SIZE: [number, number, number] = [0.32, 0.34, 0.28];
 
 type AnimationState = {
   elapsed: number;
@@ -114,12 +113,15 @@ export default function MyVerseAICompanion({
   onCompanionActivate: () => void;
 }) {
   const { scene } = useGLTF(MODEL_PATH);
-  const { model, scale, offset, headPivot, armPivot, baseHeadRotation, baseArmRotation, eyeMotion, baseEyePosition, emissiveMaterials } = useMemo(() => {
+  const { model, scale, offset, hitSize, hitCenter, headPivot, pitchPivot, rollPivot, armPivot,
+    baseHeadRotation, basePitchRotation, baseRollRotation, baseArmRotation, eyeMotion, baseEyePosition, emissiveMaterials } = useMemo(() => {
     const model = scene.clone(true);
-    const headPivot = model.getObjectByName('head_pivot');
-    const armPivot = model.getObjectByName('right_arm_pivot');
+    const headPivot = model.getObjectByName('head_yaw');
+    const pitchPivot = model.getObjectByName('neck_pitch');
+    const rollPivot = model.getObjectByName('neck_roll');
+    const armPivot = model.getObjectByName('shoulder_right');
     const eyes = model.getObjectByName('head_pivot_eyes_cyan');
-    if (!headPivot || !armPivot || !(eyes instanceof Mesh)) {
+    if (!headPivot || !pitchPivot || !rollPivot || !armPivot || !(eyes instanceof Mesh)) {
       throw new Error('The MyVerse AI Companion model is missing a required head, arm, or cyan eye pivot.');
     }
 
@@ -160,13 +162,21 @@ export default function MyVerseAICompanion({
     const bounds = new Box3().setFromObject(model, true);
     const size = bounds.getSize(new Vector3());
     const center = bounds.getCenter(new Vector3());
+    const fittedScale = TARGET_HEIGHT / size.y;
     return {
       model,
-      scale: TARGET_HEIGHT / size.y,
-      offset: [-center.x, -bounds.min.y, -center.z] as [number, number, number],
+      scale: fittedScale,
+      // Keep the authored origin at the track footprint, not at the asymmetrical raised arm.
+      offset: [0, -bounds.min.y, 0] as [number, number, number],
+      hitSize: [size.x * fittedScale + 0.015, TARGET_HEIGHT + 0.01, size.z * fittedScale + 0.015] as [number, number, number],
+      hitCenter: [center.x * fittedScale, TARGET_HEIGHT / 2, center.z * fittedScale] as [number, number, number],
       headPivot,
+      pitchPivot,
+      rollPivot,
       armPivot,
       baseHeadRotation: headPivot.rotation.clone(),
+      basePitchRotation: pitchPivot.rotation.clone(),
+      baseRollRotation: rollPivot.rotation.clone(),
       baseArmRotation: armPivot.rotation.clone(),
       eyeMotion,
       baseEyePosition,
@@ -174,8 +184,10 @@ export default function MyVerseAICompanion({
     };
   }, [scene]);
   const root = useRef<Group>(null);
-  const animatedObjects = useRef<{ headPivot: Object3D | null; armPivot: Object3D | null; eyeMotion: Group | null }>({
+  const animatedObjects = useRef<{ headPivot: Object3D | null; pitchPivot: Object3D | null; rollPivot: Object3D | null; armPivot: Object3D | null; eyeMotion: Group | null }>({
     headPivot: null,
+    pitchPivot: null,
+    rollPivot: null,
     armPivot: null,
     eyeMotion: null,
   });
@@ -244,22 +256,29 @@ export default function MyVerseAICompanion({
 
   useLayoutEffect(() => {
     animatedObjects.current.headPivot = headPivot;
+    animatedObjects.current.pitchPivot = pitchPivot;
+    animatedObjects.current.rollPivot = rollPivot;
     animatedObjects.current.armPivot = armPivot;
     animatedObjects.current.eyeMotion = eyeMotion;
     animation.current = resetAnimation();
     wasHovered.current = false;
     headPivot.rotation.copy(baseHeadRotation);
+    pitchPivot.rotation.copy(basePitchRotation);
+    rollPivot.rotation.copy(baseRollRotation);
     armPivot.rotation.copy(baseArmRotation);
     eyeMotion.position.copy(baseEyePosition);
     eyeMotion.scale.set(1, 1, 1);
     motion.current.invalidate?.();
     return () => {
       headPivot.rotation.copy(baseHeadRotation);
+      pitchPivot.rotation.copy(basePitchRotation);
+      rollPivot.rotation.copy(baseRollRotation);
       armPivot.rotation.copy(baseArmRotation);
       eyeMotion.position.copy(baseEyePosition);
       eyeMotion.scale.set(1, 1, 1);
     };
-  }, [active, reducedMotion, model, headPivot, armPivot, baseHeadRotation, baseArmRotation, eyeMotion, baseEyePosition, motion]);
+  }, [active, reducedMotion, model, headPivot, pitchPivot, rollPivot, armPivot, baseHeadRotation,
+    basePitchRotation, baseRollRotation, baseArmRotation, eyeMotion, baseEyePosition, motion]);
 
   useEffect(() => {
     if (interactionSignal === previousInteractionSignal.current) return;
@@ -291,12 +310,16 @@ export default function MyVerseAICompanion({
     if (!active || reducedMotion || !pageVisible.current) return;
     const animated = animatedObjects.current;
     const head = animated.headPivot;
+    const pitch = animated.pitchPivot;
+    const roll = animated.rollPivot;
     const arm = animated.armPivot;
     const eyes = animated.eyeMotion;
-    if (!head || !arm || !eyes) return;
+    if (!head || !pitch || !roll || !arm || !eyes) return;
     const delta = Math.min(unboundedDelta, 0.05);
     if (motion.current.lights.room < 0.95) {
       head.rotation.copy(baseHeadRotation);
+      pitch.rotation.copy(basePitchRotation);
+      roll.rotation.copy(baseRollRotation);
       arm.rotation.copy(baseArmRotation);
       eyes.position.copy(baseEyePosition);
       eyes.scale.set(1, 1, 1);
@@ -354,13 +377,10 @@ export default function MyVerseAICompanion({
     state.roll = MathUtils.damp(state.roll, state.idleRoll + (attentive ? 0.045 : 0), 3.2, delta);
     state.eyeX = MathUtils.damp(state.eyeX, targetEyeX, 8, delta);
     state.eyeY = MathUtils.damp(state.eyeY, targetEyeY, 8, delta);
-    head.rotation.set(
-      baseHeadRotation.x + state.pitch,
-      baseHeadRotation.y + state.yaw,
-      baseHeadRotation.z + state.roll,
-      baseHeadRotation.order,
-    );
-    arm.rotation.z = baseArmRotation.z + greetingAmount(state);
+    head.rotation.y = baseHeadRotation.y + state.yaw;
+    pitch.rotation.x = basePitchRotation.x - state.pitch;
+    roll.rotation.z = baseRollRotation.z + state.roll;
+    arm.rotation.z = baseArmRotation.z - greetingAmount(state);
     eyes.position.set(baseEyePosition.x + state.eyeX, baseEyePosition.y + state.eyeY, baseEyePosition.z);
     eyes.scale.y = 1 - 0.97 * blinkAmount(state);
     motion.current.invalidate?.();
@@ -370,7 +390,7 @@ export default function MyVerseAICompanion({
     <group ref={root} name="myverse_ai_companion" position={POSITION} rotation={[0, YAW, 0]} dispose={null}>
       <mesh
         name="myverse_ai_companion_hit_target"
-        position={[0, TARGET_HEIGHT / 2, 0]}
+        position={hitCenter}
         onPointerOver={event => {
           if (!interactive) return;
           event.stopPropagation();
@@ -387,11 +407,11 @@ export default function MyVerseAICompanion({
           if (!roomCursor.dragging) onCompanionActivate();
         }}
       >
-        <boxGeometry args={HIT_TARGET_SIZE} />
+        <boxGeometry args={hitSize} />
         <meshBasicMaterial colorWrite={false} depthWrite={false} />
       </mesh>
       <object3D name="myverse_ai_companion_hotspot_anchor" position={[0.15, TARGET_HEIGHT + 0.04, 0.04]} />
-      <group scale={scale * (active && !interactive ? 0.82 : 1)}>
+      <group scale={scale}>
         <group position={offset}><primitive object={model} /></group>
       </group>
     </group>
