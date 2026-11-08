@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { test } from 'node:test';
 import { AiBudgetController } from '../src/budget-controller.ts';
+import { createWorker } from '../src/worker.ts';
 
 const DAY_START = Date.UTC(2026, 10, 7);
 const TEST_TOKEN = 'local-test-only-budget-admin-token';
@@ -285,6 +286,15 @@ test('timeout preserves unknown budget usage and its active slot across object r
     granted: false,
     reason: 'busy',
   });
+  assert.deepEqual((await admit(
+    restarted.controller,
+    'request-after-expiration-window',
+    100,
+    DAY_START + (30 * 24 * 60 * 60 * 1_000),
+  )).body, {
+    granted: false,
+    reason: 'busy',
+  });
   assert.deepEqual((await admit(restarted.controller, 'request-timeout')).body, {
     granted: false,
     reason: 'duplicate_request',
@@ -375,4 +385,164 @@ test('operator reconciliation requires a secret and can safely release a confirm
   assert.equal(conflict.status, 409);
   assert.deepEqual(conflict.body, { reconciled: false, reason: 'conflicting_reconciliation' });
   assert.deepEqual(daily(f.database), { settled_neurons: 18, reserved_neurons: 0 });
+});
+
+test('authenticated status reads report slots, unresolved states and estimated budget without mutation', async t => {
+  const f = controllerFixture({ adminToken: TEST_TOKEN, concurrency: '3' });
+  dispose(t, f);
+  const nowMs = Date.now();
+  const budgetDay = new Date(nowMs).toISOString().slice(0, 10);
+
+  const completedGrant = (await admit(f.controller, 'status-completed', 100, nowMs)).body;
+  await start(f.controller, 'status-completed', completedGrant.grantId, nowMs);
+  await call(f.controller, '/settle', {
+    requestId: 'status-completed',
+    grantId: completedGrant.grantId,
+    outcome: 'completed',
+    terminal: true,
+    usage: { promptTokens: 1_000, completionTokens: 100 },
+    failureClassification: 'COMPLETED_WITH_REPORTED_USAGE',
+    nowMs,
+  });
+
+  const unknownGrant = (await admit(f.controller, 'status-unknown', 120, nowMs)).body;
+  await start(f.controller, 'status-unknown', unknownGrant.grantId, nowMs);
+  await call(f.controller, '/settle', {
+    requestId: 'status-unknown',
+    grantId: unknownGrant.grantId,
+    outcome: 'failed',
+    terminal: false,
+    failureClassification: 'INFERENCE_DEADLINE_EXCEEDED',
+    nowMs,
+  });
+  const reservedGrant = (await admit(f.controller, 'status-reserved', 200, nowMs)).body;
+  const snapshot = () => ({
+    budgets: f.database.prepare('SELECT * FROM daily_budgets ORDER BY utc_day').all(),
+    reservations: f.database.prepare('SELECT * FROM reservations ORDER BY request_id').all(),
+  });
+  const before = snapshot();
+
+  const response = await f.controller.fetch(request('/internal/status', {}, TEST_TOKEN));
+  const result = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  assert.equal(result.status, 'ok');
+  assert.equal(result.budgetDay, budgetDay);
+  assert.equal(result.activeInferenceSlots, 2);
+  assert.equal(result.configuredConcurrencyLimit, 3);
+  assert.equal(result.unresolvedReservationCount, 2);
+  assert.deepEqual(result.reservationStates, {
+    RESERVED: 1,
+    INFERENCE_STARTED: 0,
+    COMPLETED: 1,
+    FAILED_WITH_KNOWN_USAGE: 0,
+    UNKNOWN_USAGE: 1,
+    RECONCILED: 0,
+  });
+  assert.equal(result.estimatedSettledNeurons, 138);
+  assert.equal(result.estimatedReservedNeurons, 200);
+  assert.equal(result.unresolvedReservationDetailsTruncated, false);
+  assert.deepEqual(result.unresolvedReservations.map(row => row.requestId), [
+    'status-reserved',
+    'status-unknown',
+  ]);
+  assert.equal(result.unresolvedReservations[0].grantId, reservedGrant.grantId);
+  assert.equal(result.unresolvedReservations[0].state, 'RESERVED');
+  assert.equal(result.unresolvedReservations[1].grantId, unknownGrant.grantId);
+  assert.equal(result.unresolvedReservations[1].state, 'UNKNOWN_USAGE');
+  assert.equal(result.unresolvedReservations[1].reservationAt, nowMs);
+  assert.equal(result.unresolvedReservations[1].inferenceStartedAt, nowMs);
+  assert.equal(result.unresolvedReservations[1].completionAt, null);
+  assert.equal(JSON.stringify(result).includes(TEST_TOKEN), false);
+  assert.deepEqual(snapshot(), before);
+});
+
+test('budget status rejects missing and invalid administrator credentials without revealing state', async t => {
+  const f = controllerFixture({ adminToken: TEST_TOKEN });
+  dispose(t, f);
+  const grant = (await admit(f.controller, 'status-protected')).body;
+
+  for (const token of [undefined, 'incorrect-token']) {
+    const response = await f.controller.fetch(request('/internal/status', {
+      requestId: 'status-protected',
+      grantId: grant.grantId,
+    }, token));
+    assert.equal(response.status, 403);
+    assert.deepEqual(await response.json(), { error: 'UNAUTHORIZED' });
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  }
+});
+
+test('budget status remains available from Durable Object storage after restart', async t => {
+  const f = controllerFixture({ adminToken: TEST_TOKEN });
+  dispose(t, f);
+  const nowMs = Date.now();
+  const grant = (await admit(f.controller, 'status-restart', 100, nowMs)).body;
+  await start(f.controller, 'status-restart', grant.grantId, nowMs);
+  await call(f.controller, '/settle', {
+    requestId: 'status-restart',
+    grantId: grant.grantId,
+    outcome: 'failed',
+    terminal: false,
+    failureClassification: 'INFERENCE_DEADLINE_EXCEEDED',
+    nowMs,
+  });
+  const beforeRestart = await call(f.controller, '/internal/status', {}, TEST_TOKEN);
+
+  const restarted = f.reopen();
+  const afterRestart = await call(restarted.controller, '/internal/status', {}, TEST_TOKEN);
+
+  assert.equal(beforeRestart.status, 200);
+  assert.deepEqual(afterRestart, beforeRestart);
+  assert.equal(afterRestart.body.activeInferenceSlots, 1);
+  assert.equal(afterRestart.body.reservationStates.UNKNOWN_USAGE, 1);
+  assert.equal(afterRestart.body.estimatedSettledNeurons, 100);
+});
+
+test('Worker exposes the authenticated status operation without invoking AI', async t => {
+  const f = controllerFixture({ adminToken: TEST_TOKEN });
+  dispose(t, f);
+  const worker = createWorker();
+  const binding = {
+    getByName: () => ({ fetch: internalRequest => f.controller.fetch(internalRequest) }),
+  };
+  const env = {
+    CHAT_RATE_LIMITER: { limit: async () => ({ success: true }) },
+    AI_BUDGET_CONTROLLER: binding,
+  };
+
+  const authorized = await worker.fetch(request('/internal/budget/status', {}, TEST_TOKEN), env);
+  assert.equal(authorized.status, 200);
+  assert.equal((await authorized.json()).status, 'ok');
+  assert.equal(authorized.headers.get('Cache-Control'), 'no-store');
+
+  const unauthorized = await worker.fetch(request('/internal/budget/status', {}, 'incorrect-token'), env);
+  assert.equal(unauthorized.status, 403);
+  assert.deepEqual(await unauthorized.json(), { error: 'UNAUTHORIZED' });
+});
+
+test('budget status caps unresolved reservation details', async t => {
+  const f = controllerFixture({ adminToken: TEST_TOKEN });
+  dispose(t, f);
+  const nowMs = Date.now();
+
+  for (let index = 0; index < 103; index++) {
+    const requestId = `status-cap-${String(index).padStart(3, '0')}`;
+    const grant = (await admit(f.controller, requestId, 1, nowMs)).body;
+    await start(f.controller, requestId, grant.grantId, nowMs);
+    await call(f.controller, '/settle', {
+      requestId,
+      grantId: grant.grantId,
+      outcome: 'failed',
+      terminal: true,
+      failureClassification: 'PROVIDER_USAGE_UNKNOWN',
+      nowMs,
+    });
+  }
+
+  const result = await call(f.controller, '/internal/status', {}, TEST_TOKEN);
+  assert.equal(result.body.unresolvedReservationCount, 103);
+  assert.equal(result.body.unresolvedReservations.length, 100);
+  assert.equal(result.body.unresolvedReservationDetailsTruncated, true);
 });
