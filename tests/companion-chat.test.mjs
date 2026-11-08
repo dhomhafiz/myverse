@@ -16,11 +16,11 @@ const callbacks = events => ({ onStart: text => events.push(['start', text]), on
   onError: (_, text) => events.push(['error', text]), onSettled: () => events.push(['settled']) });
 const deferred = () => { let resolve, reject; const promise = new Promise((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; };
 
-test('suggested questions have six stable categories with English and Bahasa Melayu copy', () => {
-  assert.deepEqual(companionSuggestions.map(({ id }) => id), ['about', 'experience', 'skills', 'projects', 'hiring', 'contact']);
-  assert.equal(new Set(companionSuggestions.map(({ id }) => id)).size, 6);
+test('suggested questions have five stable categories with English and Bahasa Melayu copy', () => {
+  assert.deepEqual(companionSuggestions.map(({ id }) => id), ['about', 'experience', 'skills', 'projects', 'hiring']);
+  assert.equal(new Set(companionSuggestions.map(({ id }) => id)).size, 5);
   assert.deepEqual(companionSuggestions.map(({ label }) => label.en), [
-    'About Hafiz', 'Experience', 'Tech Stack', 'Projects', 'Hire Hafiz', 'Contact Hafiz',
+    'About Hafiz', 'Experience', 'Tech Stack', 'Projects', 'Hire Hafiz',
   ]);
   assert.deepEqual(companionSuggestions.map(({ question }) => question.en), [
     'Tell me about Hafiz and his background.',
@@ -28,10 +28,9 @@ test('suggested questions have six stable categories with English and Bahasa Mel
     'What technologies does Hafiz specialize in?',
     'What projects has Hafiz worked on?',
     'Can I hire Hafiz for a website or software project?',
-    'How can I contact Hafiz?',
   ]);
   assert.deepEqual(companionSuggestions.map(({ label }) => label.ms), [
-    'Tentang Hafiz', 'Pengalaman', 'Kemahiran', 'Projek', 'Upah Hafiz', 'Hubungi Hafiz',
+    'Tentang Hafiz', 'Pengalaman', 'Kemahiran', 'Projek', 'Upah Hafiz',
   ]);
   assert.deepEqual(companionSuggestions.map(({ question }) => question.ms), [
     'Ceritakan tentang Hafiz dan latar belakangnya.',
@@ -39,7 +38,6 @@ test('suggested questions have six stable categories with English and Bahasa Mel
     'Apakah teknologi dan kemahiran utama Hafiz?',
     'Apakah projek yang pernah Hafiz bangunkan?',
     'Bolehkah saya mengupah Hafiz untuk projek laman web atau perisian?',
-    'Bagaimana saya boleh menghubungi Hafiz?',
   ]);
 });
 
@@ -213,7 +211,7 @@ test('all English and Bahasa Melayu suggested questions use the same Gemma reque
       assert.deepEqual(calls.at(-1), { message: question, history: [] });
     }
   }
-  assert.equal(calls.length, 12);
+  assert.equal(calls.length, 10);
 });
 
 test('conversation history keeps only five completed exchanges and caps each context entry', () => {

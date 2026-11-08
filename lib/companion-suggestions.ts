@@ -1,7 +1,7 @@
 export type CompanionLanguage = 'en' | 'ms';
 
 export type CompanionSuggestion = {
-  id: 'about' | 'experience' | 'skills' | 'projects' | 'hiring' | 'contact';
+  id: 'about' | 'experience' | 'skills' | 'projects' | 'hiring';
   label: Record<CompanionLanguage, string>;
   question: Record<CompanionLanguage, string>;
 };
@@ -45,14 +45,6 @@ export const companionSuggestions = [
     question: {
       en: 'Can I hire Hafiz for a website or software project?',
       ms: 'Bolehkah saya mengupah Hafiz untuk projek laman web atau perisian?',
-    },
-  },
-  {
-    id: 'contact',
-    label: { en: 'Contact Hafiz', ms: 'Hubungi Hafiz' },
-    question: {
-      en: 'How can I contact Hafiz?',
-      ms: 'Bagaimana saya boleh menghubungi Hafiz?',
     },
   },
 ] satisfies readonly CompanionSuggestion[];
