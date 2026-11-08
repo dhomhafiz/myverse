@@ -391,7 +391,7 @@ export default function MyVerseAICompanion({
         <meshBasicMaterial colorWrite={false} depthWrite={false} />
       </mesh>
       <object3D name="myverse_ai_companion_hotspot_anchor" position={[0.15, TARGET_HEIGHT + 0.04, 0.04]} />
-      <group scale={scale}>
+      <group scale={scale * (active && !interactive ? 0.82 : 1)}>
         <group position={offset}><primitive object={model} /></group>
       </group>
     </group>

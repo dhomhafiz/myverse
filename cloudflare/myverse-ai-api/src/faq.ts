@@ -79,7 +79,10 @@ const FAQ_PATTERNS: Record<FaqTopic, readonly RegExp[]> = {
     /^(?:apa itu|apakah) my ?verse$/,
   ],
   skills: [
+    /^what is (?:hafizs|his) tech stack$/,
+    /^what tech stack does (?:hafiz|he) use$/,
     /^(?:what|which) technologies does (?:hafiz|he) use$/,
+    /^what programming languages does (?:hafiz|he) know$/,
     /^(?:what|which) technologies are listed as (?:hafizs|his) skills$/,
     /^(?:apakah|apa) teknologi yang digunakan hafiz$/,
     /^(?:apakah|apa) kemahiran teknologi hafiz$/,

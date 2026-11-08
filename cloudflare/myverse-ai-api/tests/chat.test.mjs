@@ -4,21 +4,29 @@ import { createServer } from 'node:http';
 import { test } from 'node:test';
 import worker from '../src/index.ts';
 import { createWorkerForLocalQwenValidation } from '../src/local-qwen-validation.ts';
-import { AI_TIMEOUT_MS, MODEL, reply } from '../src/ai.ts';
+import { AI_TIMEOUT_MS, GEMMA_MAX_COMPLETION_TOKENS, GEMMA_MODEL, reply } from '../src/ai.ts';
 import { buildSystemPrompt, SYSTEM_PROMPT } from '../src/prompts.ts';
 import { selectTopics } from '../src/topics.ts';
+import { createTestBudgetBinding } from './helpers/budget-binding.mjs';
 
 const origin = 'https://www.dhomhafiz.dev';
 function fixture(options = {}) {
   const calls = [];
   const keys = [];
   const env = {
+    AI_MODEL: GEMMA_MODEL,
     AI: { run: async (...args) => {
       calls.push(args);
       if (options.failure) throw options.failure;
-      return options.output ?? { response: 'Hafiz builds interactive websites. Explore /work.' };
+      return options.output ?? {
+        choices: [{
+          message: { role: 'assistant', content: 'Hafiz builds interactive websites. Explore /work.' },
+          finish_reason: 'stop',
+        }],
+      };
     } },
     AI_ENABLED: options.aiEnabled === undefined ? 'true' : options.aiEnabled,
+    AI_BUDGET_CONTROLLER: createTestBudgetBinding(),
     CHAT_RATE_LIMITER: { limit: async ({ key }) => {
       keys.push(key);
       if (options.limiterFailure) throw new Error('private limiter details');
@@ -129,13 +137,15 @@ for (const [message, answer] of [
   ['How would Hafiz design a 3D experience for a hospital?', 'Hafiz could begin with an accessible interactive room concept.'],
   ['How could MyVerse be adapted into a game?', 'That would require an open-ended design discussion.'],
 ]) test(`valid question: ${message}`, async () => {
-  const f = fixture({ aiEnabled: 'true', output: { response: answer } });
+  const f = fixture({ aiEnabled: 'true', output: {
+    choices: [{ message: { role: 'assistant', content: answer }, finish_reason: 'stop' }],
+  } });
   const response = await f.send({ message });
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { success: true, reply: answer, model: MODEL, source: 'ai' });
+  assert.deepEqual(await response.json(), { success: true, reply: answer, model: GEMMA_MODEL, source: 'ai' });
   const [model, input] = f.calls[0];
-  assert.equal(model, MODEL);
-  assert.equal(input.max_tokens, 250);
+  assert.equal(model, GEMMA_MODEL);
+  assert.equal(input.max_completion_tokens, GEMMA_MAX_COMPLETION_TOKENS);
   assert.equal(input.temperature, 0.4);
   assert.equal(input.stream, false);
   assert.deepEqual(input.messages, [
@@ -218,6 +228,7 @@ test('local HTTP rejects a mocked project-attribution contradiction without expo
   let calls = 0;
   const env = {
     AI_ENABLED: 'true',
+    AI_BUDGET_CONTROLLER: createTestBudgetBinding(),
     AI: { run: async () => {
       calls++;
       return {
@@ -317,7 +328,7 @@ test('English background guidance keeps Java/Spring Boot and employers explicitl
 test('system instructions prioritize the visitor language and natural Malaysian Malay', () => {
   assert.match(SYSTEM_PROMPT, /Answer English questions in English/);
   assert.match(SYSTEM_PROMPT, /natural Bahasa Melayu Malaysia/);
-  assert.match(SYSTEM_PROMPT, /Do not reply in unsolicited Malay or code-switch unnecessarily/);
+  assert.match(SYSTEM_PROMPT, /do not code-switch when they do not/);
   assert.match(SYSTEM_PROMPT, /Avoid Indonesian phrasing such as pengembang web, desainer grafis, proyek, informasi and perangkat lunak/);
   assert.match(SYSTEM_PROMPT, /Do not describe Hafiz as a graphic designer/);
 });

@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import worker from '../src/index.ts';
 import { createWorkerForLocalQwenValidation } from '../src/local-qwen-validation.ts';
-import { MODEL, QWEN_MODEL, reply } from '../src/ai.ts';
+import { GEMMA_MODEL, MODEL, QWEN_MAX_OUTPUT_TOKENS, QWEN_MODEL, reply } from '../src/ai.ts';
 import { qwenPrompt } from '../src/ai.ts';
+import { createTestBudgetBinding } from './helpers/budget-binding.mjs';
 
 const message = 'How does Hafiz combine backend engineering and 3D development?';
 const input = { message, history: [] };
@@ -35,7 +36,7 @@ test('Qwen invocation uses the documented non-thinking raw-prompt format and pre
   assert.equal(invocation[0], QWEN_MODEL);
   assert.equal(invocation[1].raw, true);
   assert.equal(invocation[1].temperature, 0.4);
-  assert.equal(invocation[1].max_tokens, 250);
+  assert.equal(invocation[1].max_tokens, QWEN_MAX_OUTPUT_TOKENS);
   assert.equal(invocation[1].stream, false);
   assert.match(invocation[1].prompt, /^<\|im_start\|>system\n/);
   assert.match(invocation[1].prompt, /<\|im_start\|>assistant\n<think>\n\n<\/think>\n\n$/);
@@ -77,6 +78,7 @@ test('recorded Test A false negative is rejected and returned as a safe Malay HT
     body: JSON.stringify(testAInput),
   }), {
     AI_ENABLED: 'true',
+    AI_BUDGET_CONTROLLER: createTestBudgetBinding(),
     AI: { run: async () => {
       calls++;
       return { choices: [{ text: recordedTestAResponse, finish_reason: 'stop' }] };
@@ -179,6 +181,7 @@ test('local Qwen validation uses the application HTTP path and keeps diagnostics
     body: JSON.stringify({ message: 'Ceritakan pengalaman backend Hafiz.' }),
   }), {
     AI_ENABLED: 'true',
+    AI_BUDGET_CONTROLLER: createTestBudgetBinding(),
     AI: { run: async (...args) => {
       calls.push(args);
       return {
@@ -202,8 +205,8 @@ test('local Qwen validation uses the application HTTP path and keeps diagnostics
   assert.deepEqual(inferredModels, [QWEN_MODEL]);
   assert.equal(providerResponses[0].choices[0].finish_reason, 'stop');
   assert.equal(requests[0].model, QWEN_MODEL);
-  assert.deepEqual(requests[0].selectedCategories, ['identity', 'career']);
-  assert.equal(requests[0].selectionReason, 'multi-topic');
+  assert.deepEqual(requests[0].selectedCategories, ['identity', 'career', 'skills', 'myVerse']);
+  assert.equal(requests[0].selectionReason, 'focused-career-profile');
   assert.deepEqual(outputs[0], {
     finishReason: 'stop',
     usage: { prompt_tokens: 100, completion_tokens: 12, total_tokens: 112 },
@@ -241,6 +244,7 @@ test('known Qwen contradictions return localized safe HTTP errors without retryi
       }),
     }), {
       AI_ENABLED: 'true',
+      AI_BUDGET_CONTROLLER: createTestBudgetBinding(),
       AI: { run: async () => {
         calls++;
         return {
@@ -310,7 +314,9 @@ test('API maps truncated output to a localized safe error without retry or parti
       headers: { 'Content-Type': 'application/json', Origin: 'https://www.dhomhafiz.dev' },
       body: JSON.stringify({ message: messageText }),
     }), {
+      AI_MODEL: GEMMA_MODEL,
       AI_ENABLED: 'true',
+      AI_BUDGET_CONTROLLER: createTestBudgetBinding(),
       AI: { run: async () => {
         calls++;
         return { response: 'This partial answer must not be shown.', finish_reason: 'length' };

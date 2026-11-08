@@ -11,7 +11,7 @@ type IndicatorProps = {
   target: string; anchor: string; position: Vec3; caption: string; ariaLabel?: string;
   outlineTargets?: readonly string[];
   active: boolean; reducedMotion: boolean; highlighted?: boolean; repeatActivations?: boolean;
-  onActivate: () => void; onHoverChange?: (hovered: boolean) => void; onVisibilityChange?: (visible: boolean) => void;
+  onActivate: (trigger: HTMLButtonElement) => void; onHoverChange?: (hovered: boolean) => void; onVisibilityChange?: (visible: boolean) => void;
 };
 
 // Same native-DOM ownership as RoomLabel: no Html, portals or nested React roots.
@@ -22,7 +22,7 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
   const point = useMemo(() => new Vector3(), []);
   const visibility = useRef(false);
   const visual = useRef({ pointer: false, focus: false, monitor: false, hover: false });
-  const activate = useEffectEvent(() => onActivate());
+  const activate = useEffectEvent((trigger: HTMLButtonElement) => onActivate(trigger));
   const reportHover = useEffectEvent((hovered: boolean) => onHoverChange?.(hovered));
   const reportVisibility = useEffectEvent((visible: boolean) => onVisibilityChange?.(visible));
   const updateHighlight = useEffectEvent(() => {
@@ -110,7 +110,7 @@ export default function HotspotIndicator({ target, anchor, position, caption, ar
       if (suppressClick) { suppressClick = false; return; }
       if (pending) return;
       if (!repeatActivations) pending = true;
-      activate();
+      activate(button);
     };
     button.addEventListener('pointerenter', enter); button.addEventListener('pointerleave', leave);
     button.addEventListener('focus', focus); button.addEventListener('blur', blur);

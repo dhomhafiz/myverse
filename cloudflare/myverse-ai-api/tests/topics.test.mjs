@@ -50,7 +50,10 @@ test('structured knowledge preserves verified chronology, employer mappings, pro
 });
 
 test('career, project, MyVerse and cross-stack questions select their trusted categories', () => {
-  assert.deepEqual(selection("Tell me about Hafiz's backend experience.").categories, ['identity', 'career']);
+  const backend = selection("Tell me about Hafiz's backend experience.");
+  assert.deepEqual(backend.categories, ['identity', 'career', 'skills', 'myVerse']);
+  assert.equal(backend.reason, 'focused-career-profile');
+  assert.equal(backend.knowledgeProfile, 'focused-career');
   assert.deepEqual(selection('What technologies were used for the Netflix installation?').categories, ['publishedProjects']);
   assert.deepEqual(selection('What is MyVerse?').categories, ['myVerse']);
   assert.deepEqual(selection("What is Hafiz's approach?").categories, ['identity', 'approach']);
@@ -63,7 +66,7 @@ test('Phase 4B.2A.2 live questions route to AI with the expected knowledge categ
   const cases = [
     {
       message: 'Boleh terangkan pengalaman Hafiz dalam pembangunan backend dan teknologi yang pernah digunakan?',
-      expected: ['identity', 'career'],
+      expected: ['identity', 'career', 'skills', 'myVerse'],
     },
     {
       message: 'Compare the technologies used for the Netflix Squid Game 2 installation and MyVerse.',
@@ -139,9 +142,11 @@ test('selected prompts contain only selected facts while full fallback remains c
   assert.doesNotMatch(projectPrompt, /MyVerse architecture.*Next\.js/s);
   assert.doesNotMatch(projectPrompt, /General skills \[lib\/skills\.ts/);
 
-  const careerPrompt = buildSystemPrompt(selection("Tell me about Hafiz's backend experience.").categories);
+  const backend = selection("Tell me about Hafiz's backend experience.");
+  const careerPrompt = buildSystemPrompt(backend.categories, backend.knowledgeProfile);
   assert.match(careerPrompt, /Ethereal Digital — Software Developer \/ Senior Backend Developer/);
-  assert.match(careerPrompt, /Explicitly supported technologies: Spring Boot, REST APIs and Microsoft SQL Server/);
+  assert.match(careerPrompt, /Ethereal Digital.*Spring Boot.*REST APIs.*Microsoft SQL Server/s);
+  assert.doesNotMatch(careerPrompt, /Career chronology/);
   assert.doesNotMatch(careerPrompt, /Netflix Squid Game 2 Interactive Poll System/);
 
   const fallbackPrompt = buildSystemPrompt(selection('What is Hafiz’s favourite food?').categories);

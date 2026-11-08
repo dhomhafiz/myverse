@@ -1,15 +1,30 @@
-import { PORTFOLIO_FACTS, type KnowledgeCategory } from './knowledge.ts';
-import { buildSystemPrompt } from './prompts.ts';
+import { CAREER_TIMELINE, CURRENT_CAREER_DATES, PORTFOLIO_FACTS, type KnowledgeCategory } from './knowledge.ts';
+import {
+  buildSystemPrompt,
+  PERSONALITY_EXAMPLE_INSTRUCTIONS,
+  selectPersonalityExamples,
+} from './prompts.ts';
 import { selectTopics, type TopicSelection } from './topics.ts';
 import type { ChatRequest } from './validation.ts';
-import { ApiError } from './responses.ts';
+import { ApiError, type InternalFailureCategory, type InternalInferenceDiagnostics, type ResponseNormalizationOutcome } from './responses.ts';
 
 export const MODEL = '@cf/meta/llama-3.2-3b-instruct' as const;
 export const QWEN_MODEL = '@cf/qwen/qwen3-30b-a3b-fp8' as const;
-export type SupportedModel = typeof MODEL | typeof QWEN_MODEL;
+export const GEMMA_MODEL = '@cf/google/gemma-4-26b-a4b-it' as const;
+export type SupportedModel = typeof MODEL | typeof QWEN_MODEL | typeof GEMMA_MODEL;
+const PRODUCTION_MODEL_ALLOWLIST: ReadonlySet<string> = new Set([GEMMA_MODEL]);
+export function resolveProductionModel(value: string | undefined): typeof GEMMA_MODEL | null {
+  return value !== undefined && PRODUCTION_MODEL_ALLOWLIST.has(value) ? GEMMA_MODEL : null;
+}
 export const AI_TIMEOUT_MS = 15_000;
+// Fixed server-side budget; never taken from visitor input. Llama remains at 250.
+export const QWEN_MAX_OUTPUT_TOKENS = 768;
+export const GEMMA_MAX_COMPLETION_TOKENS = 768;
+export const GEMMA_MAX_CONTEXT_TOKENS = 256_000;
+export const QWEN_MAX_CONTEXT_TOKENS = 32_768;
 
 type ModelMessage = { role: 'system' | 'user' | 'assistant'; content: string };
+export type ReportedTokenUsage = { promptTokens: number; completionTokens: number };
 type ModelRequest = {
   messages: ModelMessage[];
   temperature: number;
@@ -21,6 +36,10 @@ export type ModelOutput = { response: string; finishReason: string | null; usage
 type InferenceInstrumentation = {
   beforeInference?: (model: SupportedModel) => void;
   onProviderResponse?: (result: unknown) => void;
+  onLateProviderResponse?: (result: unknown) => void;
+  retain?: (task: Promise<void>) => void;
+  onNormalization?: (outcome: ResponseNormalizationOutcome) => void;
+  onElapsed?: (elapsedMs: number) => void;
 };
 
 type RecordValue = Record<string, unknown>;
@@ -30,7 +49,26 @@ function isRecord(value: unknown): value is RecordValue {
 }
 
 function invalidModelResponse(reason: string): Error {
-  return Object.assign(new Error('Unexpected or incomplete model response.'), { diagnosticCode: reason });
+  return Object.assign(new Error('Unexpected or incomplete model response.'), {
+    diagnosticCode: reason,
+    normalizationFailure: true,
+  });
+}
+
+function guardrailFailure(reason: string): Error {
+  return Object.assign(new Error('Model response failed a portfolio guardrail.'), { diagnosticCode: reason });
+}
+
+class ProviderRejection extends Error {
+  constructor(cause: unknown) {
+    super('AI provider rejected inference.', { cause });
+  }
+}
+
+class InferenceDeadlineExceeded extends Error {
+  constructor() {
+    super('Inference deadline exceeded.');
+  }
 }
 
 function getFinishReason(value: RecordValue): string | null {
@@ -50,6 +88,109 @@ function normalizeUsage(value: unknown): TokenUsage | undefined {
     if (typeof count === 'number' && Number.isSafeInteger(count) && count >= 0) usage[key] = count;
   }
   return Object.keys(usage).length > 0 ? usage : undefined;
+}
+
+type NeuronRate = {
+  inputNeuronsPerMillion: number;
+  outputNeuronsPerMillion: number;
+  maxContextTokens: number;
+  maxCompletionTokens: number;
+};
+
+function neuronRate(model: SupportedModel): NeuronRate | null {
+  if (model === GEMMA_MODEL) {
+    return {
+      inputNeuronsPerMillion: 9_091,
+      outputNeuronsPerMillion: 27_273,
+      maxContextTokens: GEMMA_MAX_CONTEXT_TOKENS,
+      maxCompletionTokens: GEMMA_MAX_COMPLETION_TOKENS,
+    };
+  }
+  if (model === QWEN_MODEL) {
+    return {
+      inputNeuronsPerMillion: 4_625,
+      outputNeuronsPerMillion: 30_475,
+      maxContextTokens: QWEN_MAX_CONTEXT_TOKENS,
+      maxCompletionTokens: QWEN_MAX_OUTPUT_TOKENS,
+    };
+  }
+  return null;
+}
+
+export function reportedModelTokenUsage(value: unknown, model: SupportedModel): ReportedTokenUsage | undefined {
+  if (!isRecord(value)) return undefined;
+  const rate = neuronRate(model);
+  if (!rate) return undefined;
+  const usage = normalizeUsage(value.usage);
+  if (!usage || usage.prompt_tokens === undefined || usage.completion_tokens === undefined) return undefined;
+  if (usage.prompt_tokens < 1
+    || usage.prompt_tokens + usage.completion_tokens > rate.maxContextTokens
+    || usage.completion_tokens > rate.maxCompletionTokens) return undefined;
+  return { promptTokens: usage.prompt_tokens, completionTokens: usage.completion_tokens };
+}
+
+export function estimateNeuronUsageForModel(
+  model: SupportedModel,
+  promptTokens: number,
+  completionTokens: number,
+): number | null {
+  const rate = neuronRate(model);
+  if (!Number.isSafeInteger(promptTokens) || promptTokens < 1
+    || !Number.isSafeInteger(completionTokens) || completionTokens < 0
+    || !rate || promptTokens + completionTokens > rate.maxContextTokens
+    || completionTokens > rate.maxCompletionTokens) return null;
+
+  const inputNeurons = promptTokens * rate.inputNeuronsPerMillion;
+  const outputNeurons = completionTokens * rate.outputNeuronsPerMillion;
+  return Math.max(1, Math.ceil(((inputNeurons + outputNeurons) * 1.5) / 1_000_000));
+}
+
+export function estimateGemmaNeuronUsage(promptTokens: number, completionTokens: number): number | null {
+  return estimateNeuronUsageForModel(GEMMA_MODEL, promptTokens, completionTokens);
+}
+
+function buildModelMessages(
+  input: ChatRequest,
+  model: SupportedModel,
+  selection: TopicSelection,
+): ModelMessage[] {
+  const personalityExamples = model === GEMMA_MODEL
+    ? selectPersonalityExamples(input.message, selection.categories)
+    : [];
+  const systemPrompt = buildSystemPrompt(selection.categories, selection.knowledgeProfile);
+  return [
+    {
+      role: 'system',
+      content: personalityExamples.length > 0
+        ? `${systemPrompt}\n\n${PERSONALITY_EXAMPLE_INSTRUCTIONS}`
+        : systemPrompt,
+    },
+    ...personalityExamples,
+    ...input.history,
+    { role: 'user', content: input.message },
+  ];
+}
+
+export function estimateGemmaNeuronReservation(input: ChatRequest, selection: TopicSelection): number | null {
+  return estimateModelNeuronReservation(input, selection, GEMMA_MODEL);
+}
+
+export function estimateModelNeuronReservation(
+  input: ChatRequest,
+  selection: TopicSelection,
+  model: SupportedModel,
+): number | null {
+  const rate = neuronRate(model);
+  if (!rate) return null;
+  const messages = buildModelMessages(input, model, selection);
+  const encoder = new TextEncoder();
+  const promptBytes = messages.reduce(
+    (total, message) => total + encoder.encode(`${message.role}\n${message.content}\n`).byteLength,
+    0,
+  );
+  const promptTokenCeiling = promptBytes + (messages.length * 16) + 64;
+  if (promptTokenCeiling + rate.maxCompletionTokens > rate.maxContextTokens) return null;
+  return estimateNeuronUsageForModel(model, promptTokenCeiling, rate.maxCompletionTokens);
 }
 
 function normalizedResponse(result: unknown): ModelOutput {
@@ -104,6 +245,38 @@ function normalizedResponse(result: unknown): ModelOutput {
     finishReason,
     ...(usage ? { usage } : {}),
   };
+}
+
+function normalizedGemmaResponse(result: unknown): ModelOutput {
+  // Gemma's documented chat-completions output is not Qwen's raw text/legacy shape.
+  if (!isRecord(result) || !Array.isArray(result.choices) || result.choices.length !== 1
+    || !isRecord(result.choices[0]) || !isRecord(result.choices[0].message)) {
+    throw invalidModelResponse('INVALID_GEMMA_RESPONSE_SHAPE');
+  }
+  const choice = result.choices[0];
+  const message = choice.message as RecordValue;
+  if (message.role !== 'assistant' || !('finish_reason' in choice)) {
+    throw invalidModelResponse('INVALID_GEMMA_MESSAGE_METADATA');
+  }
+  // Unexpected reasoning fields are defensive fixtures, not a promised provider shape.
+  for (const record of [result, choice, message]) {
+    for (const key of ['reasoning_content', 'reasoning']) {
+      if (key in record && record[key] !== null && record[key] !== '') {
+        throw invalidModelResponse('REASONING_OUTPUT_PRESENT');
+      }
+    }
+  }
+  if (typeof message.content === 'string' && /<\|channel>|<channel\|>|<\|think\|>/i.test(message.content)) {
+    throw invalidModelResponse('REASONING_OUTPUT_PRESENT');
+  }
+  if ((message.refusal !== undefined && message.refusal !== null && message.refusal !== '')
+    || (message.tool_calls !== undefined && (!Array.isArray(message.tool_calls) || message.tool_calls.length > 0))
+    || (message.function_call !== undefined && message.function_call !== null)) {
+    throw invalidModelResponse('UNSUPPORTED_GEMMA_MESSAGE');
+  }
+  const reason = getFinishReason(choice);
+  if (reason !== 'stop' && reason !== 'length') throw invalidModelResponse('UNSUPPORTED_FINISH_REASON');
+  return normalizedResponse(result);
 }
 
 function escapeQwenContent(content: string): string {
@@ -194,22 +367,72 @@ function hasUnsupportedQualityClaim(response: string): boolean {
   const quality = /\b(?:stable|stability|scalable|scalability|scaleable|high[- ]performance|performant|performance|efficient|efficiency|robust|usable|usability|smooth|smoothly|seamless|award[- ]winning|industry[- ]leading|stabil|skalabel|kebolehskalaan|efisien|cekap|prestasi|kebolehgunaan|lancar|kelancaran)\b/i;
   const personalContext = /\b(?:Hafiz|he|his|beliau|pengalaman(?:\s+(?:ini|beliau|Hafiz|backend))?|kemahiran(?:\s+backend)?|My\s?Verse|Netflix|Squid Game(?:\s+2)?)\b/i;
   const accomplishment = /\b(?:understands?|allows?|enables?|helps?|builds?|built|develops?|developed|creates?|created|delivers?|delivered|implements?|implemented|ensures?|ensured|makes?|made|memahami|membolehkan|membangunkan|membina|menggunakan|memastikan|menjamin|menghasilkan|mencipta|menunjukkan|membuktikan|berfungsi|dijalankan)\b/i;
+  const qualityPredicate = /\b(?:is|are|was|were|has been|have been|remains?)\s+(?!(?:not|never|no|unverified|unproven|unsupported|unknown)\b)(?:[\w-]+\s*){0,3}/i;
   const unsupportedExpertise = /\b(?:strong foundation|deep expertise|expertise)\s+in\s+(?:system\s+)?architecture\b/i;
 
-  return response.split(/[.!?;\n]+/).some(statement =>
-    (quality.test(statement) && personalContext.test(statement) && accomplishment.test(statement))
-    || (unsupportedExpertise.test(statement) && personalContext.test(statement)));
+  return response.split(/[.!?;\n]+/).some(statement => {
+    const predicate = qualityPredicate.exec(statement)?.[0] ?? '';
+    return (quality.test(statement) && personalContext.test(statement)
+      && (accomplishment.test(statement) || quality.test(predicate)))
+      || (unsupportedExpertise.test(statement) && personalContext.test(statement));
+  });
 }
 
-function validateQwenGrounding(response: string, categories: readonly KnowledgeCategory[]): void {
+function hasNonChronologicalDatedCareer(response: string, question: string): boolean {
+  const records = [
+    ...CAREER_TIMELINE,
+    { employer: 'Independent Developer', startYear: CURRENT_CAREER_DATES.startYear },
+  ];
+  const lower = response.toLowerCase();
+  const mentions = records.flatMap(record => {
+    const positions: { position: number; startYear: number; nameLength: number }[] = [];
+    let position = lower.indexOf(record.employer.toLowerCase());
+    while (position !== -1) {
+      positions.push({ position, startYear: record.startYear, nameLength: record.employer.length });
+      position = lower.indexOf(record.employer.toLowerCase(), position + record.employer.length);
+    }
+    return positions;
+  }).sort((a, b) => a.position - b.position);
+  // Check explicit forward transitions independently of the question's intent.
+  // This is a bounded relationship check, not a general temporal-language parser.
+  for (let index = 1; index < mentions.length; index++) {
+    const previous = mentions[index - 1];
+    const current = mentions[index];
+    const between = lower.slice(previous.position + previous.nameLength, current.position);
+    const asserted = between.replace(/\b(?:not|never|tidak)\s+(?:later joined|then joined|kemudian menyertai)\b/g, '');
+    if (current.startYear < previous.startYear
+      && /\b(?:(?:later|then|subsequently)\s+(?:joined|worked at|moved to)|kemudian\s+(?:menyertai|bekerja di))\b/.test(asserted)) return true;
+  }
+  // Source ordering is required for requested/declared timelines, not comparisons
+  // or focused descriptions of an earlier role relative to the current role.
+  const explicitTimeline = /\b(?:timeline|chronolog(?:y|ical)|oldest[- ]first|garis masa|kronologi)\b/i;
+  const comparison = /\b(?:compare|compared|comparison|versus|vs|bandingkan|berbanding|perbezaan)\b/i;
+  const timelineQuestion = explicitTimeline.test(question)
+    || (!comparison.test(question) && /\b(?:career|journey|kerjaya)\b/i.test(question));
+  const declaredTimeline = /(?:^|\n)\s*(?:#{1,3}\s*)?(?:(?:full|complete|chronological|oldest[- ]first)\s+)*(?:career\s+)?timeline\s*[:—-]|(?:^|\n)\s*(?:garis masa|kronologi)\s*(?:kerjaya)?\s*:/i;
+  if (!timelineQuestion && !declaredTimeline.test(response)) return false;
+  // Narrow check for dated role narration within an explicitly chronological mode.
+  // Limit each date lookup to its own clause and the next employer mention.
+  const dated = mentions.filter((mention, index) => {
+    const end = Math.min(mention.position + mention.nameLength + 80, mentions[index + 1]?.position ?? response.length);
+    const clause = response.slice(mention.position + mention.nameLength, end).split(/[.!?;\n]/, 1)[0];
+    return new RegExp(`\\b${mention.startYear}\\b`).test(clause);
+  });
+  return dated.some((mention, index) => index > 0 && mention.startYear < dated[index - 1].startYear);
+}
+
+function validatePortfolioGrounding(response: string, categories: readonly KnowledgeCategory[], question: string): void {
+  if (categories.includes('career') && hasNonChronologicalDatedCareer(response, question)) {
+    throw guardrailFailure('NON_CHRONOLOGICAL_CAREER');
+  }
   if (categories.includes('career') && hasUnsupportedEmployerTechnologyClaim(response)) {
-    throw invalidModelResponse('UNSUPPORTED_EMPLOYER_TECHNOLOGY');
+    throw guardrailFailure('UNSUPPORTED_EMPLOYER_TECHNOLOGY');
   }
   if (hasUnsupportedProjectTechnologyClaim(response)) {
-    throw invalidModelResponse('UNSUPPORTED_PROJECT_TECHNOLOGY');
+    throw guardrailFailure('UNSUPPORTED_PROJECT_TECHNOLOGY');
   }
   if (hasUnsupportedQualityClaim(response)) {
-    throw invalidModelResponse('UNSUPPORTED_QUALITY_CLAIM');
+    throw guardrailFailure('UNSUPPORTED_QUALITY_CLAIM');
   }
 }
 
@@ -228,17 +451,45 @@ export async function invokeModel(
   instrumentation?: InferenceInstrumentation,
 ): Promise<ModelOutput> {
   instrumentation?.beforeInference?.(model);
-  const result: unknown = model === QWEN_MODEL
-    ? await ai.run(model, {
-      prompt: qwenPrompt(input.messages),
-      raw: true,
-      temperature: input.temperature,
-      max_tokens: input.max_tokens,
-      stream: input.stream,
-    }, options)
-    : await ai.run(model, input, options);
+  let result: unknown;
+  try {
+    result = model === QWEN_MODEL
+      ? await ai.run(model, {
+        prompt: qwenPrompt(input.messages),
+        raw: true,
+        temperature: input.temperature,
+        max_tokens: input.max_tokens,
+        stream: input.stream,
+      }, options)
+      : model === GEMMA_MODEL
+        ? await ai.run(model, {
+          messages: input.messages,
+          max_completion_tokens: GEMMA_MAX_COMPLETION_TOKENS,
+          temperature: input.temperature,
+          stream: false,
+          chat_template_kwargs: { enable_thinking: false },
+        }, options)
+        : await ai.run(model, input, options);
+  } catch (error) {
+    throw new ProviderRejection(error);
+  }
   instrumentation?.onProviderResponse?.(result);
-  return normalizedResponse(result);
+  if (options?.signal?.aborted) throw new InferenceDeadlineExceeded();
+  try {
+    const output = model === GEMMA_MODEL ? normalizedGemmaResponse(result) : normalizedResponse(result);
+    instrumentation?.onNormalization?.('succeeded');
+    return output;
+  } catch (error) {
+    const code = isRecord(error) && typeof error.diagnosticCode === 'string' ? error.diagnosticCode : null;
+    instrumentation?.onNormalization?.(code === 'OUTPUT_TOKEN_LIMIT' ? 'truncated' : 'invalid');
+    throw error;
+  }
+}
+
+function getProviderErrorCode(error: unknown): number | undefined {
+  const code = isRecord(error) && 'code' in error ? Number(error.code)
+    : error instanceof Error ? Number(/^(\d+):/.exec(error.message)?.[1]) : NaN;
+  return Number.isSafeInteger(code) && code >= 0 ? code : undefined;
 }
 
 function upstreamError(error: unknown): ApiError {
@@ -265,27 +516,84 @@ export async function reply(
   selection: TopicSelection = selectTopics(input),
   instrumentation?: InferenceInstrumentation,
 ): Promise<ModelOutput> {
-  const messages: ModelMessage[] = [
-    { role: 'system', content: buildSystemPrompt(selection.categories) },
-    ...input.history,
-    { role: 'user', content: input.message },
-  ];
-  const modelInput: ModelRequest = { messages, temperature: 0.4, max_tokens: 250, stream: false };
+  const messages = buildModelMessages(input, model, selection);
+  const modelInput: ModelRequest = {
+    messages, temperature: 0.4,
+    max_tokens: model === QWEN_MODEL ? QWEN_MAX_OUTPUT_TOKENS : 250,
+    stream: false,
+  };
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
+  const inferenceStartedAt = Date.now();
+  let deadlineReached = false;
+  let abortRequested = false;
+  let responseNormalizationOutcome: ResponseNormalizationOutcome = 'not_started';
+  let elapsedReported = false;
+  const reportElapsed = () => {
+    if (elapsedReported) return Math.max(0, Date.now() - inferenceStartedAt);
+    elapsedReported = true;
+    const elapsedMs = Math.max(0, Date.now() - inferenceStartedAt);
+    instrumentation?.onElapsed?.(elapsedMs);
+    return elapsedMs;
+  };
+  const trackedInstrumentation = instrumentation ? {
+    ...instrumentation,
+    onProviderResponse: (result: unknown) => {
+      if (!deadlineReached) instrumentation.onProviderResponse?.(result);
+      else instrumentation.onLateProviderResponse?.(result);
+    },
+    onNormalization: (outcome: ResponseNormalizationOutcome) => {
+      if (deadlineReached) return;
+      responseNormalizationOutcome = outcome;
+      instrumentation.onNormalization?.(outcome);
+    },
+  } : undefined;
   try {
+    const provider = invokeModel(ai, model, modelInput, { signal: controller.signal }, trackedInstrumentation);
+    instrumentation?.retain?.(provider.then(() => {}, () => {}));
     const output = await Promise.race([
-      invokeModel(ai, model, modelInput, { signal: controller.signal }, instrumentation),
+      provider,
       new Promise<never>((_, reject) => {
         timer = setTimeout(() => {
-          reject(new Error('Inference deadline exceeded'));
+          deadlineReached = true;
+          abortRequested = true;
+          reject(new InferenceDeadlineExceeded());
           controller.abort();
         }, AI_TIMEOUT_MS);
       }),
     ]);
-    if (model === QWEN_MODEL) validateQwenGrounding(output.response, selection.categories);
+    reportElapsed();
+    if (model === QWEN_MODEL || model === GEMMA_MODEL) validatePortfolioGrounding(output.response, selection.categories, input.message);
     return output;
   } catch (error) {
-    throw upstreamError(error);
+    const elapsedInferenceMs = reportElapsed();
+    const providerRejected = error instanceof ProviderRejection;
+    const originalError = providerRejected ? error.cause : error;
+    const providerErrorCode = providerRejected ? getProviderErrorCode(originalError) : undefined;
+    const normalizationFailure = isRecord(originalError) && originalError.normalizationFailure === true;
+    const diagnosticCode = normalizationFailure && typeof originalError.diagnosticCode === 'string'
+      ? originalError.diagnosticCode : null;
+    let failureCategory: InternalFailureCategory = 'UNKNOWN';
+    if (deadlineReached || error instanceof InferenceDeadlineExceeded) {
+      failureCategory = 'INFERENCE_DEADLINE_EXCEEDED';
+    } else if (providerRejected) {
+      failureCategory = providerErrorCode === 3036 ? 'AI_PROVIDER_QUOTA' : 'AI_PROVIDER_REJECTED';
+    } else if (diagnosticCode === 'OUTPUT_TOKEN_LIMIT') {
+      failureCategory = 'AI_RESPONSE_TRUNCATED';
+    } else if (normalizationFailure) {
+      failureCategory = 'AI_RESPONSE_INVALID';
+    }
+    const mapped = upstreamError(originalError);
+    const internalDiagnostics: InternalInferenceDiagnostics = {
+      failureCategory,
+      elapsedInferenceMs,
+      deadlineReached,
+      abortRequested,
+      providerRejected,
+      responseNormalizationOutcome,
+      publicHttpErrorCode: mapped.code,
+      ...(providerErrorCode !== undefined ? { providerErrorCode } : {}),
+    };
+    throw new ApiError(mapped.status, mapped.code, mapped.message, mapped.diagnosticCode, internalDiagnostics, error);
   } finally { if (timer !== undefined) clearTimeout(timer); }
 }

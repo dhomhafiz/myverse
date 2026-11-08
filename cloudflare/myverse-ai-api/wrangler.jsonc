@@ -5,6 +5,14 @@
   "preview_urls": false,
   "main": "src/index.ts",
   "compatibility_date": "2026-11-05",
+  "durable_objects": {
+    "bindings": [
+      { "name": "AI_BUDGET_CONTROLLER", "class_name": "AiBudgetController" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["AiBudgetController"] }
+  ],
   "ai": { "binding": "AI" },
   "ratelimits": [
     {
@@ -14,7 +22,13 @@
       "simple": { "limit": 6, "period": 60 }
     }
   ],
-  "vars": { "AI_ENABLED": "false", "LOCAL_DEV_ORIGINS": "" },
+  "vars": {
+    "AI_MODEL": "@cf/google/gemma-4-26b-a4b-it",
+    "AI_ENABLED": "false",
+    "AI_DAILY_ESTIMATED_NEURON_BUDGET": "2000",
+    "AI_MAX_CONCURRENT_INFERENCES": "1",
+    "LOCAL_DEV_ORIGINS": ""
+  },
   "observability": {
     "enabled": true,
     "head_sampling_rate": 0.1,

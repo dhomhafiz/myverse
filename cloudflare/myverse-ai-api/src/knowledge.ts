@@ -162,16 +162,43 @@ export const PORTFOLIO_FACTS = {
   },
 } as const;
 
+// Verified against professionalExperiences in lib/about.ts, published by /about.
+// Preserve year-only precision; do not invent start months or exact handoff dates.
+// Keep this metadata outside PORTFOLIO_FACTS: historical acceptance journals hash it.
+type CareerEmployer = typeof PORTFOLIO_FACTS.career.employers[number]['employer'];
+export const CAREER_DATES = {
+  'Ethereal Digital': { startYear: 2024, endYear: 2026, endMonth: 2 },
+  'Commerce Dot Com International': { startYear: 2023, endYear: 2023 },
+  'Strato Solutions': { startYear: 2022, endYear: 2023 },
+  'MYNIC Berhad': { startYear: 2018, endYear: 2019 },
+  'dJava Factory': { startYear: 2019, endYear: 2022 },
+  'Globe3 Systems': { startYear: 2017, endYear: 2018 },
+  'PharmEng Technology Malaysia': { startYear: 2016, endYear: 2017 },
+  'Avanade Malaysia': { startYear: 2013, endYear: 2014 },
+} as const satisfies Record<CareerEmployer, { startYear: number; endYear: number; endMonth?: number }>;
+export const CURRENT_CAREER_DATES = { startYear: 2026, endYear: null } as const;
+export const CAREER_TIMELINE = PORTFOLIO_FACTS.career.employers
+  .map(record => ({ ...record, ...CAREER_DATES[record.employer] }))
+  .sort((a, b) => a.startYear - b.startYear || a.endYear - b.endYear);
+
 const careerChronology = [
+  ...CAREER_TIMELINE.map(({ role, employer, period }) => `${role} at ${employer} (${period})`),
   PORTFOLIO_FACTS.career.current,
-  ...PORTFOLIO_FACTS.career.employers.map(({ role, employer, period }) => `${role} at ${employer} (${period})`),
 ].join('; ');
-const employerFacts = PORTFOLIO_FACTS.career.employers.map(record => {
+function formatEmployerFact(record: typeof CAREER_TIMELINE[number]): string {
   const technologies = record.technologies.length > 0
     ? `Explicitly supported technologies: ${joinEnglish(record.technologies)}.`
     : 'The approved role description does not specify technologies.';
   return `${record.employer} — ${record.role} (${record.period}): ${record.responsibilities.en} ${technologies}`;
-}).join(' ');
+}
+const careerEmployerFacts = CAREER_TIMELINE.map(record => ({
+  employer: record.employer,
+  id: `career:${record.employer.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+  category: 'career' as const,
+  content: formatEmployerFact(record),
+  focusedContent: `${record.employer} — ${record.role} (${record.period}). Verified technologies: ${joinEnglish(record.technologies)}.`,
+}));
+const employerFacts = careerEmployerFacts.map(record => record.content).join(' ');
 const generalSkills = joinEnglish(PORTFOLIO_FACTS.skills.general);
 const projectTechnologies = joinEnglish(PORTFOLIO_FACTS.projects.netflix.technologies);
 const myVerseTechnologies = joinEnglish(PORTFOLIO_FACTS.myVerse.technologies);
@@ -184,7 +211,7 @@ export const KNOWLEDGE: Record<KnowledgeCategory, readonly string[]> = {
     `Approach [lib/about.ts; /about]: ${PORTFOLIO_FACTS.approach} Describe this as his approach, not as proof of a particular employer or project outcome.`,
   ],
   career: [
-    `Career chronology [lib/about.ts; /about]: ${careerChronology}. Preserve this chronology. Job titles and general skills alone do not verify an employer-specific technology.`,
+    `Career chronology [lib/about.ts; /about], oldest-first by verified start year: ${careerChronology}. Preserve this chronology. Year-only dates and overlapping years do not establish exact transitions; use neutral dated descriptions, not "began at" or "later joined". Job titles and general skills alone do not verify an employer-specific technology.`,
     `Verified employer records [lib/about.ts; /about]: ${employerFacts} Do not assign a technology to an employer unless it is explicitly listed in that employer's record.`,
   ],
   skills: [
@@ -209,11 +236,74 @@ export const KNOWLEDGE: Record<KnowledgeCategory, readonly string[]> = {
   ],
 };
 
-export function formatKnowledge(categories: readonly KnowledgeCategory[]): string {
+export type KnowledgeProfile = 'focused-career';
+export type SelectedKnowledgeRecord = {
+  id: string;
+  category: KnowledgeCategory;
+  content: string;
+};
+
+const FOCUSED_CAREER_EMPLOYERS = new Set([
+  'MYNIC Berhad',
+  'Strato Solutions',
+  'Commerce Dot Com International',
+  'Ethereal Digital',
+]);
+
+export function selectKnowledgeRecords(
+  categories: readonly KnowledgeCategory[],
+  profile?: KnowledgeProfile,
+): SelectedKnowledgeRecord[] {
   return KNOWLEDGE_CATEGORIES
     .filter(category => categories.includes(category))
-    .map(category => `${KNOWLEDGE_TITLES[category]}:\n${KNOWLEDGE[category].map(fact => `- ${fact}`).join('\n')}`)
+    .flatMap(category => {
+      if (profile === 'focused-career' && category === 'career') {
+        return [
+          ...careerEmployerFacts
+            .filter(record => FOCUSED_CAREER_EMPLOYERS.has(record.employer))
+            .map(({ id, category: recordCategory, focusedContent }) => ({
+              id,
+              category: recordCategory,
+              content: focusedContent,
+            })),
+          {
+            id: 'career:independent-developer',
+            category,
+            content: PORTFOLIO_FACTS.career.current,
+          },
+        ];
+      }
+      if (profile === 'focused-career' && category === 'myVerse') {
+        return [{ id: 'myVerse:architecture', category, content: KNOWLEDGE.myVerse[0] }];
+      }
+      return KNOWLEDGE[category].map((content, index) => ({
+        id: `${category}:${index + 1}`,
+        category,
+        content,
+      }));
+    });
+}
+
+export function formatKnowledgeRecords(records: readonly SelectedKnowledgeRecord[]): string {
+  return KNOWLEDGE_CATEGORIES
+    .map(category => {
+      const selected = records.filter(record => record.category === category);
+      if (selected.length === 0) return '';
+      return `${KNOWLEDGE_TITLES[category]}:\n${selected.map(record => `- ${record.content}`).join('\n')}`;
+    })
+    .filter(Boolean)
     .join('\n\n');
+}
+
+export function formatKnowledge(
+  categories: readonly KnowledgeCategory[],
+  profile?: KnowledgeProfile,
+): string {
+  const records = selectKnowledgeRecords(categories, profile);
+  const formatted = formatKnowledgeRecords(records);
+  return profile === 'focused-career' && categories.includes('career')
+    ? formatted.replace('Career:\n', 'Career (selected relevant experience; not a complete timeline):\n')
+    : formatted;
 }
 
 export const ALL_KNOWLEDGE = formatKnowledge(KNOWLEDGE_CATEGORIES);
