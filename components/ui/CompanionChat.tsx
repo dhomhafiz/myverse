@@ -2,12 +2,16 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type FormEvent, type KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import { companionConversation, CompanionChatError, MAX_COMPANION_MESSAGE_LENGTH } from '@/lib/companion-api';
-import { createCompanionRequest } from '@/lib/companion-request';
+import type { CompanionHistoryMessage, CompanionReply } from '@/lib/companion-chat';
+import { appendCompanionHistory, createCompanionRequest } from '@/lib/companion-request';
+import { linkifyCompanionNavigation } from '@/lib/companion-navigation';
+import { companionSuggestions, type CompanionLanguage } from '@/lib/companion-suggestions';
 
-type Message = { id: number; role: 'assistant' | 'user'; text: string };
+type Message = { id: number; role: 'assistant' | 'user'; text: string; source?: CompanionReply['source'] };
 type ViewportMetrics = { height: number; offsetTop: number } | null;
 
 const MAX_MESSAGES = 40;
@@ -38,12 +42,16 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
   const [draft, setDraft] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
+  const [suggestionsOpen, setSuggestionsOpen] = useState(true);
+  const [suggestionLanguage, setSuggestionLanguage] = useState<CompanionLanguage>('en');
   const [request] = useState(() => createCompanionRequest(companionConversation.provider));
   const panel = useRef<HTMLElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const messageList = useRef<HTMLOListElement>(null);
   const lastAutoScrolledMessage = useRef(0);
   const nextId = useRef(1);
+  const history = useRef<CompanionHistoryMessage[]>([]);
+  const submittedPrompt = useRef('');
 
   useEffect(() => () => request.cancel(), [request]);
 
@@ -51,6 +59,18 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
     request.cancel();
     onClose();
   }, [onClose, request]);
+
+  const startNewChat = useCallback(() => {
+    request.cancel();
+    history.current = [];
+    nextId.current = 1;
+    lastAutoScrolledMessage.current = 0;
+    setMessages(initialMessages);
+    setDraft('');
+    setPending(false);
+    setError('');
+    setSuggestionsOpen(true);
+  }, [request]);
 
   useEffect(() => {
     const visualViewport = window.visualViewport;
@@ -95,21 +115,34 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
     }
   }, [messages]);
 
-  const addMessage = useCallback((role: Message['role'], text: string) => {
-    setMessages(current => [...current, { id: nextId.current++, role, text }].slice(-MAX_MESSAGES));
+  useLayoutEffect(() => {
+    if (suggestionsOpen && messages.some(message => message.role === 'user') && messageList.current) {
+      messageList.current.scrollTop = messageList.current.scrollHeight;
+    }
+  }, [messages, suggestionsOpen]);
+
+  const addMessage = useCallback((role: Message['role'], text: string, source?: Message['source']) => {
+    setMessages(current => [...current, { id: nextId.current++, role, text, source }].slice(-MAX_MESSAGES));
   }, []);
 
   const requestResponse = useCallback((raw: string) => {
+    if (request.pending) return;
     try {
-      request.submit(raw, {
+      request.submit(raw, history.current, {
         onStart(prompt) {
+          submittedPrompt.current = prompt;
           addMessage('user', prompt);
           setDraft('');
           setPending(true);
           setError('');
+          setSuggestionsOpen(false);
           onAcknowledge();
         },
-        onReply(response) { addMessage('assistant', response); onAcknowledge(); },
+        onReply(response) {
+          addMessage('assistant', response.reply, response.source);
+          history.current = appendCompanionHistory(history.current, submittedPrompt.current, response.reply);
+          onAcknowledge();
+        },
         onError(reason, prompt) {
           setError(reason instanceof CompanionChatError ? reason.message : 'The reply could not be loaded. Your message is still here.');
           setDraft(current => current || prompt);
@@ -120,6 +153,11 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
       setError(reason instanceof CompanionChatError ? reason.message : 'That message could not be sent.');
     }
   }, [addMessage, onAcknowledge, request]);
+
+  const submitSuggestion = useCallback((question: string) => {
+    if (request.pending) return;
+    requestResponse(question);
+  }, [request, requestResponse]);
 
   const send = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -182,29 +220,73 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
             <p id="companion-chat-title">MYVERSE // AI COMPANION</p>
             <p id="companion-chat-subtitle">ASK ABOUT THE CREATOR</p>
           </div>
-          <button className="companion-chat-close" type="button" onClick={closeChat} aria-label="Back to Room">
-            <span aria-hidden="true">×</span>
-            <span>BACK TO ROOM</span>
-          </button>
+          <div className="companion-chat-header-actions">
+            <button className="companion-chat-new" type="button" onClick={startNewChat}>
+              NEW CHAT
+            </button>
+            <button className="companion-chat-close" type="button" onClick={closeChat} aria-label="Back to Room">
+              <span aria-hidden="true">×</span>
+              <span>BACK TO ROOM</span>
+            </button>
+          </div>
         </header>
         <ol ref={messageList} className="companion-chat-messages" role="log" aria-live="polite" aria-relevant="additions">
           {messages.map(message => (
             <li className={`companion-chat-message companion-chat-message--${message.role}`} data-message-id={message.id} key={message.id}>
-              <span className="companion-chat-sender">{message.role === 'assistant' ? 'COMPANION' : 'YOU'}</span>
+              <span className="companion-chat-sender">{message.role === 'assistant'
+                ? message.source === 'faq' ? 'COMPANION · LIMITED FAQ' : 'COMPANION'
+                : 'YOU'}</span>
               {message.role === 'assistant' ? (
                 <div className="companion-chat-markdown">
                   <ReactMarkdown remarkPlugins={[remarkBreaks]} allowedElements={markdownElements}
                     components={{
-                      a: ({ href, children }) => isSafeMarkdownHref(href ?? '')
-                        ? <a href={href} rel="noopener noreferrer">{children}</a>
-                        : <>{children}</>,
+                      a: ({ href, children }) => {
+                        if (!isSafeMarkdownHref(href ?? '')) return <>{children}</>;
+                        if (href?.startsWith('/') && !href.startsWith('//')) {
+                          return <Link href={href} prefetch={false}>{children}</Link>;
+                        }
+                        return <a href={href} rel="noopener noreferrer">{children}</a>;
+                      },
                     }}>
-                    {message.text}
+                    {linkifyCompanionNavigation(message.text)}
                   </ReactMarkdown>
                 </div>
               ) : <p>{message.text}</p>}
             </li>
           ))}
+          {suggestionsOpen ? (
+            <li className={`companion-chat-suggestions${messages.some(message => message.role === 'user') ? ' is-compact' : ''}`}>
+              <div className="companion-chat-suggestions-heading">
+                <p>{suggestionLanguage === 'en'
+                  ? 'Not sure what to ask? Start with a suggestion.'
+                  : 'Tidak pasti apa yang ingin ditanya? Mulakan dengan cadangan.'}</p>
+                <div className="companion-chat-language" role="group" aria-label="Suggested question language">
+                  <button type="button" aria-pressed={suggestionLanguage === 'en'}
+                    onClick={() => setSuggestionLanguage('en')}>EN</button>
+                  <button type="button" aria-pressed={suggestionLanguage === 'ms'}
+                    onClick={() => setSuggestionLanguage('ms')}>BM</button>
+                </div>
+              </div>
+              <div className="companion-chat-suggestion-pills" aria-label="Suggested questions">
+                {companionSuggestions.map(suggestion => (
+                  <button key={suggestion.id} type="button" className="companion-chat-suggestion"
+                    disabled={pending} onClick={() => submitSuggestion(suggestion.question[suggestionLanguage])}>
+                    {suggestion.label[suggestionLanguage]}
+                  </button>
+                ))}
+              </div>
+              <button type="button" className="companion-chat-suggestions-dismiss"
+                onClick={() => setSuggestionsOpen(false)}>
+                {suggestionLanguage === 'en' ? 'Dismiss suggestions' : 'Tutup cadangan'}
+              </button>
+            </li>
+          ) : (
+            <li className="companion-chat-suggestions-reopen">
+              <button type="button" disabled={pending} onClick={() => setSuggestionsOpen(true)}>
+                {suggestionLanguage === 'en' ? 'Suggested Questions' : 'Soalan Cadangan'}
+              </button>
+            </li>
+          )}
           {pending && (
             <li className="companion-chat-thinking" role="status">
               <span className="companion-chat-thinking-dots" aria-hidden="true"><i /><i /><i /></span>
@@ -233,7 +315,8 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
         <p id="companion-chat-limit" className="companion-chat-disclaimer">{draft.length} / {MAX_COMPANION_MESSAGE_LENGTH}</p>
         <p className="companion-chat-disclaimer">{companionConversation.mode === 'local-api'
           ? 'PORTFOLIO FAQ · AI GENERATION DISABLED' : companionConversation.mode === 'worker-api'
-            ? 'MYVERSE COMPANION · CLOUDFLARE API' : 'PREDEFINED RESPONSES · NO LIVE AI SERVICE'}</p>
+            ? 'MYVERSE COMPANION · CLOUDFLARE API' : companionConversation.mode === 'mock'
+              ? 'LOCAL PREVIEW · MOCK RESPONSES' : 'AI SERVICE UNAVAILABLE'}</p>
       </section>
     </div>,
     portalRoot,

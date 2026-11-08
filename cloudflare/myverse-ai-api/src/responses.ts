@@ -17,7 +17,9 @@ export type InternalInferenceDiagnostics = {
 };
 
 export type ChatResponse = { success: true; reply: string; model?: string; source?: 'faq' | 'ai' }
-  | { success: false; error: { code: ErrorCode; message: string } };
+  | { success: false; error: { code: ErrorCode; message: string; reason?: PublicAiFailureReason } };
+export type PublicAiFailureReason = 'daily_budget_exhausted' | 'concurrency_unavailable' | 'recovery_uncertain'
+  | 'provider_timeout' | 'provider_failure' | 'service_unavailable';
 
 export class ApiError extends Error {
   status: number;

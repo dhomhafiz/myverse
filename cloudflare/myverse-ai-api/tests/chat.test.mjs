@@ -26,7 +26,7 @@ function fixture(options = {}) {
       };
     } },
     AI_ENABLED: options.aiEnabled === undefined ? 'true' : options.aiEnabled,
-    AI_BUDGET_CONTROLLER: createTestBudgetBinding(),
+    AI_BUDGET_CONTROLLER: options.budget ?? createTestBudgetBinding(),
     CHAT_RATE_LIMITER: { limit: async ({ key }) => {
       keys.push(key);
       if (options.limiterFailure) throw new Error('private limiter details');
@@ -59,6 +59,7 @@ test('AI availability requires the exact server-side true value and otherwise fa
       error: {
         code: 'AI_UNAVAILABLE',
         message: 'Sorry, the AI Companion is temporarily unavailable. Please try again, or explore /work and /contact.',
+        reason: 'service_unavailable',
       },
     });
     assert.doesNotMatch(JSON.stringify(body), /AI_ENABLED|TRUE|yes/);
@@ -67,11 +68,11 @@ test('AI availability requires the exact server-side true value and otherwise fa
   }
 });
 
-test('AI-disabled requests keep deterministic FAQs and health available', async () => {
+test('AI-disabled requests do not bypass the Gemma-first route with deterministic FAQs', async () => {
   const f = fixture({ aiEnabled: 'false' });
-  const faq = await f.send({ message: 'Who is Hafiz?' });
-  assert.equal(faq.status, 200);
-  assert.equal((await faq.json()).source, 'faq');
+  const unavailable = await f.send({ message: 'Who is Hafiz?' });
+  assert.equal(unavailable.status, 503);
+  assert.equal((await unavailable.json()).error.reason, 'service_unavailable');
   assert.equal(f.calls.length, 0);
 
   const health = await worker.fetch(new Request('https://local/health'), {
@@ -154,45 +155,124 @@ for (const [message, answer] of [
   ]);
 });
 
-test('verified FAQ topics are answered deterministically after validation and rate limiting', async () => {
+test('known FAQ questions all route through Gemma when AI admission is available', async () => {
   const cases = [
-    ['Who is Hafiz?', /Kuala Lumpur-based creative developer/, 'faq'],
-    ['Siapa Hafiz?', /ialah pembangun kreatif/, 'faq'],
-    ['What is his backend experience?', /Ethereal Digital/, 'faq'],
-    ['Apa pengalaman backend Hafiz?', /Ethereal Digital/, 'faq'],
-    ["What is Hafiz's backend experience?", /Supported technologies: Spring Boot, REST APIs and Microsoft SQL Server/, 'faq'],
-    ['Tell me about Hafiz’s backend background.', /Commerce Dot Com International/, 'faq'],
-    ['Boleh terangkan pengalaman Hafiz dalam pembangunan backend?', /Teknologi yang disenaraikan/, 'faq'],
-    ['What published projects can visitors explore?', /Coming Soon/, 'faq'],
-    ['Apakah teknologi yang digunakan Hafiz?', /React, Next\.js/, 'faq'],
-    ['How can I contact Hafiz?', /build@dhomhafiz\.dev/, 'faq'],
-    ['How much does he charge?', /Pricing and current availability are not listed/, 'faq'],
-    ['Adakah Hafiz tersedia?', /harga dan ketersediaan semasa tidak diterbitkan/, 'faq'],
-    ['Where are the asset credits?', /third-party asset creators/, 'faq'],
-    ['Where are the asset credits listed?', /third-party asset creators/, 'faq'],
+    'Who is Hafiz?',
+    'Siapa Hafiz?',
+    'What is his backend experience?',
+    'Apa pengalaman backend Hafiz?',
+    "What is Hafiz's backend experience?",
+    'Tell me about Hafiz’s backend background.',
+    'Boleh terangkan pengalaman Hafiz dalam pembangunan backend?',
+    'What published projects can visitors explore?',
+    'Apakah teknologi yang digunakan Hafiz?',
+    'How can I contact Hafiz?',
+    'How much does he charge?',
+    'Adakah Hafiz tersedia?',
+    'Where are the asset credits?',
+    'Where are the asset credits listed?',
   ];
-  for (const [message, expected] of cases) {
+  for (const message of cases) {
     const f = fixture();
     const response = await f.send({ message });
     assert.equal(response.status, 200);
     const body = await response.json();
     assert.equal(body.success, true);
-    assert.match(body.reply, expected);
-    assert.equal(body.source, 'faq');
-    assert.equal('model' in body, false);
+    assert.equal(body.source, 'ai');
+    assert.equal(body.model, GEMMA_MODEL);
     assert.equal(f.keys.length, 1);
+    assert.equal(f.calls.length, 1);
+    assert.equal(f.calls[0][0], GEMMA_MODEL);
+  }
+});
+
+test('explicit language requests and language switches are sent to Gemma with history', async () => {
+  const f = fixture();
+  const history = [
+    { role: 'user', content: 'What projects has Hafiz built?' },
+    { role: 'assistant', content: 'The Netflix installation and MyVerse.' },
+  ];
+  const response = await f.send({ message: 'Yang mana menggunakan React?', history });
+  const body = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(body.source, 'ai');
+  assert.equal(f.calls.length, 1);
+  assert.deepEqual(f.calls[0][1].messages.slice(1, -1), history);
+  assert.match(f.calls[0][1].messages[0].content, /LATEST visitor message/);
+});
+
+function deniedBudget(reason) {
+  return {
+    getByName: () => ({
+      fetch: async () => Response.json({ granted: false, reason }),
+    }),
+  };
+}
+
+test('verified daily budget exhaustion alone enables deterministic FAQ fallback', async () => {
+  for (const [message, expected] of [
+    ['Who is Hafiz?', /Kuala Lumpur-based creative developer/],
+    ['Siapa Hafiz?', /pembangun kreatif/],
+    ['Apakah teknologi yang digunakan Hafiz?', /React, Next\.js/],
+  ]) {
+    const f = fixture({ budget: deniedBudget('budget_exhausted') });
+    const response = await f.send({ message });
+    const body = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(body.source, 'faq');
+    assert.match(body.reply, expected);
     assert.equal(f.calls.length, 0);
   }
 });
 
-test('explicit language request is honored by deterministic FAQ', async () => {
-  const f = fixture();
-  const response = await f.send({ message: 'Who is Hafiz? Please answer in Malay.' });
+test('budget exhaustion without a reliable FAQ match returns a localized budget message', async () => {
+  const f = fixture({ budget: deniedBudget('budget_exhausted') });
+  const response = await f.send({ message: 'What is the weather in Kuala Lumpur?' });
   const body = await response.json();
-  assert.equal(response.status, 200);
-  assert.equal(body.source, 'faq');
-  assert.match(body.reply, /ialah pembangun kreatif/);
+  assert.equal(response.status, 503);
+  assert.equal(body.error.code, 'AI_UNAVAILABLE');
+  assert.equal(body.error.reason, 'daily_budget_exhausted');
+  assert.match(body.error.message, /budget has been reached/);
   assert.equal(f.calls.length, 0);
+});
+
+test('concurrency and recovery uncertainty denials never masquerade as budget exhaustion', async () => {
+  for (const [admissionReason, publicReason] of [
+    ['busy', 'concurrency_unavailable'],
+    ['uncertainty_limit', 'recovery_uncertain'],
+  ]) {
+    const f = fixture({ budget: deniedBudget(admissionReason) });
+    const response = await f.send({ message: 'Who is Hafiz?' });
+    const body = await response.json();
+    assert.equal(response.status, 503);
+    assert.equal(body.error.reason, publicReason);
+    assert.doesNotMatch(body.error.message, /budget/i);
+    assert.equal(f.calls.length, 0);
+  }
+});
+
+test('ambiguous admission outcomes cannot trigger FAQ fallback', async () => {
+  const budget = {
+    getByName: () => ({ fetch: async () => Response.json({ reason: 'budget_exhausted' }) }),
+  };
+  const f = fixture({ budget });
+  const response = await f.send({ message: 'Who is Hafiz?' });
+  const body = await response.json();
+  assert.equal(response.status, 503);
+  assert.equal(body.error.reason, 'service_unavailable');
+  assert.equal(body.source, undefined);
+  assert.equal(f.calls.length, 0);
+});
+
+test('provider failures do not fall back to a known FAQ', async () => {
+  const f = fixture({ failure: new Error('private provider details') });
+  const response = await f.send({ message: 'Who is Hafiz?' });
+  const body = await response.json();
+  assert.equal(response.status, 503);
+  assert.equal(body.error.reason, 'provider_failure');
+  assert.equal(body.source, undefined);
+  assert.equal(f.calls.length, 1);
+  assert.doesNotMatch(JSON.stringify(body), /private provider details/);
 });
 
 test('follow-up keeps bounded history between trusted system and latest visitor', async () => {
@@ -275,6 +355,7 @@ test('local HTTP rejects a mocked project-attribution contradiction without expo
     error: {
       code: 'AI_UNAVAILABLE',
       message: 'Sorry, the AI Companion is temporarily unavailable. Please try again, or explore /work and /contact.',
+      reason: 'provider_failure',
     },
   });
   assert.doesNotMatch(JSON.stringify(body), /Next\.js|Three\.js|UNSUPPORTED_PROJECT_TECHNOLOGY/);
@@ -456,7 +537,9 @@ for (const [failure, status, code] of [
   const body = await response.json();
   assert.equal(body.success, false);
   assert.equal(body.error.code, code);
-  assert.deepEqual(Object.keys(body.error).sort(), ['code', 'message']);
+  assert.deepEqual(Object.keys(body.error).sort(), code === 'AI_UNAVAILABLE'
+    ? ['code', 'message', 'reason'] : ['code', 'message']);
+  if (code === 'AI_UNAVAILABLE') assert.equal(body.error.reason, 'provider_failure');
   assert.match(body.error.message, /^Sorry, the AI Companion is temporarily unavailable/);
   assert.doesNotMatch(JSON.stringify(body), /private|stack|token|VERIFIED PUBLIC/);
   assert.equal(f.calls.length, 1);
@@ -511,7 +594,11 @@ test('HTTP timeout response is stable and safe without retrying inference', asyn
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), {
     success: false,
-    error: { code: 'AI_UNAVAILABLE', message: 'Sorry, the AI Companion is temporarily unavailable. Please try again, or explore /work and /contact.' },
+    error: {
+      code: 'AI_UNAVAILABLE',
+      message: 'Sorry, the AI Companion is temporarily unavailable. Please try again, or explore /work and /contact.',
+      reason: 'provider_timeout',
+    },
   });
   assert.equal(calls, 1);
 });

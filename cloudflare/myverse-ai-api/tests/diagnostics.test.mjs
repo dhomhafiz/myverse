@@ -91,8 +91,8 @@ async function assertDiagnostic(f, diagnosticCode, stage) {
   assert.equal(JSON.stringify(entry).includes(message), false);
 }
 
-test('tech-stack and programming-language synonyms use the existing deterministic FAQ', async () => {
-  let baseline;
+test('tech-stack and programming-language FAQ matches still use Gemma', async () => {
+  let calls = 0;
   for (const question of [
     'What is his tech stack?',
     'What tech stack does Hafiz use?',
@@ -105,15 +105,21 @@ test('tech-stack and programming-language synonyms use the existing deterministi
       body: JSON.stringify({ message: question }),
     });
     const result = await createWorker().fetch(request, {
+      AI: { run: async () => {
+        calls++;
+        return validOutput;
+      } },
+      AI_MODEL: GEMMA_MODEL,
+      AI_BUDGET_CONTROLLER: budgetBinding(),
       CHAT_RATE_LIMITER: { limit: async () => ({ success: true }) },
-      AI_ENABLED: 'false',
+      AI_ENABLED: 'true',
     });
     assert.equal(result.status, 200);
     const body = await result.json();
-    assert.equal(body.source, 'faq');
-    baseline ??= body.reply;
-    assert.equal(body.reply, baseline);
+    assert.equal(body.source, 'ai');
+    assert.equal(body.model, GEMMA_MODEL);
   }
+  assert.equal(calls, 4);
 });
 
 test('unrelated technical questions continue through the mocked AI path', async () => {

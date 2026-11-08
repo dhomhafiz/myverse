@@ -12,7 +12,7 @@ import {
 } from './ai.ts';
 import { ApiError, json, type ResponseNormalizationOutcome } from './responses.ts';
 import { readRequest, type ChatRequest } from './validation.ts';
-import { decideAiFallback, matchPortfolioFaq } from './faq.ts';
+import { budgetExhaustedMessage, decideAiFallback, matchPortfolioFaq } from './faq.ts';
 import { selectTopics, type TopicSelection } from './topics.ts';
 import type { KnowledgeCategory } from './knowledge.ts';
 
@@ -95,6 +95,7 @@ const AI_UNAVAILABLE_DIAGNOSTICS = {
   DURABLE_OBJECT_ADMISSION_REQUEST_FAILURE: { stage: 'budget_admission' },
   AI_BUDGET_EXHAUSTED: { stage: 'budget_admission' },
   AI_CONCURRENCY_LIMIT_REACHED: { stage: 'budget_admission' },
+  AI_RECOVERY_UNCERTAIN: { stage: 'budget_admission' },
   BUDGET_CONTROLLER_CONFIGURATION_INVALID: { stage: 'budget_admission' },
   DURABLE_OBJECT_STORAGE_FAILURE: { stage: 'budget_admission' },
   DURABLE_OBJECT_ADMISSION_REJECTED: { stage: 'budget_admission' },
@@ -108,11 +109,23 @@ const AI_UNAVAILABLE_DIAGNOSTICS = {
 function admissionFailureCode(reason: unknown): keyof typeof AI_UNAVAILABLE_DIAGNOSTICS {
   switch (reason) {
     case 'busy': return 'AI_CONCURRENCY_LIMIT_REACHED';
-    case 'uncertainty_limit': return 'AI_CONCURRENCY_LIMIT_REACHED';
+    case 'uncertainty_limit': return 'AI_RECOVERY_UNCERTAIN';
     case 'budget_exhausted': return 'AI_BUDGET_EXHAUSTED';
     case 'invalid_configuration': return 'BUDGET_CONTROLLER_CONFIGURATION_INVALID';
     case 'storage_unavailable': return 'DURABLE_OBJECT_STORAGE_FAILURE';
     default: return 'DURABLE_OBJECT_ADMISSION_REJECTED';
+  }
+}
+
+function publicAiFailureReason(diagnosticCode?: string) {
+  switch (diagnosticCode) {
+    case 'AI_BUDGET_EXHAUSTED': return 'daily_budget_exhausted' as const;
+    case 'AI_CONCURRENCY_LIMIT_REACHED': return 'concurrency_unavailable' as const;
+    case 'AI_RECOVERY_UNCERTAIN': return 'recovery_uncertain' as const;
+    case 'INFERENCE_TIMEOUT': return 'provider_timeout' as const;
+    case 'GEMMA_PROVIDER_FAILURE':
+    case 'INFERENCE_FAILURE': return 'provider_failure' as const;
+    default: return 'service_unavailable' as const;
   }
 }
 
@@ -275,9 +288,6 @@ async function handleRequest(
         throw new ApiError(429, 'RATE_LIMITED', 'Too many requests. Please try again later.');
       }
 
-      const faq = input.history.length === 0 ? matchPortfolioFaq(input.message) : null;
-      if (faq) return json({ success: true, reply: faq.reply, source: 'faq' }, 200, headers);
-
       if (env.AI_ENABLED !== 'true') {
         throw new ApiError(503, 'AI_UNAVAILABLE', decideAiFallback(input.message, false).reply, 'AI_DISABLED');
       }
@@ -317,11 +327,16 @@ async function handleRequest(
         'DURABLE_OBJECT_ADMISSION_REQUEST_FAILURE',
       );
       if (admission.granted !== true || typeof admission.grantId !== 'string') {
+        if (admission.granted === false && admission.reason === 'budget_exhausted') {
+          const faq = matchPortfolioFaq(input.message);
+          if (faq) return json({ success: true, reply: faq.reply, source: 'faq' }, 200, headers);
+          throw new ApiError(503, 'AI_UNAVAILABLE', budgetExhaustedMessage(input.message), 'AI_BUDGET_EXHAUSTED');
+        }
         throw new ApiError(
           503,
           'AI_UNAVAILABLE',
           decideAiFallback(input.message, false).reply,
-          admissionFailureCode(admission.reason),
+          admissionFailureCode(admission.granted === false ? admission.reason : undefined),
         );
       }
       const grantId = admission.grantId;
@@ -429,6 +444,13 @@ async function handleRequest(
       const safe = error instanceof ApiError ? error : new ApiError(500, 'INTERNAL_ERROR', 'An unexpected error occurred.');
       if (safe.code === 'AI_UNAVAILABLE') logAiUnavailable(safe, correlationId);
       if (safe.code === 'RATE_LIMITED') headers.set('Retry-After', '60');
-      return json({ success: false, error: { code: safe.code, message: safe.message } }, safe.status, headers);
+      return json({
+        success: false,
+        error: {
+          code: safe.code,
+          message: safe.message,
+          ...(safe.code === 'AI_UNAVAILABLE' ? { reason: publicAiFailureReason(safe.diagnosticCode) } : {}),
+        },
+      }, safe.status, headers);
     }
 }

@@ -98,11 +98,11 @@ test('chat payload cannot select a production model', async () => {
   assert.equal(f.calls.length, 0);
 });
 
-test('FAQ and health remain available when model configuration or AI binding is unavailable', async () => {
+test('FAQ questions do not bypass model configuration; health remains available', async () => {
   const faqFixture = fixture({ model: '@cf/unknown/model', enabled: 'false', hasAi: false });
   const faq = await faqFixture.send({ message: 'Who is Hafiz?' });
-  assert.equal(faq.status, 200);
-  assert.equal((await faq.json()).source, 'faq');
+  assert.equal(faq.status, 503);
+  assert.equal((await faq.json()).error.code, 'AI_UNAVAILABLE');
   assert.equal(faqFixture.calls.length, 0);
 
   const health = await worker.fetch(new Request('https://local/health'), {});

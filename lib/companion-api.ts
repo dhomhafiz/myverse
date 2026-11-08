@@ -1,10 +1,13 @@
-import { mockConversationProvider, type ConversationProvider } from './companion-chat.ts';
+import { mockConversationProvider, type CompanionHistoryMessage, type ConversationProvider } from './companion-chat.ts';
 
 export const MAX_COMPANION_MESSAGE_LENGTH = 500;
-export const COMPANION_CLIENT_TIMEOUT_MS = 10_000;
-export type CompanionRequest = { message: string; history: [] };
+export const COMPANION_CLIENT_TIMEOUT_MS = 20_000;
+export type CompanionRequest = { message: string; history: CompanionHistoryMessage[] };
 export type CompanionResponse = { success: true; reply: string; source: 'faq' | 'ai' };
-type Failure = 'empty' | 'length' | 'configuration' | 'timeout' | 'network' | 'malformed' | '400' | '429' | '503';
+type Failure = 'empty' | 'length' | 'configuration' | 'timeout' | 'network' | 'malformed' | '400' | '429'
+  | '503' | 'budget' | 'capacity' | 'recovery' | 'provider';
+type PublicAiFailureReason = 'daily_budget_exhausted' | 'concurrency_unavailable' | 'recovery_uncertain'
+  | 'provider_timeout' | 'provider_failure' | 'service_unavailable';
 const messages: Record<Failure, string> = {
   empty: 'Please enter a message.',
   length: 'Please keep your message within 500 characters.',
@@ -15,6 +18,10 @@ const messages: Record<Failure, string> = {
   '400': 'That message could not be sent. Please check it and try again.',
   '429': 'A few too many messages. Please wait a minute before sending another.',
   '503': 'The companion is unavailable right now. Please try again later, or explore the portfolio.',
+  budget: 'AI replies are temporarily unavailable because today’s AI budget has been reached. You can still explore the portfolio.',
+  capacity: 'The companion is handling another request right now. Please try again shortly.',
+  recovery: 'The companion is temporarily unavailable while it safely recovers. Please try again later.',
+  provider: 'The AI service could not complete that reply. Please try again later.',
 };
 
 export class CompanionChatError extends Error {
@@ -58,12 +65,41 @@ export function parseCompanionResponse(value: unknown, allowAi = false): Compani
   return { success: true, source: response.source, reply: response.reply };
 }
 
+function publicFailureReason(value: unknown): PublicAiFailureReason | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const error = (value as Record<string, unknown>).error;
+  if (!error || typeof error !== 'object' || Array.isArray(error)) return null;
+  const reason = (error as Record<string, unknown>).reason;
+  return ['daily_budget_exhausted', 'concurrency_unavailable', 'recovery_uncertain',
+    'provider_timeout', 'provider_failure', 'service_unavailable'].includes(String(reason))
+    ? reason as PublicAiFailureReason : null;
+}
+
+function failureForResponse(response: Response, body: unknown): Failure {
+  if (response.status === 429) {
+    if (body && typeof body === 'object' && !Array.isArray(body)
+      && 'error' in body && body.error && typeof body.error === 'object' && !Array.isArray(body.error)
+      && 'code' in body.error && body.error.code === 'AI_QUOTA_EXCEEDED') return 'provider';
+    return '429';
+  }
+  if (response.status === 400) return '400';
+  if (response.status !== 503) return '503';
+  switch (publicFailureReason(body)) {
+    case 'daily_budget_exhausted': return 'budget';
+    case 'concurrency_unavailable': return 'capacity';
+    case 'recovery_uncertain': return 'recovery';
+    case 'provider_timeout': return 'timeout';
+    case 'provider_failure': return 'provider';
+    default: return '503';
+  }
+}
+
 function createApiProvider(origin: string, options: { fetchImpl?: typeof fetch; timeoutMs?: number }, localFaqOnly: boolean): ConversationProvider {
   const timeoutMs = options.timeoutMs ?? COMPANION_CLIENT_TIMEOUT_MS;
-  if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 15_000) throw new CompanionChatError('configuration');
+  if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 25_000) throw new CompanionChatError('configuration');
   return {
-    async respond(raw, signal) {
-      const payload: CompanionRequest = { message: validateCompanionPrompt(raw), history: [] };
+    async respond(raw, signal, history = []) {
+      const payload: CompanionRequest = { message: validateCompanionPrompt(raw), history: [...history] };
       const controller = new AbortController();
       let timer: ReturnType<typeof setTimeout> | undefined;
       let cancel: () => void = () => {};
@@ -105,10 +141,14 @@ function createApiProvider(origin: string, options: { fetchImpl?: typeof fetch; 
           });
         } catch { throw new CompanionChatError('network'); }
         if (!response.ok) {
-          const code = response.status === 429 ? '429' : response.status === 400 ? '400' : '503';
-          throw new CompanionChatError(code);
+          let body: unknown;
+          try { body = await response.json(); } catch { /* Status mapping remains safe without a response body. */ }
+          throw new CompanionChatError(failureForResponse(response, body));
         }
-        try { return parseCompanionResponse(await response.json(), !localFaqOnly).reply; }
+        try {
+          const result = parseCompanionResponse(await response.json(), !localFaqOnly);
+          return { reply: result.reply, source: result.source };
+        }
         catch { throw new CompanionChatError('malformed'); }
       };
       try { return await Promise.race([cancelled, exchange()]); }
@@ -139,9 +179,7 @@ export function selectConversationProvider(config: { environment: string; mode?:
     try { return { mode: 'worker-api', provider: createWorkerApiProvider(config.url ?? '') }; } catch { /* Fail closed below. */ }
     return { mode: 'unavailable', provider: { async respond() { throw new CompanionChatError('configuration'); } } };
   }
-  if (config.environment !== 'production' || !config.mode || config.mode === 'mock') {
-    return { mode: 'mock', provider: mockConversationProvider };
-  }
+  if (config.environment !== 'production') return { mode: 'mock', provider: mockConversationProvider };
   return { mode: 'unavailable', provider: { async respond() { throw new CompanionChatError('configuration'); } } };
 }
 

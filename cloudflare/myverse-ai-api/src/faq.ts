@@ -203,3 +203,9 @@ export function decideAiFallback(message: string, allowFaq = true): FallbackDeci
     routes: ['/work', '/contact'],
   };
 }
+
+export function budgetExhaustedMessage(message: string): string {
+  return detectLanguage(normalize(message)) === 'ms'
+    ? 'Maaf, respons AI tidak tersedia buat sementara waktu kerana bajet AI harian telah dicapai. Anda masih boleh menerokai portfolio.'
+    : 'Sorry, AI replies are temporarily unavailable because today’s AI budget has been reached. You can still explore the portfolio.';
+}
