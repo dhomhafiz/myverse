@@ -236,6 +236,13 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     };
     companionCameraMotion.current = values;
     const finish = () => {
+      // Demand rendering can miss the last tween frame, especially with reduced motion.
+      // Commit the companion's final pose before retiring the animation state.
+      camera.position.copy(values.destination);
+      camera.quaternion.copy(values.to);
+      camera.fov = values.fov;
+      camera.updateProjectionMatrix();
+      invalidate();
       companionCameraMotion.current = null;
       if (companionFocus !== 'closing') {
         companionLayout.current = { width: size.width, height: size.height };
