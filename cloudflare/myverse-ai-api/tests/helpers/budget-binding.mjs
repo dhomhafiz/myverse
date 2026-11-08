@@ -1,3 +1,11 @@
+// Match the production v2 fencing contract while keeping provider tests focused on their subject.
+export function fencedResult(body, result) {
+  if (result.granted === true) return { ...result, attemptId: body.attemptId, ownerId: body.ownerId,
+    generation: 1, leaseExpiresAt: Date.now() + 30_000, deadlineAt: Date.now() + 60_000 };
+  if (result.started === true) return { ...result, leaseExpiresAt: Date.now() + 30_000, deadlineAt: Date.now() + 60_000 };
+  return result;
+}
+
 export function createTestBudgetBinding() {
   return {
     getByName: () => ({
@@ -11,7 +19,7 @@ export function createTestBudgetBinding() {
             : path === '/settle'
               ? { settled: true }
               : { error: 'NOT_FOUND' };
-        return new Response(JSON.stringify(result), {
+        return new Response(JSON.stringify(fencedResult(body, result)), {
           status: path === '/admit' || path === '/start' || path === '/settle' ? 200 : 404,
           headers: { 'Content-Type': 'application/json' },
         });

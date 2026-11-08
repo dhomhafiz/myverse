@@ -36,6 +36,8 @@ export type ModelOutput = { response: string; finishReason: string | null; usage
 type InferenceInstrumentation = {
   beforeInference?: (model: SupportedModel) => void;
   onProviderResponse?: (result: unknown) => void;
+  onLateProviderResponse?: (result: unknown) => void;
+  retain?: (task: Promise<void>) => void;
   onNormalization?: (outcome: ResponseNormalizationOutcome) => void;
   onElapsed?: (elapsedMs: number) => void;
 };
@@ -471,8 +473,8 @@ export async function invokeModel(
   } catch (error) {
     throw new ProviderRejection(error);
   }
-  if (options?.signal?.aborted) throw new InferenceDeadlineExceeded();
   instrumentation?.onProviderResponse?.(result);
+  if (options?.signal?.aborted) throw new InferenceDeadlineExceeded();
   try {
     const output = model === GEMMA_MODEL ? normalizedGemmaResponse(result) : normalizedResponse(result);
     instrumentation?.onNormalization?.('succeeded');
@@ -538,6 +540,7 @@ export async function reply(
     ...instrumentation,
     onProviderResponse: (result: unknown) => {
       if (!deadlineReached) instrumentation.onProviderResponse?.(result);
+      else instrumentation.onLateProviderResponse?.(result);
     },
     onNormalization: (outcome: ResponseNormalizationOutcome) => {
       if (deadlineReached) return;
@@ -546,8 +549,10 @@ export async function reply(
     },
   } : undefined;
   try {
+    const provider = invokeModel(ai, model, modelInput, { signal: controller.signal }, trackedInstrumentation);
+    instrumentation?.retain?.(provider.then(() => {}, () => {}));
     const output = await Promise.race([
-      invokeModel(ai, model, modelInput, { signal: controller.signal }, trackedInstrumentation),
+      provider,
       new Promise<never>((_, reject) => {
         timer = setTimeout(() => {
           deadlineReached = true;

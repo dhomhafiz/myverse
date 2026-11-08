@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { mock, test } from 'node:test';
 import { GEMMA_MODEL } from '../src/ai.ts';
 import { createWorker } from '../src/worker.ts';
+import { fencedResult } from './helpers/budget-binding.mjs';
 
 const origin = 'https://www.dhomhafiz.dev';
 const message = 'Does Hafiz have experience with Kubernetes?';
@@ -29,7 +30,11 @@ function budgetBinding(handler = async request => {
       : { settled: true };
   return response(result);
 }) {
-  return { getByName: () => ({ fetch: handler }) };
+  return { getByName: () => ({ fetch: async request => {
+    const body = await request.clone().json();
+    const result = await handler(request);
+    return response(fencedResult(body, await result.json()), result.status);
+  } }) };
 }
 
 function fixture({

@@ -50,6 +50,8 @@ export type LocalModelDiagnostics = {
 export type LocalQwenDiagnostics = LocalModelDiagnostics;
 
 type BudgetControllerStub = ReturnType<NonNullable<Bindings['AI_BUDGET_CONTROLLER']>['getByName']>;
+type WorkerContext = Pick<ExecutionContext, 'waitUntil'>;
+export const BUDGET_COMMAND_TIMEOUT_MS = 1_000;
 
 async function budgetCommand(
   controller: BudgetControllerStub,
@@ -57,21 +59,30 @@ async function budgetCommand(
   body: Record<string, unknown>,
   diagnosticCode: 'DURABLE_OBJECT_ADMISSION_REQUEST_FAILURE' | 'RESERVATION_SETTLEMENT_FAILURE',
 ): Promise<Record<string, unknown>> {
-  try {
-    const response = await controller.fetch(new Request(`${BUDGET_CONTROLLER_URL}${path}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    }));
-    if (!response.ok) throw new Error('Budget controller rejected the command.');
-    const result: unknown = await response.json();
-    if (typeof result !== 'object' || result === null || Array.isArray(result)) {
-      throw new Error('Budget controller returned an invalid response.');
-    }
-    return result as Record<string, unknown>;
-  } catch {
-    throw new ApiError(503, 'AI_UNAVAILABLE', 'MyVerse AI is temporarily unavailable.', diagnosticCode);
+  const command = { ...body, commandId: crypto.randomUUID() };
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      const result = await Promise.race([(async () => {
+        const response = await controller.fetch(new Request(`${BUDGET_CONTROLLER_URL}${path}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command),
+        }));
+        if (!response.ok) throw new Error('Budget controller rejected the command.');
+        const result: unknown = await response.json();
+        if (typeof result !== 'object' || result === null || Array.isArray(result)) {
+          throw new Error('Budget controller returned an invalid response.');
+        }
+        return result as Record<string, unknown>;
+      })(), new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error('Budget command outcome is ambiguous.')), BUDGET_COMMAND_TIMEOUT_MS);
+      })]);
+      return result;
+    } catch {
+      // Replay the same command receipt; never replay provider dispatch.
+      if (attempt === 1) throw new ApiError(503, 'AI_UNAVAILABLE', 'MyVerse AI is temporarily unavailable.', diagnosticCode);
+    } finally { if (timer !== undefined) clearTimeout(timer); }
   }
+  throw new ApiError(503, 'AI_UNAVAILABLE', 'MyVerse AI is temporarily unavailable.', diagnosticCode);
 }
 
 const AI_UNAVAILABLE_DIAGNOSTICS = {
@@ -97,6 +108,7 @@ const AI_UNAVAILABLE_DIAGNOSTICS = {
 function admissionFailureCode(reason: unknown): keyof typeof AI_UNAVAILABLE_DIAGNOSTICS {
   switch (reason) {
     case 'busy': return 'AI_CONCURRENCY_LIMIT_REACHED';
+    case 'uncertainty_limit': return 'AI_CONCURRENCY_LIMIT_REACHED';
     case 'budget_exhausted': return 'AI_BUDGET_EXHAUSTED';
     case 'invalid_configuration': return 'BUDGET_CONTROLLER_CONFIGURATION_INVALID';
     case 'storage_unavailable': return 'DURABLE_OBJECT_STORAGE_FAILURE';
@@ -144,7 +156,12 @@ function isAllowedOrigin(origin: string, configured: string): boolean {
 }
 
 export function createWorker(model?: SupportedModel, diagnostics?: LocalModelDiagnostics) {
-  return { fetch: (request: Request, env: Bindings) => handleRequest(request, env, model, diagnostics) };
+  return { fetch: (request: Request, env: Bindings, context?: WorkerContext) => {
+    const task = handleRequest(request, env, model, diagnostics, context);
+    // Best-effort disconnect protection, bounded by the runtime. The durable watchdog is authoritative.
+    context?.waitUntil(task.then(() => {}, () => {}));
+    return task;
+  } };
 }
 
 async function handleRequest(
@@ -152,12 +169,14 @@ async function handleRequest(
   env: Bindings,
   modelOverride: SupportedModel | undefined,
   diagnostics?: LocalModelDiagnostics,
+  context?: WorkerContext,
 ): Promise<Response> {
     const headers = new Headers({ Vary: 'Origin' });
     const correlationId = crypto.randomUUID();
     try {
       const path = new URL(request.url).pathname;
-      if (path !== '/health' && path !== '/api/chat' && path !== '/internal/budget/status') {
+      if (path !== '/health' && path !== '/api/chat'
+        && path !== '/internal/budget/status' && path !== '/internal/budget/recovery') {
         throw new ApiError(404, 'NOT_FOUND', 'Endpoint not found.');
       }
       const origin = request.headers.get('Origin');
@@ -205,6 +224,38 @@ async function handleRequest(
           headers.set('Content-Type', 'application/json; charset=utf-8');
           headers.set('X-Content-Type-Options', 'nosniff');
           return new Response(JSON.stringify({ error: 'BUDGET_STATUS_UNAVAILABLE' }), { status: 503, headers });
+        }
+      }
+      if (path === '/internal/budget/recovery') {
+        const controllerBinding = env.AI_BUDGET_CONTROLLER;
+        if (!controllerBinding || typeof controllerBinding.getByName !== 'function') {
+          return json({ success: false, error: { code: 'AI_UNAVAILABLE', message: 'Budget recovery is unavailable.' } }, 503, headers);
+        }
+        const length = request.headers.get('Content-Length');
+        if (length !== null && (!/^\d+$/.test(length) || Number(length) > 2_048)) {
+          return json({ success: false, error: { code: 'INVALID_REQUEST', message: 'Invalid recovery request.' } }, 400, headers);
+        }
+        let body: ArrayBuffer;
+        try {
+          body = await request.arrayBuffer();
+        } catch {
+          return json({ success: false, error: { code: 'INVALID_REQUEST', message: 'Invalid recovery request.' } }, 400, headers);
+        }
+        if (body.byteLength > 2_048) {
+          return json({ success: false, error: { code: 'INVALID_REQUEST', message: 'Invalid recovery request.' } }, 400, headers);
+        }
+        const recoveryHeaders = new Headers({ 'Content-Type': 'application/json' });
+        const authorization = request.headers.get('Authorization');
+        if (authorization !== null) recoveryHeaders.set('Authorization', authorization);
+        const controller = controllerBinding.getByName(BUDGET_CONTROLLER_NAME);
+        try {
+          return await controller.fetch(new Request(`${BUDGET_CONTROLLER_URL}/internal/legacy-quarantine`, {
+            method: 'POST',
+            headers: recoveryHeaders,
+            body,
+          }));
+        } catch {
+          return json({ success: false, error: { code: 'AI_UNAVAILABLE', message: 'Budget recovery is unavailable.' } }, 503, headers);
         }
       }
 
@@ -255,10 +306,14 @@ async function handleRequest(
       }
       const controller = env.AI_BUDGET_CONTROLLER.getByName(BUDGET_CONTROLLER_NAME);
       const requestId = correlationId;
+      const attemptId = crypto.randomUUID();
+      const ownerId = crypto.randomUUID();
+      const ray = request.headers.get('cf-ray');
+      const ingressCorrelation = ray && /^[a-fA-F0-9]{16,32}-[A-Z]{3}$/.test(ray) ? { ingressRayId: ray } : {};
       const admission = await budgetCommand(
         controller,
         '/admit',
-        { requestId, estimatedNeurons, model },
+        { protocol: 2, requestId, attemptId, ownerId, estimatedNeurons, model, ...ingressCorrelation },
         'DURABLE_OBJECT_ADMISSION_REQUEST_FAILURE',
       );
       if (admission.granted !== true || typeof admission.grantId !== 'string') {
@@ -270,9 +325,19 @@ async function handleRequest(
         );
       }
       const grantId = admission.grantId;
-      const identity = { requestId, grantId };
-      const started = await budgetCommand(controller, '/start', identity, 'DURABLE_OBJECT_ADMISSION_REQUEST_FAILURE');
-      if (started.started !== true) {
+      if (!Number.isSafeInteger(admission.generation) || admission.attemptId !== attemptId || admission.ownerId !== ownerId) {
+        throw new ApiError(503, 'AI_UNAVAILABLE', decideAiFallback(input.message, false).reply, 'DURABLE_OBJECT_ADMISSION_STATE_FAILURE');
+      }
+      const identity = { protocol: 2, requestId, grantId, attemptId, ownerId, generation: admission.generation };
+      let started: Record<string, unknown>;
+      try {
+        started = await budgetCommand(controller, '/start', identity, 'DURABLE_OBJECT_ADMISSION_REQUEST_FAILURE');
+        if (started.started !== true || !Number.isSafeInteger(started.leaseExpiresAt)
+          || Number(started.leaseExpiresAt) <= Date.now() || request.signal.aborted) {
+          throw new ApiError(503, 'AI_UNAVAILABLE', decideAiFallback(input.message, false).reply, 'DURABLE_OBJECT_ADMISSION_STATE_FAILURE');
+        }
+      } catch (error) {
+        // This invocation has not called the provider. Even an ambiguous /start can safely close its own grant.
         const notStarted = await budgetCommand(controller, '/settle', {
           ...identity,
           outcome: 'not_started',
@@ -282,10 +347,11 @@ async function handleRequest(
         if (notStarted.settled !== true) {
           throw new ApiError(503, 'AI_UNAVAILABLE', decideAiFallback(input.message, false).reply, 'RESERVATION_SETTLEMENT_FAILURE');
         }
-        throw new ApiError(503, 'AI_UNAVAILABLE', decideAiFallback(input.message, false).reply, 'DURABLE_OBJECT_ADMISSION_STATE_FAILURE');
+        throw error;
       }
 
       let providerUsage: ReportedTokenUsage | undefined;
+      let providerResponseObserved = false;
       try {
         if (model === QWEN_MODEL || model === GEMMA_MODEL) {
           diagnostics?.onRequest?.({
@@ -297,11 +363,22 @@ async function handleRequest(
         const aiReply = await reply(env.AI, input, model, selection, {
           beforeInference: diagnostics?.beforeInference,
           onProviderResponse: result => {
+            providerResponseObserved = true;
             providerUsage = reportedModelTokenUsage(result, model);
             diagnostics?.onProviderResponse?.(result);
           },
           onNormalization: diagnostics?.onNormalization,
           onElapsed: diagnostics?.onElapsed,
+          retain: task => context?.waitUntil(task),
+          onLateProviderResponse: result => {
+            const usage = reportedModelTokenUsage(result, model);
+            const finalization = budgetCommand(controller, '/settle', {
+              ...identity, outcome: 'completed', terminal: true,
+              ...(usage ? { usage } : {}),
+              failureClassification: usage ? 'COMPLETED_WITH_REPORTED_USAGE' : 'COMPLETED_USAGE_UNKNOWN',
+            }, 'RESERVATION_SETTLEMENT_FAILURE').then(() => {}, () => {});
+            context?.waitUntil(finalization);
+          },
         });
         const settled = await budgetCommand(controller, '/settle', {
           ...identity,
@@ -322,7 +399,8 @@ async function handleRequest(
         return json({ success: true, reply: aiReply.response, model, source: 'ai' }, 200, headers);
       } catch (error) {
         if (error instanceof ApiError && error.diagnosticCode === 'RESERVATION_SETTLEMENT_FAILURE') throw error;
-        const terminal = !isInferenceTimeout(error);
+        // A rejected/aborted transport is not evidence that remote execution has terminated.
+        const terminal = providerResponseObserved;
         try {
           const settled = await budgetCommand(controller, '/settle', {
             ...identity,
