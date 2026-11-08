@@ -7,8 +7,8 @@ export const PROFESSIONAL_TITLE = 'CREATIVE DEVELOPER';
 export const NO_INDEX = process.env.MYVERSE_NO_INDEX === 'true';
 
 const defaultSocialImage = {
-  url: '/images/selectedwork1.webp',
-  alt: 'AI-generated concept visual of a Squid Game 2 interactive voting installation.',
+  url: '/images/social-preview.webp',
+  alt: 'The default MyVerse room view with a dual-monitor desk, guitars, and cycling display.',
 };
 
 export function createPageMetadata(

@@ -9,8 +9,8 @@ const workSans = Work_Sans({ subsets: ['latin'], display: 'swap', variable: '--f
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap', variable: '--font-space-mono' });
 const description = 'Mohd Hafiz Abd Rahim is a Kuala Lumpur-based creative developer and web designer creating interactive web experiences.';
 const socialImage = {
-  url: new URL('/images/social-preview.jpg', SITE_URL).toString(),
-  alt: 'Portrait of Mohd Hafiz Abd Rahim against a charcoal background.',
+  url: new URL('/images/social-preview.webp', SITE_URL).toString(),
+  alt: 'The default MyVerse room view with a dual-monitor desk, guitars, and cycling display.',
 };
 const structuredData = {
   '@context': 'https://schema.org',

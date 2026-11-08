@@ -37,7 +37,7 @@ const productionAssets = [
   'images/cycling-panel-center.webp',
   'images/cycling-panel-right.webp',
   'images/selectedwork1.webp',
-  'images/social-preview.jpg',
+  'images/social-preview.webp',
   'images/work-in-progress-noir.webp',
 ];
 const excludedAssets = [
@@ -71,7 +71,7 @@ if (!homepageHead) {
   throw new Error('Homepage export is missing its document head.');
 }
 
-const socialImageUrl = 'https://www.dhomhafiz.dev/images/social-preview.jpg';
+const socialImageUrl = 'https://www.dhomhafiz.dev/images/social-preview.webp';
 if (
   !homepageHead.includes(`property="og:image" content="${socialImageUrl}"`) ||
   !homepageHead.includes(`name="twitter:image" content="${socialImageUrl}"`)
