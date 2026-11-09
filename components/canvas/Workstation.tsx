@@ -7,6 +7,7 @@ import LeftMonitorDisplay from './LeftMonitorDisplay';
 import RightMonitorDisplay from './RightMonitorDisplay';
 import PhoneContactScreen from './PhoneContactScreen';
 import { phone, room } from '@/lib/room-config';
+import type { CompanionRobotActivity } from '@/lib/companion-robot-config';
 import type { RefObject } from 'react';
 import type { EntranceMotion } from '@/lib/entrance';
 
@@ -21,9 +22,10 @@ function Monitor({ name, x, yaw, active, reducedMotion }: { name: string; x: num
   </group>;
 }
 
-export default function Workstation({ active, companionActive, companionInteractive, reducedMotion, motion, companionInteractionSignal, companionHovered, onCompanionHoverChange, onCompanionActivate }: {
+export default function Workstation({ active, companionActive, companionInteractive, reducedMotion, motion, companionInteractionSignal, companionHovered, companionActivity, onCompanionHoverChange, onCompanionActivate }: {
   active: boolean; companionActive: boolean; companionInteractive: boolean; reducedMotion: boolean; motion: RefObject<EntranceMotion>;
   companionInteractionSignal: number; companionHovered: boolean;
+  companionActivity: CompanionRobotActivity;
   onCompanionHoverChange: (source: 'robot' | 'hotspot', hovered: boolean) => void;
   onCompanionActivate: () => void;
 }) {
@@ -47,7 +49,7 @@ export default function Workstation({ active, companionActive, companionInteract
     <GamingMouse position={[0.2, 0.797, 0.23]} />
     <GamingPc active={active} reducedMotion={reducedMotion} motion={motion} />
     <MyVerseAICompanion active={companionActive} interactive={companionInteractive} reducedMotion={reducedMotion} motion={motion}
-      interactionSignal={companionInteractionSignal} hovered={companionHovered} onHoverChange={onCompanionHoverChange}
+      interactionSignal={companionInteractionSignal} hovered={companionHovered} activity={companionActivity} onHoverChange={onCompanionHoverChange}
       onCompanionActivate={onCompanionActivate} />
     <group name={phone.name} position={phone.position} rotation={phone.rotation} scale={phone.scale} userData={{ destination: 'contact' }}>
       <group name={phone.flipPivotName}>

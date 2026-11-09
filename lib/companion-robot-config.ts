@@ -1,3 +1,5 @@
+export type CompanionRobotActivity = 'idle' | 'thinking' | 'response';
+
 /** Desk-local metres; glTF front +Z. PC rendered height: 0.45 * 1.25 = 0.5625 m. */
 export const companionRobot = {
   modelPath: '/models/myverse_companion_robot_v2.glb',

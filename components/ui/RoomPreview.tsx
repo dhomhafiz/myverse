@@ -16,6 +16,7 @@ import RoomUnavailable from './RoomUnavailable';
 import HeroBrand from './HeroBrand';
 import useEntranceTimeline from '@/hooks/useEntranceTimeline';
 import { createEntranceMotion } from '@/lib/entrance';
+import type { CompanionRobotActivity } from '@/lib/companion-robot-config';
 import GlobalNavigation from './GlobalNavigation';
 import FloatingRoomNavigation from './FloatingRoomNavigation';
 import CompanionChat from './CompanionChat';
@@ -55,6 +56,7 @@ export default function RoomPreview({
     () => 'explore' as HotspotNavigationMode,
   );
   const [companionInteractionSignal, setCompanionInteractionSignal] = useState(0);
+  const [companionActivity, setCompanionActivity] = useState<CompanionRobotActivity>('idle');
   const [companionHoverSources, setCompanionHoverSources] = useState({ robot: false, hotspot: false });
   const [companionNotice, setCompanionNotice] = useState('');
   const [companionFocus, setCompanionFocus] = useState<CompanionFocusState>('closed');
@@ -182,6 +184,9 @@ export default function RoomPreview({
   const onCompanionAcknowledge = useCallback(() => {
     setCompanionInteractionSignal(signal => signal + 1);
   }, []);
+  const onCompanionActivityChange = useCallback((activity: CompanionRobotActivity) => {
+    setCompanionActivity(activity);
+  }, []);
   useEffect(() => {
     if (companionFocus !== 'opening') return;
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -306,6 +311,7 @@ export default function RoomPreview({
             onCompanionFocusFailed={onCompanionFocusFailed}
             companionInteractionSignal={companionInteractionSignal}
             companionHovered={companionHovered}
+            companionActivity={companionActivity}
             onCompanionActivate={onCompanionActivate}
             onCompanionHoverChange={onCompanionHoverChange}
             directDestinationId={pathname === '/' && hotspotNavigation.destinationId
@@ -363,7 +369,7 @@ export default function RoomPreview({
       )}
       <HeroBrand active={phase === 'entering' || phase === 'exploring'} settled={phase === 'exploring'} />
       {companionFocus === 'open' && <CompanionChat onClose={onCompanionClose}
-        onAcknowledge={onCompanionAcknowledge} reducedMotion={reducedMotion} />}
+        onAcknowledge={onCompanionAcknowledge} onActivityChange={onCompanionActivityChange} reducedMotion={reducedMotion} />}
       <noscript><style>{'.boot-screen { display: none; }'}</style><section className="scene-message no-script"><h1>Mohd Hafiz’s workspace</h1><p>A personal developer room with guitars and a gravel bike. Enable JavaScript for the interactive room. Portfolio content arrives in a later phase.</p></section></noscript>
     </div>
   );

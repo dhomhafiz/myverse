@@ -8,6 +8,7 @@ import InteractiveChair from './InteractiveChair';
 import { cameraAnchors, room } from '@/lib/room-config';
 import type { RefObject } from 'react';
 import type { EntranceMotion } from '@/lib/entrance';
+import type { CompanionRobotActivity } from '@/lib/companion-robot-config';
 
 function Window() {
   return <group {...room.window} name="window">
@@ -25,10 +26,11 @@ function Window() {
   </group>;
 }
 
-export default function PlaceholderRoom({ chairActive, pcActive, clockActive, companionActive, companionInteractive, reducedMotion, onGesture, motion, companionInteractionSignal, companionHovered, onCompanionHoverChange, onCompanionActivate }: {
+export default function PlaceholderRoom({ chairActive, pcActive, clockActive, companionActive, companionInteractive, reducedMotion, onGesture, motion, companionInteractionSignal, companionHovered, companionActivity, onCompanionHoverChange, onCompanionActivate }: {
   chairActive: boolean; pcActive: boolean; clockActive: boolean; companionActive: boolean; companionInteractive: boolean; reducedMotion: boolean; onGesture: () => void;
   motion: RefObject<EntranceMotion>;
   companionInteractionSignal: number; companionHovered: boolean;
+  companionActivity: CompanionRobotActivity;
   onCompanionHoverChange: (source: 'robot' | 'hotspot', hovered: boolean) => void;
   onCompanionActivate: () => void;
 }) {
@@ -45,7 +47,7 @@ export default function PlaceholderRoom({ chairActive, pcActive, clockActive, co
     <Box name="carpet" position={[0, 0.014, -0.7]} size={[3.3, 0.025, 2.55]} color="#4b5050" />
     <Box position={[0, 0.09, -d / 2 + 0.012]} size={[w, 0.18, 0.035]} color="#525b5b" />
     <Window /><Workstation active={pcActive} companionActive={companionActive} companionInteractive={companionInteractive} reducedMotion={reducedMotion} motion={motion}
-      companionInteractionSignal={companionInteractionSignal} companionHovered={companionHovered} onCompanionHoverChange={onCompanionHoverChange}
+      companionInteractionSignal={companionInteractionSignal} companionHovered={companionHovered} companionActivity={companionActivity} onCompanionHoverChange={onCompanionHoverChange}
       onCompanionActivate={onCompanionActivate} />
     <InteractiveChair active={chairActive} reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} /><Guitars /><Barstool /><GuitarTrackLight /><LeftWallFeature active={clockActive} /><Pegboard /><CyclingTriptych /><Bike />
     <FloorLamp />

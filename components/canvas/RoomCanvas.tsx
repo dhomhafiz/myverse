@@ -15,6 +15,7 @@ import type { CompanionFocusState, EntrancePhase, Readiness } from '@/lib/room-s
 import SceneReadiness from './SceneReadiness';
 import SceneLighting from './SceneLighting';
 import type { EntranceMotion } from '@/lib/entrance';
+import type { CompanionRobotActivity } from '@/lib/companion-robot-config';
 import Football from './Football';
 
 // Clear rejected loader promises before Retry; successful cached models stay untouched.
@@ -24,12 +25,12 @@ export function clearFailedRoomAssets() {
     .forEach(path => useGLTF.clear(path));
 }
 
-export default function RoomCanvas({ fallback, view, phase, reducedMotion, onReadiness, onProgress, onGate, motion, onGesture, onFailure, navigationMode, onNavigationSettled, onOpenDestination, directStart, directDestinationId, roomActive, companionFocus, onCompanionFocusSettled, onCompanionFocusFailed, companionInteractionSignal, companionHovered, onCompanionActivate, onCompanionHoverChange }: {
+export default function RoomCanvas({ fallback, view, phase, reducedMotion, onReadiness, onProgress, onGate, motion, onGesture, onFailure, navigationMode, onNavigationSettled, onOpenDestination, directStart, directDestinationId, roomActive, companionFocus, onCompanionFocusSettled, onCompanionFocusFailed, companionInteractionSignal, companionHovered, companionActivity, onCompanionActivate, onCompanionHoverChange }: {
   directStart: boolean; directDestinationId: string; roomActive: boolean; navigationMode: HotspotNavigationMode;
   onNavigationSettled: () => void; onOpenDestination: (destinationId: string) => void;
   companionFocus: CompanionFocusState; onCompanionFocusSettled: (direction: 'opening' | 'closing') => void;
   onCompanionFocusFailed: (error: Error) => void;
-  companionInteractionSignal: number; companionHovered: boolean; onCompanionActivate: () => void;
+  companionInteractionSignal: number; companionHovered: boolean; companionActivity: CompanionRobotActivity; onCompanionActivate: () => void;
   onCompanionHoverChange: (source: 'robot' | 'hotspot', hovered: boolean) => void;
   fallback: ReactNode; view: ReviewView; phase: EntrancePhase; reducedMotion: boolean;
   onReadiness: (stage: Readiness) => void; onProgress: (loaded: number, total: number, active: boolean) => void;
@@ -64,7 +65,7 @@ export default function RoomCanvas({ fallback, view, phase, reducedMotion, onRea
         companionActive={companionActive}
         companionInteractive={companionInteractive}
         reducedMotion={reducedMotion} onGesture={onGesture} motion={motion}
-        companionInteractionSignal={companionInteractionSignal} companionHovered={companionHovered} onCompanionHoverChange={onCompanionHoverChange}
+        companionInteractionSignal={companionInteractionSignal} companionHovered={companionHovered} companionActivity={companionActivity} onCompanionHoverChange={onCompanionHoverChange}
         onCompanionActivate={onCompanionActivate} />
       <DestinationHotspots reducedMotion={reducedMotion} active={hotspotsActive} onOpen={onOpenDestination}
         companionInteractive={companionInteractive}

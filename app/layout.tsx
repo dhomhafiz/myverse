@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Space_Mono, Work_Sans } from 'next/font/google';
+import { Pixelify_Sans, Space_Mono, Work_Sans } from 'next/font/google';
 import './globals.css';
 import ExperienceShell from '@/components/ui/ExperienceShell';
 import { NO_INDEX, OWNER_NAME, SITE_NAME, SITE_URL } from '@/lib/site';
@@ -7,6 +7,7 @@ import { CONTACT_EMAIL, contactSocialLinks } from '@/lib/contact';
 
 const workSans = Work_Sans({ subsets: ['latin'], display: 'swap', variable: '--font-work-sans' });
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap', variable: '--font-space-mono' });
+const pixelifySans = Pixelify_Sans({ subsets: ['latin'], weight: '700', display: 'swap', variable: '--font-pixelify-sans' });
 const description = 'Mohd Hafiz Abd Rahim is a Kuala Lumpur-based creative developer and web designer creating interactive web experiences.';
 const socialImage = {
   url: new URL('/images/social-preview.webp', SITE_URL).toString(),
@@ -76,7 +77,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-MY">
-      <body className={`${workSans.variable} ${spaceMono.variable}`}>
+      <body className={`${workSans.variable} ${spaceMono.variable} ${pixelifySans.variable}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}

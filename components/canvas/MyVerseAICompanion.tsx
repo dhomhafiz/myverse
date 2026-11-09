@@ -8,7 +8,8 @@ import type { RefObject } from 'react';
 import type { Material } from 'three';
 import type { EntranceMotion } from '@/lib/entrance';
 import { roomCursor } from '@/lib/room-state';
-import { companionRobot } from '@/lib/companion-robot-config';
+import { companionRobot, type CompanionRobotActivity } from '@/lib/companion-robot-config';
+import CompanionLedDisplay from './CompanionLedDisplay';
 
 const MODEL_PATH = companionRobot.modelPath;
 const TARGET_HEIGHT = companionRobot.targetHeight;
@@ -100,6 +101,7 @@ export default function MyVerseAICompanion({
   motion,
   interactionSignal,
   hovered,
+  activity,
   onHoverChange,
   onCompanionActivate,
 }: {
@@ -109,6 +111,7 @@ export default function MyVerseAICompanion({
   motion: RefObject<EntranceMotion>;
   interactionSignal: number;
   hovered: boolean;
+  activity: CompanionRobotActivity;
   onHoverChange: (source: 'robot', hovered: boolean) => void;
   onCompanionActivate: () => void;
 }) {
@@ -412,7 +415,10 @@ export default function MyVerseAICompanion({
       </mesh>
       <object3D name="myverse_ai_companion_hotspot_anchor" position={[0.15, TARGET_HEIGHT + 0.04, 0.04]} />
       <group scale={scale}>
-        <group position={offset}><primitive object={model} /></group>
+        <group position={offset}>
+          <primitive object={model} />
+          <CompanionLedDisplay activity={activity} active={active} reducedMotion={reducedMotion} />
+        </group>
       </group>
     </group>
   );

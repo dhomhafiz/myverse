@@ -10,6 +10,7 @@ import type { CompanionHistoryMessage, CompanionReply } from '@/lib/companion-ch
 import { appendCompanionHistory, createCompanionRequest } from '@/lib/companion-request';
 import { linkifyCompanionNavigation } from '@/lib/companion-navigation';
 import { companionSuggestions, type CompanionLanguage } from '@/lib/companion-suggestions';
+import type { CompanionRobotActivity } from '@/lib/companion-robot-config';
 
 type Message = { id: number; role: 'assistant' | 'user'; text: string; source?: CompanionReply['source'] };
 type ViewportMetrics = { height: number; offsetTop: number } | null;
@@ -31,9 +32,10 @@ const initialMessages: Message[] = [{
   text: 'Hi, I’m MyVerse’s AI Companion. Ask me about Hafiz’s projects, skills, or contact details.',
 }];
 
-export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }: {
+export default function CompanionChat({ onClose, onAcknowledge, onActivityChange, reducedMotion }: {
   onClose: () => void;
   onAcknowledge: () => void;
+  onActivityChange: (activity: CompanionRobotActivity) => void;
   reducedMotion: boolean;
 }) {
   const portalRoot = useSyncExternalStore(subscribeToPortal, getPortalSnapshot, getServerPortalSnapshot);
@@ -52,8 +54,13 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
   const nextId = useRef(1);
   const history = useRef<CompanionHistoryMessage[]>([]);
   const submittedPrompt = useRef('');
+  const activityTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => () => request.cancel(), [request]);
+  useEffect(() => () => {
+    request.cancel();
+    if (activityTimeout.current) clearTimeout(activityTimeout.current);
+    onActivityChange('idle');
+  }, [onActivityChange, request]);
 
   const closeChat = useCallback(() => {
     request.cancel();
@@ -62,6 +69,9 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
 
   const startNewChat = useCallback(() => {
     request.cancel();
+    if (activityTimeout.current) clearTimeout(activityTimeout.current);
+    activityTimeout.current = null;
+    onActivityChange('idle');
     history.current = [];
     nextId.current = 1;
     lastAutoScrolledMessage.current = 0;
@@ -70,7 +80,7 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
     setPending(false);
     setError('');
     setSuggestionsOpen(true);
-  }, [request]);
+  }, [onActivityChange, request]);
 
   useEffect(() => {
     const visualViewport = window.visualViewport;
@@ -130,6 +140,9 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
     try {
       request.submit(raw, history.current, {
         onStart(prompt) {
+          if (activityTimeout.current) clearTimeout(activityTimeout.current);
+          activityTimeout.current = null;
+          onActivityChange('thinking');
           submittedPrompt.current = prompt;
           addMessage('user', prompt);
           setDraft('');
@@ -139,20 +152,29 @@ export default function CompanionChat({ onClose, onAcknowledge, reducedMotion }:
           onAcknowledge();
         },
         onReply(response) {
+          onActivityChange('response');
           addMessage('assistant', response.reply, response.source);
           history.current = appendCompanionHistory(history.current, submittedPrompt.current, response.reply);
           onAcknowledge();
         },
         onError(reason, prompt) {
+          onActivityChange('idle');
           setError(reason instanceof CompanionChatError ? reason.message : 'The reply could not be loaded. Your message is still here.');
           setDraft(current => current || prompt);
         },
-        onSettled() { setPending(false); },
+        onSettled() {
+          setPending(false);
+          if (activityTimeout.current) clearTimeout(activityTimeout.current);
+          activityTimeout.current = setTimeout(() => {
+            activityTimeout.current = null;
+            onActivityChange('idle');
+          }, 900);
+        },
       });
     } catch (reason) {
       setError(reason instanceof CompanionChatError ? reason.message : 'That message could not be sent.');
     }
-  }, [addMessage, onAcknowledge, request]);
+  }, [addMessage, onAcknowledge, onActivityChange, request]);
 
   const submitSuggestion = useCallback((question: string) => {
     if (request.pending) return;
