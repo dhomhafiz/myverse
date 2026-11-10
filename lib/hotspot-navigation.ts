@@ -1,6 +1,6 @@
 import type { Vec3 } from './room-config';
 
-export type HotspotCameraPose = { position: Vec3; rotation: Vec3; fov: number };
+export type HotspotCameraPose = { position: Vec3 };
 export type HotspotNavigationMode = 'explore' | 'opening' | 'paused' | 'returning';
 
 let navigationMode: HotspotNavigationMode = 'explore';

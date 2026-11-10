@@ -25,7 +25,7 @@ export function clearFailedRoomAssets() {
     .forEach(path => useGLTF.clear(path));
 }
 
-export default function RoomCanvas({ fallback, view, phase, reducedMotion, onReadiness, onProgress, onGate, motion, onGesture, onFailure, navigationMode, onNavigationSettled, onOpenDestination, directStart, directDestinationId, roomActive, companionFocus, onCompanionFocusSettled, onCompanionFocusFailed, companionInteractionSignal, companionHovered, companionActivity, onCompanionActivate, onCompanionHoverChange }: {
+export default function RoomCanvas({ fallback, view, phase, reducedMotion, onReadiness, onProgress, onGate, motion, onFailure, navigationMode, onNavigationSettled, onOpenDestination, directStart, directDestinationId, roomActive, companionFocus, onCompanionFocusSettled, onCompanionFocusFailed, companionInteractionSignal, companionHovered, companionActivity, onCompanionActivate, onCompanionHoverChange }: {
   directStart: boolean; directDestinationId: string; roomActive: boolean; navigationMode: HotspotNavigationMode;
   onNavigationSettled: () => void; onOpenDestination: (destinationId: string) => void;
   companionFocus: CompanionFocusState; onCompanionFocusSettled: (direction: 'opening' | 'closing') => void;
@@ -35,7 +35,7 @@ export default function RoomCanvas({ fallback, view, phase, reducedMotion, onRea
   fallback: ReactNode; view: ReviewView; phase: EntrancePhase; reducedMotion: boolean;
   onReadiness: (stage: Readiness) => void; onProgress: (loaded: number, total: number, active: boolean) => void;
   onGate: (gate: ReadinessGate) => void;
-  motion: RefObject<EntranceMotion>; onGesture: () => void; onFailure: (error?: Error) => void;
+  motion: RefObject<EntranceMotion>; onFailure: (error?: Error) => void;
 }) {
   const companionActive = roomActive && view === 'home' && phase === 'exploring' &&
     (navigationMode === 'explore' || companionFocus !== 'closed');
@@ -57,14 +57,14 @@ export default function RoomCanvas({ fallback, view, phase, reducedMotion, onRea
       <directionalLight name="room_directional_light" position={[-2, 4, 1]} intensity={2.1} color="#e0e8ec" castShadow
         shadow-mapSize={[1024, 1024]} shadow-camera-left={-4} shadow-camera-right={4}
         shadow-camera-top={4} shadow-camera-bottom={-4} shadow-bias={-0.001} />
-      <CameraRig directStart={directStart} directDestinationId={directDestinationId} view={view} phase={phase} reducedMotion={reducedMotion} motion={motion} onGesture={onGesture} navigationMode={navigationMode} onNavigationSettled={onNavigationSettled} roomActive={roomActive}
+      <CameraRig directStart={directStart} directDestinationId={directDestinationId} view={view} phase={phase} reducedMotion={reducedMotion} motion={motion} navigationMode={navigationMode} onNavigationSettled={onNavigationSettled} roomActive={roomActive}
         companionFocus={companionFocus} onCompanionFocusSettled={onCompanionFocusSettled} onCompanionFocusFailed={onCompanionFocusFailed} />
       <PlaceholderRoom chairActive={roomActive && phase === 'exploring' && navigationMode === 'explore'} pcActive={roomActive && (phase === 'entering' || (phase === 'exploring' && navigationMode === 'explore'))}
         clockActive={(roomActive && (phase === 'entering' || (phase === 'exploring' && navigationMode === 'explore'))) ||
           (phase === 'exploring' && navigationMode === 'returning')}
         companionActive={companionActive}
         companionInteractive={companionInteractive}
-        reducedMotion={reducedMotion} onGesture={onGesture} motion={motion}
+        reducedMotion={reducedMotion} motion={motion}
         companionInteractionSignal={companionInteractionSignal} companionHovered={companionHovered} companionActivity={companionActivity} onCompanionHoverChange={onCompanionHoverChange}
         onCompanionActivate={onCompanionActivate} />
       <DestinationHotspots reducedMotion={reducedMotion} active={hotspotsActive} onOpen={onOpenDestination}

@@ -26,8 +26,8 @@ function Window() {
   </group>;
 }
 
-export default function PlaceholderRoom({ chairActive, pcActive, clockActive, companionActive, companionInteractive, reducedMotion, onGesture, motion, companionInteractionSignal, companionHovered, companionActivity, onCompanionHoverChange, onCompanionActivate }: {
-  chairActive: boolean; pcActive: boolean; clockActive: boolean; companionActive: boolean; companionInteractive: boolean; reducedMotion: boolean; onGesture: () => void;
+export default function PlaceholderRoom({ chairActive, pcActive, clockActive, companionActive, companionInteractive, reducedMotion, motion, companionInteractionSignal, companionHovered, companionActivity, onCompanionHoverChange, onCompanionActivate }: {
+  chairActive: boolean; pcActive: boolean; clockActive: boolean; companionActive: boolean; companionInteractive: boolean; reducedMotion: boolean;
   motion: RefObject<EntranceMotion>;
   companionInteractionSignal: number; companionHovered: boolean;
   companionActivity: CompanionRobotActivity;
@@ -49,7 +49,7 @@ export default function PlaceholderRoom({ chairActive, pcActive, clockActive, co
     <Window /><Workstation active={pcActive} companionActive={companionActive} companionInteractive={companionInteractive} reducedMotion={reducedMotion} motion={motion}
       companionInteractionSignal={companionInteractionSignal} companionHovered={companionHovered} companionActivity={companionActivity} onCompanionHoverChange={onCompanionHoverChange}
       onCompanionActivate={onCompanionActivate} />
-    <InteractiveChair active={chairActive} reducedMotion={reducedMotion} onGesture={onGesture} motion={motion} /><Guitars /><Barstool /><GuitarTrackLight /><LeftWallFeature active={clockActive} /><Pegboard /><CyclingTriptych /><Bike />
+    <InteractiveChair active={chairActive} reducedMotion={reducedMotion} motion={motion} /><Guitars /><Barstool /><GuitarTrackLight /><LeftWallFeature active={clockActive} /><Pegboard /><CyclingTriptych /><Bike />
     <FloorLamp />
     {Object.entries(cameraAnchors).map(([name, pose]) => <object3D key={name} name={name} position={pose.position} userData={{ lookAtTarget: pose.target }} />)}
   </group>;

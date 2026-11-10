@@ -11,11 +11,10 @@ import { bikeReview, phone, room, type ReviewView } from '@/lib/room-config';
 import { freeLook, roomCursor, type CameraMode, type CompanionFocusState, type EntrancePhase } from '@/lib/room-state';
 import { entrance, poseValues, type EntranceMotion } from '@/lib/entrance';
 import { getHotspotDestination } from '@/lib/hotspot-destinations';
+import { getCameraBaseAngles, getCameraPose, hasCameraLookOffset, neutralCameraLook } from '@/lib/room-camera-pose';
 
 type CompanionCameraSnapshot = {
   position: Vector3;
-  quaternion: Quaternion;
-  fov: number;
   current: { yaw: number; pitch: number; lens: number };
   target: { yaw: number; pitch: number; lens: number };
 };
@@ -89,10 +88,10 @@ function getMobileCompanionFraming(camera: PerspectiveCamera, width: number, hei
   return null;
 }
 
-export default function CameraRig({ view, phase, reducedMotion, motion, onGesture, navigationMode, onNavigationSettled, directStart, directDestinationId, roomActive, companionFocus, onCompanionFocusSettled, onCompanionFocusFailed }: {
+export default function CameraRig({ view, phase, reducedMotion, motion, navigationMode, onNavigationSettled, directStart, directDestinationId, roomActive, companionFocus, onCompanionFocusSettled, onCompanionFocusFailed }: {
   view: ReviewView; phase: EntrancePhase; reducedMotion: boolean; motion: MutableRefObject<EntranceMotion>;
   roomActive: boolean;
-  directStart: boolean; directDestinationId: string; onGesture: () => void;
+  directStart: boolean; directDestinationId: string;
   navigationMode: HotspotNavigationMode; onNavigationSettled: () => void;
   companionFocus: CompanionFocusState;
   onCompanionFocusSettled: (direction: 'opening' | 'closing') => void;
@@ -100,10 +99,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
 }) {
   const { gl, size, invalidate, camera, scene } = useThree();
   const pose = view === 'bike' ? bikeReview : room.home;
-  const base = useMemo(() => {
-    const dx = pose.target[0] - pose.position[0], dy = pose.target[1] - pose.position[1], dz = pose.target[2] - pose.position[2];
-    return { yaw: Math.atan2(-dx, -dz), pitch: Math.atan2(dy, Math.hypot(dx, dz)) };
-  }, [pose]);
+  const base = useMemo(() => getCameraBaseAngles(pose), [pose]);
   const completion = useRef<{ callback: () => void; frame: number | null } | null>(null);
   useEffect(() => addAfterEffect(() => {
     const pending = completion.current;
@@ -117,7 +113,6 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
   const companionSnapshot = useRef<CompanionCameraSnapshot | null>(null);
   const companionLayout = useRef<{ width: number; height: number } | null>(null);
   const restoredPosition = useRef<Vector3 | null>(null);
-  const restoredFov = useRef<number | null>(null);
   const mode = useRef<CameraMode>('transition');
   const target = useRef({ yaw: 0, pitch: 0, lens: 0 });
   const current = useRef({ yaw: 0, pitch: 0, lens: 0 });
@@ -127,12 +122,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
   useEffect(() => {
     if (!(camera instanceof PerspectiveCamera)) return;
     const captureCurrentPose = () => {
-      const rotation = new Euler().setFromQuaternion(camera.quaternion, 'YXZ');
-      hotspotNavigation.saved = {
-        position: camera.position.toArray(),
-        rotation: [rotation.x, rotation.y, rotation.z],
-        fov: camera.fov,
-      };
+      hotspotNavigation.saved = { position: camera.position.toArray() };
     };
     hotspotNavigation.captureCurrentPose = captureCurrentPose;
     return () => {
@@ -156,8 +146,6 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     if (companionFocus === 'opening' && !snapshot) {
       companionSnapshot.current = {
         position: camera.position.clone(),
-        quaternion: camera.quaternion.clone(),
-        fov: camera.fov,
         current: { ...current.current },
         target: { ...target.current },
       };
@@ -172,6 +160,12 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
 
     let destination: Vector3;
     let destinationRotation: Quaternion;
+    const homeFov = size.width < size.height ? 86 : pose.fov;
+    const keepFreeLook = companionFocus === 'closing' && hasCameraLookOffset(saved.target);
+    const returnPose = getCameraPose(
+      { ...pose, fov: homeFov },
+      keepFreeLook ? saved.target : neutralCameraLook,
+    );
     if (companionFocus !== 'closing') {
       scene.updateMatrixWorld(true);
       const robot = scene.getObjectByName('myverse_ai_companion');
@@ -182,7 +176,6 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
         current.current = { ...saved.current };
         target.current = { ...saved.target };
         restoredPosition.current = saved.position.clone();
-        restoredFov.current = saved.fov - saved.current.lens;
         companionSnapshot.current = null;
         companionLayout.current = null;
         onCompanionFocusFailed(error);
@@ -200,7 +193,6 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
           current.current = { ...saved.current };
           target.current = { ...saved.target };
           restoredPosition.current = saved.position.clone();
-          restoredFov.current = saved.fov - saved.current.lens;
           companionSnapshot.current = null;
           companionLayout.current = null;
           onCompanionFocusFailed(error);
@@ -222,8 +214,8 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
         destinationRotation = lookCamera.quaternion.clone();
       }
     } else {
-      destination = saved.position.clone();
-      destinationRotation = saved.quaternion.clone();
+      destination = new Vector3(...returnPose.position);
+      destinationRotation = returnPose.quaternion;
     }
 
     const values: CompanionCameraMotion = {
@@ -231,7 +223,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       destination,
       from: camera.quaternion.clone(),
       to: destinationRotation,
-      fov: camera.fov,
+      fov: companionFocus === 'closing' ? returnPose.fov : camera.fov,
       progress: 0,
     };
     companionCameraMotion.current = values;
@@ -249,10 +241,10 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
         if (companionFocus === 'opening') onCompanionFocusSettled('opening');
         return;
       }
-      current.current = { ...saved.current };
-      target.current = { ...saved.target };
-      restoredPosition.current = saved.position.clone();
-      restoredFov.current = saved.fov - saved.current.lens;
+      const restoredLook = keepFreeLook ? saved.target : neutralCameraLook;
+      current.current = { ...restoredLook };
+      target.current = { ...restoredLook };
+      restoredPosition.current = values.destination.clone();
       companionSnapshot.current = null;
       companionLayout.current = null;
       onCompanionFocusSettled('closing');
@@ -272,7 +264,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       timeline.kill();
       if (companionCameraMotion.current === values) companionCameraMotion.current = null;
     };
-  }, [camera, companionFocus, gl, invalidate, navigationMode, onCompanionFocusFailed, onCompanionFocusSettled, phase, reducedMotion, scene, size.height, size.width]);
+  }, [camera, companionFocus, gl, invalidate, navigationMode, onCompanionFocusFailed, onCompanionFocusSettled, phase, pose, reducedMotion, scene, size.height, size.width]);
   useEffect(() => {
     mode.current = phase === 'exploring' ? 'explore' : 'transition';
     Object.assign(target.current, { yaw: 0, pitch: 0, lens: 0 });
@@ -296,26 +288,31 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     mode.current = 'focus';
     const destinationConfig = getHotspotDestination(hotspotNavigation.destinationId);
     if (navigationMode === 'opening') {
-      const rotation = new Euler().setFromQuaternion(camera.quaternion, 'YXZ');
-      hotspotNavigation.saved = { position: camera.position.toArray(), rotation: [rotation.x, rotation.y, rotation.z], fov: camera.fov };
+      hotspotNavigation.saved = { position: camera.position.toArray() };
       hotspotNavigation.visited = true;
     }
     const neutralHandoff = destinationConfig.cameraHandoff === 'opaque';
     const monitor = cameraAnchors[destinationConfig.focusPose];
     const saved = hotspotNavigation.saved;
     const restore = navigationMode === 'returning';
-    const restoreSaved = restore && saved && destinationConfig.returnTo === 'saved-camera';
+    const restoreSaved = restore && destinationConfig.returnTo === 'saved-camera' && saved !== null;
+    const keepFreeLook = restoreSaved && hasCameraLookOffset(target.current);
+    const homeFov = size.width < size.height ? 86 : pose.fov;
+    const returnPose = getCameraPose(
+      { ...pose, fov: homeFov },
+      keepFreeLook ? target.current : neutralCameraLook,
+    );
     const destination = !restore && neutralHandoff ? camera.position.clone()
-      : restoreSaved ? new Vector3(...saved.position) : restore ? new Vector3(...pose.position) : new Vector3(...monitor.position);
-    const destinationRotation = restoreSaved
-      ? new Quaternion().setFromEuler(new Euler(...saved.rotation, 'YXZ'))
+      : restoreSaved && keepFreeLook ? new Vector3(...saved.position) : restore ? new Vector3(...pose.position) : new Vector3(...monitor.position);
+    const destinationRotation = restore
+      ? returnPose.quaternion
       : !restore && neutralHandoff ? camera.quaternion.clone()
         : new Quaternion().setFromEuler(new Euler(base.pitch, base.yaw, 0, 'YXZ'));
     if (!restore && !neutralHandoff) {
       const dummy = camera.clone(); dummy.position.copy(destination); dummy.lookAt(new Vector3(...monitor.target)); destinationRotation.copy(dummy.quaternion);
     }
     const destinationFov = restore
-      ? restoreSaved ? saved.fov : size.width < size.height ? 86 : pose.fov
+      ? returnPose.fov
       : neutralHandoff ? camera.fov
         : size.width < size.height ? destinationConfig.focusFov.mobile : destinationConfig.focusFov.desktop;
     const values = { position: camera.position.clone(), from: camera.quaternion.clone(), to: destinationRotation, fov: camera.fov, progress: 0 };
@@ -335,9 +332,13 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     const settle = () => {
       if (restore) {
         const rotation = new Euler().setFromQuaternion(destinationRotation, 'YXZ');
-        Object.assign(current.current, { yaw: rotation.y - base.yaw, pitch: rotation.x - base.pitch, lens: 0 });
+        Object.assign(current.current, {
+          yaw: rotation.y - base.yaw,
+          pitch: rotation.x - base.pitch,
+          lens: keepFreeLook ? target.current.lens : 0,
+        });
         Object.assign(target.current, current.current);
-        restoredPosition.current = destination.clone(); restoredFov.current = destinationFov;
+        restoredPosition.current = destination.clone();
       }
       completion.current = { callback: onNavigationSettled, frame: null };
       invalidate();
@@ -400,7 +401,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       if (!pointer || event.pointerId !== pointer.id || mode.current !== 'explore') return;
       const dx = event.clientX - pointer.x, dy = event.clientY - pointer.y;
       if (!dragging.current && Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY) >= freeLook.dragThreshold) {
-        dragging.current = true; canvas.classList.add('is-dragging'); onGesture();
+        dragging.current = true; canvas.classList.add('is-dragging');
         roomCursor.dragging = true;
       }
       if (dragging.current) rotate(dx, dy);
@@ -429,7 +430,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       if (event.key === 'Home') { target.current.yaw = 0; target.current.pitch = 0; invalidate(); }
       else if (deltas[event.key]) rotate(...deltas[event.key]);
       else return;
-      event.preventDefault(); onGesture();
+      event.preventDefault();
     };
     canvas.addEventListener('pointerdown', down); canvas.addEventListener('pointermove', move);
     canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
@@ -448,7 +449,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
       canvas.removeEventListener('pointerenter', enter); canvas.removeEventListener('pointerleave', leave);
       canvas.removeEventListener('lostpointercapture', up); canvas.removeEventListener('click', click, true); canvas.removeEventListener('keydown', key);
     };
-  }, [roomActive, phase, navigationMode, companionFocus, gl, invalidate, onGesture, motion]);
+  }, [roomActive, phase, navigationMode, companionFocus, gl, invalidate, motion]);
   useFrame(({ camera }, delta) => {
     if (!(camera instanceof PerspectiveCamera)) return;
     if (companionFocus !== 'closed') {
@@ -501,7 +502,7 @@ export default function CameraRig({ view, phase, reducedMotion, motion, onGestur
     values.lens = desired.lens;
     camera.position.copy(restoredPosition.current ?? new Vector3(...pose.position));
     camera.rotation.set(base.pitch + values.pitch, base.yaw + values.yaw, 0, 'YXZ');
-    const fov = (restoredFov.current ?? (size.width < size.height ? 86 : pose.fov)) + values.lens;
+    const fov = (size.width < size.height ? 86 : pose.fov) + values.lens;
     if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
     if (Math.abs(values.yaw - desired.yaw) + Math.abs(values.pitch - desired.pitch) > 0.00001) invalidate();
   });

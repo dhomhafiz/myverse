@@ -32,8 +32,8 @@ type Gesture = {
   dragging: boolean;
 };
 
-export default function InteractiveChair({ active, reducedMotion, onGesture, motion }: {
-  active: boolean; reducedMotion: boolean; onGesture: () => void; motion: RefObject<EntranceMotion>;
+export default function InteractiveChair({ active, reducedMotion, motion }: {
+  active: boolean; reducedMotion: boolean; motion: RefObject<EntranceMotion>;
 }) {
   const { camera, gl, invalidate } = useThree();
   const { scene } = useGLTF('/models/gaming-chair-all-black-swivel-compact.glb');
@@ -180,7 +180,6 @@ export default function InteractiveChair({ active, reducedMotion, onGesture, mot
           current.dragging = true;
           spinState.dragging = true;
           canvas.classList.add('is-chair-dragging');
-          onGesture();
           deltaX = totalX;
           elapsed = (event.timeStamp - current.startTime) / 1000;
         } else if (current.dragging) {
@@ -265,7 +264,7 @@ export default function InteractiveChair({ active, reducedMotion, onGesture, mot
       window.removeEventListener('blur', blur);
       if (current && canvas.hasPointerCapture(current.pointerId)) canvas.releasePointerCapture(current.pointerId);
     };
-  }, [active, camera, gl, invalidate, model, onGesture, setHover]);
+  }, [active, camera, gl, invalidate, model, setHover]);
 
   useFrame((_, delta) => {
     const chairRoot = chairRootRef.current;

@@ -18,12 +18,17 @@ export default function FloatingRoomNavigation({ onActivate }: { onActivate: (de
         onPointerUp={event => event.stopPropagation()}
         onClick={event => event.stopPropagation()}>
         {destinations.map(({ label, destination, icon }) => (
-          <button key={destination.id} type="button" onClick={() => onActivate(destination.id)}>
+          <button
+            key={destination.id}
+            className={destination.id === 'iphone' ? 'is-primary' : undefined}
+            type="button"
+            onClick={() => onActivate(destination.id)}
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
               strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
               <path d={icon} />
             </svg>
-            <span>{label}</span>
+            <span>{destination.id === 'iphone' ? 'GET A QUOTE' : label}</span>
           </button>
         ))}
       </nav>

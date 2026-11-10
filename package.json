@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
     "test:companion": "node --experimental-strip-types --test tests/companion-chat.test.mjs",
+    "test:camera": "node --experimental-strip-types --test tests/room-camera-pose.test.mjs",
     "test:companion:browser": "node scripts/stage-3b-browser.cjs",
     "check:export": "node scripts/verify-static-export.mjs"
   },
