@@ -3,7 +3,7 @@ import { PROFESSIONAL_TITLE } from '@/lib/site';
 export default function HeroBrand({ active, settled }: { active: boolean; settled: boolean }) {
   return <>
     <div className="intro-scanlines" aria-hidden="true" />
-    <div className="hero-brand-layer" aria-hidden={!active}>
+    <div className={`hero-brand-layer${settled ? ' is-settled' : ''}`} aria-hidden={!active}>
       <h1 className={`hero-name${settled ? ' is-settled' : ''}`}>
         <span className="hero-title-wrap">
           <span className="hero-title-main">MOHD HAFIZ</span>
@@ -26,7 +26,13 @@ export default function HeroBrand({ active, settled }: { active: boolean; settle
         </span>
       </h1>
       <p className="hero-caption">Hello, World!<span className="hero-caption-cursor" aria-hidden="true">█</span></p>
+      <p className="hero-value-proposition" aria-hidden={settled}>
+        I design and build websites that help small businesses attract more customers.
+      </p>
       <p className={`brand-subtitle${settled ? ' is-settled' : ''}`} aria-hidden={!settled}>{PROFESSIONAL_TITLE} | KUALA LUMPUR, MY</p>
+      <p className={`brand-value-proposition${settled ? ' is-settled' : ''}`} aria-hidden={!settled}>
+        I design and build websites that help small businesses attract more customers.
+      </p>
       <span className="brand-anchor" aria-hidden="true">MOHD HAFIZ</span>
     </div>
   </>;

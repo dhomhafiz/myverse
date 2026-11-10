@@ -49,13 +49,13 @@ function answerFor(prompt: string) {
   }
   if (containsAny(text, ['experience', 'pengalaman', 'development', 'pembangunan'])) {
     return isMalay
-      ? 'Pengalaman Hafiz merangkumi pembangunan frontend kreatif dan reka bentuk laman web, serta pengalaman backend terdahulu dengan Java dan Spring Boot. Lihat /about untuk maklumat kerjayanya.'
-      : 'Hafiz’s experience spans creative frontend development and web design, alongside earlier backend work with Java and Spring Boot. See /about for his career details.';
+      ? 'Pengalaman Hafiz merangkumi reka bentuk laman web dan pembangunan frontend, serta pengalaman backend terdahulu dengan Java dan Spring Boot. Lihat /about untuk maklumat kerjayanya.'
+      : 'Hafiz’s experience spans web design and frontend development, alongside earlier backend work with Java and Spring Boot. See /about for his career details.';
   }
   if (containsAny(text, ['who', 'about', 'siapa', 'tentang', 'mengenai'])) {
     return isMalay
-      ? 'Mohd Hafiz Abd Rahim ialah pembangun kreatif dan pereka laman web yang berpangkalan di Kuala Lumpur. Beliau menggabungkan reka bentuk antara muka dan pembangunan frontend untuk menghasilkan pengalaman digital yang berguna dan menarik.'
-      : 'Mohd Hafiz Abd Rahim is a Kuala Lumpur-based creative developer and web designer. He brings interface design and frontend engineering together to create useful, engaging digital experiences.';
+      ? 'Mohd Hafiz Abd Rahim ialah pereka laman web dan pembangun yang berpangkalan di Kuala Lumpur. Beliau menggabungkan reka bentuk antara muka dan pembangunan frontend untuk menghasilkan pengalaman digital yang berguna dan menarik.'
+      : 'Mohd Hafiz Abd Rahim is a Kuala Lumpur-based web designer and developer. He brings interface design and frontend engineering together to create useful, engaging digital experiences.';
   }
   if (containsAny(text, ['build', 'make', 'create', 'website', 'websites', 'interactive', 'bina', 'buat', 'laman', 'interaktif'])) {
     return isMalay

@@ -80,6 +80,7 @@ body { margin: 0; }
 .unavailable .enter-button { max-width: 380px; }
 .no-script { z-index: 50; }
 .hero-brand-layer { --brand-left: 32px; --brand-bottom: 28px; position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+.hero-brand-layer.is-settled { background: linear-gradient(90deg, #101719d4 0%, #101719a6 68%, transparent 100%) left bottom / min(440px, 72vw) 116px no-repeat; }
 .hero-name { position: absolute; top: 42%; left: 50%; width: max-content; margin: 0; color: #f1f0eb; font: 800 clamp(40px, 13vw, 180px)/1.1 var(--font-work-sans), Arial, sans-serif; letter-spacing: -.035em; text-transform: uppercase; text-shadow: 0 2px 8px #0007, 0 1px 2px #0006; opacity: 0; white-space: nowrap; }
 .hero-title-wrap { position: relative; display: inline-block; transform-origin: center; }
 .hero-title-main { position: relative; z-index: 1; display: block; filter: url(#hero-fisheye); }
@@ -91,16 +92,19 @@ body { margin: 0; }
 .hero-effects { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; overflow: visible; pointer-events: none; mix-blend-mode: screen; }
 .hero-noise { opacity: 0; }
 .hero-caption { position: absolute; left: 0; right: 0; top: calc(42% + clamp(38px, 7vw, 108px)); margin: 0; color: #d0d5d8; text-align: center; font: 500 clamp(18px, 2.4vw, 24px)/1.25 var(--font-work-sans), Arial, sans-serif; letter-spacing: .01em; text-shadow: 0 2px 6px #0009; opacity: 0; }
+.hero-value-proposition { position: absolute; top: calc(42% + clamp(38px, 7vw, 108px) + clamp(38px, 3vw, 44px)); left: 50%; width: min(1000px, calc(100vw - 32px)); margin: 0; transform: translateX(-50%); color: #d1d5d6; text-align: center; font: 400 16px/1.4 var(--font-work-sans), Arial, sans-serif; letter-spacing: .01em; text-shadow: 0 2px 6px #0009; opacity: 0; }
 .hero-caption-cursor { display: inline-block; margin-left: .16em; color: inherit; font: 700 .9em/1 ui-monospace, Consolas, monospace; vertical-align: baseline; }
 .hero-caption-cursor.is-blinking { animation: hero-caption-cursor-blink 1s steps(1, end) infinite; }
 @keyframes hero-caption-cursor-blink { 50% { opacity: 0; } }
-.brand-anchor, .hero-name.is-settled { position: absolute; left: var(--brand-left); bottom: calc(var(--brand-bottom) + 23px); top: auto; width: max-content; margin: 0; font: 800 24px/1.1 var(--font-work-sans), Arial, sans-serif; letter-spacing: -.035em; text-transform: uppercase; }
+.brand-anchor, .hero-name.is-settled { position: absolute; left: var(--brand-left); bottom: calc(var(--brand-bottom) + 58px); top: auto; width: max-content; margin: 0; font: 800 24px/1.1 var(--font-work-sans), Arial, sans-serif; letter-spacing: -.035em; text-transform: uppercase; }
 .brand-anchor { visibility: hidden; }
 .hero-name.is-settled { opacity: 1; transform: none; text-shadow: 0 1px 4px #000a, 0 2px 8px #0005; }
 .hero-name.is-settled .hero-smear { opacity: .045; transform: translateX(3px) scaleX(1.045); filter: blur(.65px); }
 .hero-name.is-settled .hero-chroma, .hero-name.is-settled .hero-title-scanlines, .hero-name.is-settled .hero-noise { opacity: 0; }
-.brand-subtitle { position: absolute; left: var(--brand-left); bottom: var(--brand-bottom); margin: 0; color: #d1d5d6; font: 400 11px/16px var(--font-work-sans), Arial, sans-serif; letter-spacing: .025em; text-shadow: 0 1px 4px #000a, 0 2px 7px #0006; opacity: 0; }
+.brand-subtitle { position: absolute; left: var(--brand-left); bottom: calc(var(--brand-bottom) + 34px); margin: 0; color: #d1d5d6; font: 400 11px/16px var(--font-work-sans), Arial, sans-serif; letter-spacing: .025em; text-shadow: 0 1px 4px #000a, 0 2px 7px #0006; opacity: 0; }
 .brand-subtitle.is-settled { opacity: 1; }
+.brand-value-proposition { position: absolute; left: var(--brand-left); bottom: var(--brand-bottom); max-width: min(280px, calc(100vw - var(--brand-left) - 24px)); margin: 0; color: #d1d5d6; font: 400 10px/1.4 var(--font-work-sans), Arial, sans-serif; letter-spacing: .01em; text-shadow: 0 1px 4px #000a, 0 2px 7px #0006; opacity: 0; }
+.brand-value-proposition.is-settled { opacity: 1; }
 .intro-scanlines { position: absolute; inset: 0; z-index: 15; background: repeating-linear-gradient(0deg, #00000070 0px, #00000070 1px, transparent 1px, transparent 4px); opacity: 0; pointer-events: none; }
 .intro-skip { position: absolute; right: 28px; bottom: 26px; z-index: 40; padding: 12px 14px; border: 1px solid #ffffff40; border-radius: 25px; color: #ddd; background: #121719dd; font: 10px ui-monospace, Consolas, monospace; cursor: pointer; }
 .intro-skip:focus-visible { outline: 2px solid #e1c59d; outline-offset: 4px; }
@@ -131,6 +135,7 @@ body { margin: 0; }
   .hero-brand-layer { --brand-left: 20px; --brand-bottom: 24px; }
   .brand-anchor, .hero-name.is-settled { font-size: 20px; }
   .hero-caption { font-size: 18px; letter-spacing: .01em; font-family: var(--font-work-sans), Arial, sans-serif; }
+  .hero-value-proposition { top: calc(42% + clamp(38px, 7vw, 108px) + 30px); width: calc(100vw - 32px); font-size: 13px; }
   .intro-skip { right: 16px; bottom: 18px; }
 }
 
@@ -237,13 +242,14 @@ body { margin: 0; }
 .work-not-found { display: grid; align-content: center; justify-content: center; gap: 25px; padding: 30px; }
 .work-not-found h1 { font-size: clamp(32px, 5vw, 70px); }
 .room-surface canvas.over-projects:not(.is-dragging) { cursor: pointer; }
-.room-footer { position: absolute; z-index: 24; right: max(32px, env(safe-area-inset-right, 0px)); bottom: max(24px, env(safe-area-inset-bottom, 0px)); display: flex; max-width: calc(100% - 32px); align-items: center; justify-content: flex-end; gap: 8px; padding: 0 6px; border: 1px solid #d5e0e229; border-radius: 4px; background: #101719c7; color: #dce4e5; font: 12px/1.5 var(--font-space-mono), monospace; pointer-events: none; }
+.room-footer { position: absolute; z-index: 24; right: max(32px, env(safe-area-inset-right, 0px)); bottom: max(24px, env(safe-area-inset-bottom, 0px)); display: flex; max-width: calc(100% - 32px); align-items: center; justify-content: flex-end; gap: 8px; padding: 0 6px; background: none; color: #dce4e5; font: 12px/1.5 var(--font-space-mono), monospace; pointer-events: none; }
+.room-footer::before { position: absolute; right: calc(0px - max(32px, env(safe-area-inset-right, 0px))); bottom: calc(0px - max(24px, env(safe-area-inset-bottom, 0px))); z-index: -1; width: min(440px, 72vw); height: 116px; background: linear-gradient(270deg, #101719d4 0%, #101719a6 68%, transparent 100%); content: ''; pointer-events: none; }
 .room-credits-link { min-height: 44px; display: inline-flex; align-items: center; padding: 0 8px; color: #c1ccce; font: inherit; letter-spacing: .12em; text-decoration: none; text-shadow: 0 1px 5px #000b; transition: color .18s ease; touch-action: manipulation; pointer-events: auto; }
 .room-credits-link:hover { color: #82d2df; }
 .room-credits-link:focus-visible { color: #a4e7f0; outline: 2px solid #82d2df; outline-offset: 4px; }
 .room-footer-separator { color: #829093; pointer-events: none; }
 .room-copyright { display: inline-flex; align-items: center; gap: 4px; color: inherit; font: inherit; letter-spacing: .09em; white-space: nowrap; pointer-events: none; }
-.room-copyright-mark { color: #edf2f2; font: 600 16px/1 Arial, sans-serif; letter-spacing: 0; }
+.room-copyright-mark { position: relative; top: 3px; color: #edf2f2; font: 400 20px/1 var(--font-space-mono), monospace; letter-spacing: 0; }
 @keyframes credits-handoff { 0% { opacity: 0; } 100% { opacity: 1; } }
 .projects-transition-cover, .hotspot-transition-cover { position: absolute; inset: 0; z-index: 28; background: #111314; pointer-events: none; }
 .projects-transition-cover, .hotspot-transition-cover { animation: monitor-to-work 1.15s ease both; }
@@ -415,6 +421,7 @@ body { margin: 0; }
   }
   .room-experience .preview-header, .room-experience .room-footer { display: none; }
   .room-experience .hero-brand-layer { --brand-left: var(--room-hud-left); }
+  .room-experience .hero-brand-layer.is-settled { background: linear-gradient(90deg, #101719d4 0%, #101719a6 68%, transparent 100%) left top / min(440px, 100vw) 112px no-repeat; }
   .room-experience .brand-anchor, .room-experience .hero-name.is-settled {
     top: var(--room-hud-top);
     bottom: auto;
@@ -433,6 +440,15 @@ body { margin: 0; }
     font: 400 clamp(10px, 2.56vw, 11px)/1.5 var(--font-work-sans), Arial, sans-serif;
     letter-spacing: .02em;
     text-shadow: 0 1px 4px #000a;
+  }
+  .room-experience .brand-value-proposition {
+    top: calc(var(--room-hud-top) + 46px);
+    right: max(20px, env(safe-area-inset-right, 0px));
+    bottom: auto;
+    max-width: 420px;
+    color: #d1dfe1;
+    font-size: 9px;
+    line-height: 1.4;
   }
   .room-experience .hero-name.is-settled .hero-smear { display: none; }
   .floating-room-navigation {

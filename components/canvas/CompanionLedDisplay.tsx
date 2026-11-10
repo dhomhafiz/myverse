@@ -9,7 +9,10 @@ const TEXTURE_WIDTH = 512;
 const TEXTURE_HEIGHT = 272;
 const GRID_PITCH = 8;
 const MESSAGE = 'Hello, World!';
-const MESSAGE_FONT_SIZE = 60;
+const VALUE_PROPOSITION = 'I design and build websites that help small businesses attract more customers.';
+const MESSAGE_FONT_SIZE = 54;
+const SUPPORT_FONT_SIZE = 22;
+const SUPPORT_LINE_HEIGHT = 24;
 const FRAME_WIDTH = 0.218;
 const FRAME_HEIGHT = 0.12;
 const SCREEN_WIDTH = 0.194;
@@ -71,7 +74,44 @@ function drawPixelText(
   context.restore();
 }
 
-function createLedTexture(fontFamily: string) {
+function drawWrappedText(
+  context: CanvasRenderingContext2D,
+  text: string,
+  fontFamily: string,
+  fontSize: number,
+  maxWidth: number,
+  centerX: number,
+  firstLineY: number,
+  lineHeight: number,
+) {
+  context.save();
+  context.font = `400 ${fontSize}px ${fontFamily}`;
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  context.fillStyle = '#d1f6fa';
+  context.shadowColor = '#00eaff';
+  context.shadowBlur = 2;
+
+  const lines: string[] = [];
+  let line = '';
+  text.split(' ').forEach(word => {
+    const candidate = line ? `${line} ${word}` : word;
+    if (line && context.measureText(candidate).width > maxWidth) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = candidate;
+    }
+  });
+  if (line) lines.push(line);
+
+  lines.forEach((wrappedLine, index) => {
+    context.fillText(wrappedLine, centerX, firstLineY + index * lineHeight);
+  });
+  context.restore();
+}
+
+function createLedTexture(fontFamily: string, supportFontFamily: string) {
   const canvas = document.createElement('canvas');
   canvas.width = TEXTURE_WIDTH;
   canvas.height = TEXTURE_HEIGHT;
@@ -106,8 +146,19 @@ function createLedTexture(fontFamily: string) {
   context.fillStyle = '#42efff';
   context.shadowColor = '#00eaff';
   context.shadowBlur = 3;
-  context.fillText(MESSAGE, TEXTURE_WIDTH / 2, 136);
+  context.fillText(MESSAGE, TEXTURE_WIDTH / 2, 82);
   context.restore();
+
+  drawWrappedText(
+    context,
+    VALUE_PROPOSITION,
+    supportFontFamily,
+    SUPPORT_FONT_SIZE,
+    TEXTURE_WIDTH - 64,
+    TEXTURE_WIDTH / 2,
+    137,
+    SUPPORT_LINE_HEIGHT,
+  );
 
   context.fillStyle = '#38f2ff';
   context.shadowColor = '#00eaff';
@@ -199,11 +250,16 @@ export default function CompanionLedDisplay({
     let cancelled = false;
     const loadTexture = async () => {
       try {
-        const fontFamily = getComputedStyle(document.body).getPropertyValue('--font-pixelify-sans').trim();
+        const styles = getComputedStyle(document.body);
+        const fontFamily = styles.getPropertyValue('--font-pixelify-sans').trim();
+        const supportFontFamily = styles.getPropertyValue('--font-work-sans').trim();
         if (!fontFamily) throw new Error('Pixelify Sans Bold is not configured for the companion LED display.');
+        if (!supportFontFamily) throw new Error('Work Sans is not configured for the companion LED display.');
         const loadedFonts = await document.fonts.load(`700 ${MESSAGE_FONT_SIZE}px ${fontFamily}`, MESSAGE);
         if (loadedFonts.length === 0) throw new Error('Pixelify Sans Bold did not load for the companion LED display.');
-        const ledTexture = createLedTexture(fontFamily);
+        const supportFonts = await document.fonts.load(`400 ${SUPPORT_FONT_SIZE}px ${supportFontFamily}`, VALUE_PROPOSITION);
+        if (supportFonts.length === 0) throw new Error('Work Sans did not load for the companion LED display.');
+        const ledTexture = createLedTexture(fontFamily, supportFontFamily);
         if (cancelled) {
           ledTexture.dispose();
           return;

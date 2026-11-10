@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const SITE_URL = new URL('https://www.dhomhafiz.dev/');
 export const SITE_NAME = 'MyVerse';
 export const OWNER_NAME = 'Mohd Hafiz Abd Rahim';
-export const PROFESSIONAL_TITLE = 'CREATIVE DEVELOPER';
+export const PROFESSIONAL_TITLE = 'WEB DESIGNER & DEVELOPER';
 export const NO_INDEX = process.env.MYVERSE_NO_INDEX === 'true';
 
 const defaultSocialImage = {
