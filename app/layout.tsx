@@ -8,7 +8,7 @@ import { CONTACT_EMAIL, contactSocialLinks } from '@/lib/contact';
 const workSans = Work_Sans({ subsets: ['latin'], display: 'swap', variable: '--font-work-sans' });
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap', variable: '--font-space-mono' });
 const pixelifySans = Pixelify_Sans({ subsets: ['latin'], weight: '700', display: 'swap', variable: '--font-pixelify-sans' });
-const description = 'Mohd Hafiz Abd Rahim is a Kuala Lumpur-based creative developer and web designer creating interactive web experiences.';
+const description = 'Mohd Hafiz Abd Rahim is a Kuala Lumpur-based web designer and developer creating interactive web experiences.';
 const socialImage = {
   url: new URL('/images/social-preview.webp', SITE_URL).toString(),
   alt: 'The default MyVerse room view with a dual-monitor desk, guitars, and cycling display.',
@@ -23,7 +23,7 @@ const structuredData = {
       url: SITE_URL.toString(),
       email: CONTACT_EMAIL,
       sameAs: contactSocialLinks.map(link => link.href),
-      jobTitle: 'Creative Developer and Web Designer',
+      jobTitle: 'Web Designer and Developer',
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'Kuala Lumpur',
@@ -49,7 +49,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: SITE_URL,
-  title: 'Mohd Hafiz Abd Rahim | Creative Developer & Web Designer',
+  title: 'Mohd Hafiz Abd Rahim | Web Designer & Developer',
   description,
   applicationName: SITE_NAME,
   authors: [{ name: OWNER_NAME }],
@@ -59,14 +59,14 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: SITE_NAME,
     locale: 'en_MY',
-    title: 'Mohd Hafiz Abd Rahim | Creative Developer & Web Designer',
+    title: 'Mohd Hafiz Abd Rahim | Web Designer & Developer',
     description,
     url: SITE_URL.toString(),
     images: [{ ...socialImage, width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mohd Hafiz Abd Rahim | Creative Developer & Web Designer',
+    title: 'Mohd Hafiz Abd Rahim | Web Designer & Developer',
     description,
     images: [socialImage.url],
   },

@@ -54,9 +54,9 @@ export default function useEntranceTimeline({ root, motion, phase, reducedMotion
       Object.assign(motion.current.chair, chairPose);
       name.classList.add('is-settled');
       gsap.set(name, { clearProps: 'all' });
-      gsap.set(element.querySelectorAll('.hero-title-wrap, .hero-chroma, .hero-title-scanlines, .hero-noise, .hero-smear, .brand-subtitle'), { clearProps: 'all' });
+      gsap.set(element.querySelectorAll('.hero-title-wrap, .hero-chroma, .hero-title-scanlines, .hero-noise, .hero-smear, .brand-subtitle, .brand-value-proposition'), { clearProps: 'all' });
       displacement?.setAttribute('scale', '0');
-      gsap.set(element.querySelectorAll('.hero-caption, .intro-scanlines'), { opacity: 0 });
+      gsap.set(element.querySelectorAll('.hero-caption, .hero-value-proposition, .intro-scanlines'), { opacity: 0 });
       gsap.set(element.querySelectorAll('.room-surface'), { filter: 'none' });
       stage('exploring'); finished = true; invalidate(); onEntered();
     };
@@ -66,7 +66,8 @@ export default function useEntranceTimeline({ root, motion, phase, reducedMotion
       captionCursor?.classList.remove('is-blinking');
       gsap.set(name, { left: '50%', top: '42%', xPercent: -50, yPercent: -50, x: 0, y: 0, scaleX: 1, scaleY: 1, opacity: 0, transformOrigin: '0 0' });
       gsap.set('.hero-caption', { opacity: 0, y: 10 });
-      gsap.set('.brand-subtitle', { opacity: 0 });
+      gsap.set('.hero-value-proposition', { opacity: 0, y: 10 });
+      gsap.set('.brand-subtitle, .brand-value-proposition', { opacity: 0 });
       gsap.set('.hero-smear, .hero-chroma, .hero-title-scanlines, .hero-noise, .intro-scanlines', { opacity: 0 });
       gsap.set('.room-surface', { filter: 'blur(0px) brightness(1)' });
       gsap.set('.boot-screen', { autoAlpha: 1 });
@@ -92,7 +93,9 @@ export default function useEntranceTimeline({ root, motion, phase, reducedMotion
         timeline.to('.boot-screen', { autoAlpha: 0, duration: 0.12 });
         timeline.to(name, { opacity: 1, duration: 0.14 }, 0);
         timeline.to('.hero-caption', { opacity: 1, y: 0, duration: 0.14 }, 0.12);
+        timeline.to('.hero-value-proposition', { opacity: 1, y: 0, duration: 0.14 }, 0.12);
         timeline.to('.hero-caption', { opacity: 0, duration: 0.12 }, 0.48);
+        timeline.to('.hero-value-proposition', { opacity: 0, duration: 0.12 }, 0.48);
         return;
       }
       Object.assign(motion.current.camera, poseValues(mobile ? entrance.mobile : entrance.desktop));
@@ -115,14 +118,17 @@ export default function useEntranceTimeline({ root, motion, phase, reducedMotion
       timeline.to(distortion, { value: 1, duration: 0.1, ease: 'power1.inOut', onUpdate: applyDistortion }, 2.78);
       timeline.to(distortion, { value: 0, duration: 0.3, ease: 'power2.out', onUpdate: applyDistortion }, 3.12);
       timeline.to('.hero-caption', { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', onStart: () => captionCursor?.classList.add('is-blinking') }, 3.42);
+      timeline.to('.hero-value-proposition', { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out' }, 3.42);
       const collapseStart = 3.98 + 1.2;
       const brandMoveStart = collapseStart + 0.12;
       const brandSubtitleStart = brandMoveStart + 0.68;
       timeline.call(() => { stage('collapse'); captionCursor?.classList.remove('is-blinking'); }, [], collapseStart);
       timeline.to(name, { scaleY: 0.88, duration: 0.12, ease: 'power1.in' }, collapseStart);
       timeline.to('.hero-caption', { opacity: 0, duration: 0.2 }, collapseStart);
+      timeline.to('.hero-value-proposition', { opacity: 0, duration: 0.2 }, collapseStart);
       timeline.to(name, { left: target.left, top: target.top, xPercent: 0, yPercent: 0, scaleX, scaleY, duration: 0.68, ease: 'power2.inOut' }, brandMoveStart);
       timeline.to('.brand-subtitle', { opacity: 1, duration: 0.18 }, brandSubtitleStart);
+      timeline.to('.brand-value-proposition', { opacity: 1, duration: 0.18 }, brandSubtitleStart);
       timeline.to('.room-surface', { filter: 'blur(0px) brightness(1)', duration: 0.7 }, collapseStart);
       timeline.to('.intro-scanlines', { opacity: 0, duration: 0.6 }, collapseStart);
     });
