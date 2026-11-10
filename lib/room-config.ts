@@ -38,7 +38,7 @@ export const room = {
   bike: place([2.22, 0, 0.68], -Math.PI / 2 + 0.04),
   bikeStand: { ...place([-0.53, 0, 0]), scale: [0.96, 0.96, 0.96] as Vec3 },
   lamp: place([1.62, 0, -2.05]),
-  home: { position: [-1.35, 1.6, 1.7] as Vec3, target: [-0.15, 1.23, -1.65] as Vec3, fov: 66 },
+  home: { position: [-1.35, 1.6, 1.7] as Vec3, target: [-0.15, 1.4, -1.65] as Vec3, fov: 66 },
 };
 
 // Alternate starting composition for visual review; the default remains approved Home.
