@@ -1,0 +1,33 @@
+.boot-screen.nature-boot { background: #0b0e12; padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom)); }
+.nature-boot-composition { width: 100%; margin: auto; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.nature-terminal-art { display: block; flex: none; width: min(clamp(210px, 30vw, 420px), 74vw, calc(100svh - 300px)); height: auto; aspect-ratio: 1; overflow: hidden; }
+.nature-boot-tagline { margin: 25px 0 0; color: #e3e7dd; font: 500 clamp(9px, 1vw, 11px)/1.6 var(--font-work-sans), sans-serif; letter-spacing: .23em; }
+.nature-boot-status { margin: 16px 0 0; color: #929b96; font: 9px/1.6 var(--font-space-mono), monospace; letter-spacing: .13em; }
+.nature-boot-escape { margin-top: 12px; color: #929b96; font-size: 9px; min-height: 44px; letter-spacing: .1em; }
+.nature-boot-escape:hover { color: #e3e7dd; }
+.nature-entrance { position: relative; width: min(350px, 100%); margin-top: 34px; flex: none; }
+.nature-entrance[data-revealed="false"] { visibility: hidden; pointer-events: none; }
+.nature-entrance-button { position: relative; display: grid; place-items: center; width: 100%; min-height: 70px; padding: 16px 32px; border: 0; border-radius: 19px; background: transparent; color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .18s ease, color .18s ease; }
+.nature-entrance-label { position: relative; z-index: 1; font: 900 clamp(16px, 2vw, 19px)/1.2 var(--font-work-sans), sans-serif; letter-spacing: .035em; }
+.nature-entrance-botany { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.nature-entrance-frame { fill: #111417; stroke: #f1f4ec; stroke-width: 3; transition: fill .2s ease, stroke .2s ease; }
+.nature-entrance-button:hover:not(:disabled) .nature-entrance-frame { fill: #171e19; stroke: #b8ce9b; }
+.nature-entrance-button:focus-visible { outline: 3px solid #bbd89e; outline-offset: 7px; }
+.nature-entrance-button:active:not(:disabled) { transform: translateY(2px); }
+.nature-entrance-button:disabled { cursor: wait; color: #abb2ac; }
+.nature-entrance-button:disabled .nature-entrance-frame { stroke: #69736a; }
+.entrance-leaf-unfurl { opacity: 0; }
+.entrance-vine-growth { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+@media (max-width: 760px) { .nature-terminal-art { width: min(clamp(210px, 48vw, 300px), 76vw, calc(100svh - 300px)); } .nature-entrance { width: min(350px, calc(100% - 12px)); } }
+@media (max-height: 520px) and (min-width: 560px) {
+  .nature-boot-composition { display: grid; grid-template-columns: minmax(0, 240px) minmax(0, 350px); grid-template-areas: "art tagline" "art enter" "art status" "art escape"; justify-content: center; column-gap: clamp(24px, 5vw, 64px); width: min(100%, 760px); }
+  .nature-terminal-art { grid-area: art; width: min(240px, 32vw, calc(100svh - 64px)); justify-self: center; }
+  .nature-boot-tagline { grid-area: tagline; margin-top: 0; }
+  .nature-entrance { grid-area: enter; margin-top: 20px; width: 100%; }
+  .nature-boot-status { grid-area: status; margin-top: 18px; }
+  .nature-boot-escape { grid-area: escape; margin-top: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { .nature-boot *, .nature-boot *::before { animation: none !important; transition: none !important; } }
+/* Keep botanical layers concealed before the image loads and GSAP initializes. */
+.nature-botanical { opacity: 0; }
+.nature-growth { stroke-dasharray: 3000; stroke-dashoffset: 3000; }

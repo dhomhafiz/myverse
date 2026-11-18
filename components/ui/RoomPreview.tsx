@@ -327,7 +327,7 @@ export default function RoomPreview({
           />
         </SceneBoundary>
       </div>
-      {!directEntry && phase !== 'exploring' && <BootScreen phase={phase} readiness={readiness} reducedMotion={reducedMotion} onEnter={() => setPhase('entering')} />}
+      {!directEntry && phase !== 'exploring' && <BootScreen active={roomActive} phase={phase} readiness={readiness} reducedMotion={reducedMotion} onEnter={() => setPhase('entering')} />}
       {(phase === 'entering' || phase === 'exploring') && (
         <>
           <header className="preview-header pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-6">
