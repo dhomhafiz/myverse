@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_BUILD_DIR || '.next',
   images: { unoptimized: true },
   devIndicators: false,
+  experimental: { agentUpgrade: 'security' },
 };
 
 export default nextConfig;
