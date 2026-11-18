@@ -1,6 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
-  <rect width="64" height="64" fill="#111111"/>
-  <rect x="4" y="4" width="56" height="56" rx="12" fill="none" stroke="#ffffff" stroke-width="4"/>
-  <path d="M18 20 34 29V35L18 44V36L26 32 18 28Z" fill="#ffffff"/>
-  <rect x="36" y="39" width="12" height="5" rx="0.5" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="100 100 1054 1054">
+  <rect width="1254" height="1254" fill="#111111"/>
+  <rect id="border" x="183" y="185" width="887" height="885" rx="145" fill="none" stroke="#ffffff" stroke-width="64"/>
+  <!-- Rear curls disappear behind the solid terminal strokes. -->
+  <g fill="#60bd28">
+    <path d="M445 803C494 829 519 868 468 917C541 900 534 831 467 788Z"/>
+  </g>
+  <!-- Solid geometric outlines, visually referenced to League Spartan Black 900. -->
+  <g id="terminal" fill="#ffffff" stroke="#ffffff" stroke-width="12" stroke-linejoin="round">
+    <path d="M370 414C354 405 346 418 346 434V478C346 488 348 492 359 499L546 614L344 757C334 764 332 768 332 782V824C332 842 343 845 357 836L639 654C651 646 656 640 656 624V603C656 588 651 582 639 575Z"/>
+    <path d="M687 758H959V825H687Z"/>
+  </g>
+  <g id="vine" fill="#60bd28" stroke="#60bd28" stroke-width="10" stroke-linejoin="round">
+    <!-- Upper turn crosses the upper arm, then climbs into the two top leaves. -->
+    <path d="M370 574C365 511 433 451 510 457C553 452 592 479 589 528L576 520C572 489 539 474 503 479C438 484 393 532 388 595Z"/>
+    <path d="M527 465C556 453 557 439 567 416C579 390 596 374 627 357C598 383 585 408 576 439C571 458 557 473 543 478Z"/>
+    <path d="M558 433C498 432 505 387 517 342C531 360 568 365 559 414L557 426Z"/>
+    <path d="M576 398C572 345 621 323 678 330C661 357 665 390 631 407C614 415 596 413 584 409Z"/>
+    <!-- Lower turn passes in front of the lower arm and behind the chevron tip. -->
+    <path d="M351 750C347 701 394 663 441 665C495 662 552 696 599 686C642 678 675 647 667 604C701 645 658 706 609 715C551 728 501 697 449 694C405 691 374 724 351 750Z"/>
+    <path d="M382 698C392 657 376 630 337 598C378 620 403 650 402 683Z"/>
+    <path d="M387 636C394 581 342 565 284 572C303 595 298 621 326 641C342 653 360 653 379 647Z"/>
+    <path d="M510 854C518 825 535 809 559 793C537 813 527 833 525 853Z"/>
+    <path d="M516 834C509 787 555 765 601 765C588 788 595 817 567 836C554 846 538 846 525 843Z"/>
+  </g>
 </svg>
